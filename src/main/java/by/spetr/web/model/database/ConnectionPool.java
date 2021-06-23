@@ -1,5 +1,6 @@
 package by.spetr.web.model.database;
 
+import by.spetr.web.model.exception.ConnectionPoolException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,8 +20,8 @@ public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger();
     private static final AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static final AtomicBoolean isOnCalculation = new AtomicBoolean(false);
-    private static final long TIMER_COUNTER_DELAY_IN_SECONDS = 0;
-    private static final long TIMER_COUNTER_REPEAT_IN_SECONDS = 60;
+    private static final long TIMER_COUNTER_DELAY_IN_MINUTES = 30;
+    private static final long TIMER_COUNTER_REPEAT_IN_MINUTES = 30;
     private static final int CONNECTION_VALIDITY_TIMEOUT = 0;
     private final Lock counterLock = new ReentrantLock();
     private final Condition condition = counterLock.newCondition();
@@ -52,12 +53,13 @@ public class ConnectionPool {
         Timer timer = new Timer();
         timer.schedule(
                 new ConnectionCheckerTimerTask(counterLock, condition),
-                TimeUnit.MINUTES.toMillis(TIMER_COUNTER_DELAY_IN_SECONDS),
-                TimeUnit.MINUTES.toMillis(TIMER_COUNTER_REPEAT_IN_SECONDS)
+                TimeUnit.MINUTES.toMillis(TIMER_COUNTER_DELAY_IN_MINUTES),
+                TimeUnit.MINUTES.toMillis(TIMER_COUNTER_REPEAT_IN_MINUTES)
         );
     }
 
-    public ProxyConnection getConnection() {
+    public ProxyConnection getConnection() throws ConnectionPoolException {
+        logger.info("getConnection() method been called");
         // checking out whether we need to suspend this method
         if (isOnCalculation.get()) {
             onServicePause();
@@ -65,18 +67,23 @@ public class ConnectionPool {
 
         ProxyConnection proxyConnection = null;
         try {
-            proxyConnection = freeConnectionPool.remove();
+            proxyConnection = freeConnectionPool.take();
             busyConnectionPool.put(proxyConnection);
         } catch (InterruptedException e) {
-            logger.warn("Thread is waiting for a free connection", e);
+            logger.warn("Interrupted waiting for a queue", e);
         }
 
-        logger.info("Returning connection...");
+        if (proxyConnection == null) {
+            throw new ConnectionPoolException("Error getting free connection");
+        }
+
+        logger.info("Connection was given");
 
         return proxyConnection;
     }
 
     public boolean releaseConnection(ProxyConnection proxyConnection) {
+        logger.info("releaseConnection() method been called");
         // checking out whether we need to suspend this method
         if (isOnCalculation.get()) {
             onServicePause();
@@ -101,16 +108,13 @@ public class ConnectionPool {
                 isAdded = addNewConnection();
             }
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            // Pretty much impossible scenario
+            logger.error("Connection validity error");
         }
 
-        if (!isRemoved) {
-            logger.error("Connection hasn't been removed from busy connections list");
-        }
-
-        if (!isAdded) {
-            logger.error("Connection hasn't been added to free connections list");
-        }
+        logger.info(isRemoved && isAdded ?
+                "Connection has been successfully released and moved to freeConnectionPoll" :
+                "Connection releasing error");
 
         return isRemoved && isAdded;
     }
