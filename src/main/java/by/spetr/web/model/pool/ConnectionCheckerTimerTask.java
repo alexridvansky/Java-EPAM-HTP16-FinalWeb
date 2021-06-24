@@ -1,4 +1,4 @@
-package by.spetr.web.model.database;
+package by.spetr.web.model.pool;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,4 +1,4 @@
-package by.spetr.web.model.database;
+package by.spetr.web.model.pool;
 
 import java.sql.*;
 import java.util.Map;

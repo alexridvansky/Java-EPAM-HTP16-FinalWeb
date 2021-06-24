@@ -1,4 +1,4 @@
-package by.spetr.web.model.database;
+package by.spetr.web.model.pool;
 
 import by.spetr.web.model.exception.ConnectionPoolException;
 import org.apache.logging.log4j.LogManager;
