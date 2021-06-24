@@ -77,7 +77,7 @@ public class ConnectionPool {
             throw new ConnectionPoolException("Error getting free connection");
         }
 
-        logger.info("Connection was given");
+        logger.info("Connection been given");
 
         return proxyConnection;
     }
