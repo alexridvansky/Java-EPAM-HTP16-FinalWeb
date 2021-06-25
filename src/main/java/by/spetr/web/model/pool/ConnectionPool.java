@@ -151,16 +151,20 @@ public class ConnectionPool {
         return busyConnectionPool.size();
     }
 
-    void setServiceModeOn() {
-        // whenever we need to count connections in both queues we set isOnCalculation flag on
-        isOnCalculation.compareAndSet(false, true);
-        logger.info("Connection pool is in service mode");
+    boolean setServiceModeOn() {
+        // whenever we need to count connections in both queues simultaneously we set isOnCalculation flag on
+        boolean isSetOn = isOnCalculation.compareAndSet(false, true);
+        logger.info(isSetOn ? "Connection pool is on service" : "Error: Connection poos isn't on service");
+
+        return isSetOn;
     }
 
-    void setServiceModeOff() {
-        // sets isOnCalculation flag off
-        isOnCalculation.compareAndSet(true,false);
-        logger.info("Service mode was switched off");
+    boolean setServiceModeOff() {
+        // sets isOnCalculation flag off, pool can keep on working
+        boolean isSetOff = isOnCalculation.compareAndSet(true,false);
+        logger.info(isSetOff ? "Service mode been switched off" : "Error: Service mode hasn't been switched off");
+
+        return isSetOff;
     }
 
     boolean addNewConnection() {
@@ -175,7 +179,7 @@ public class ConnectionPool {
         boolean isAdded = freeConnectionPool.offer(proxyConnection);
         logger.info("Was connection added? {}", isAdded);
 
-        return freeConnectionPool.offer(proxyConnection);
+        return isAdded;
     }
 
     public void destroyPool() throws ConnectionPoolException {
