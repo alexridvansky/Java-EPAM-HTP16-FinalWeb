@@ -58,6 +58,15 @@ public class ConnectionPool {
         );
     }
 
+    public static ConnectionPool getInstance() {
+        if (instance == null) {
+            if (isInitialized.compareAndSet(false,true)) {
+                instance = new ConnectionPool();
+            }
+        }
+        return instance;
+    }
+
     public ProxyConnection getConnection() throws ConnectionPoolException {
         logger.info("getConnection() method been called");
         // checking out whether we need to suspend this method
@@ -119,6 +128,22 @@ public class ConnectionPool {
         return isRemoved && isAdded;
     }
 
+    private void onServicePause() {
+        // while flag is on we put lock and wait to both getting and releasing connections methods
+        // to make it possible to count connections within two queues
+        while(isOnCalculation.get()) {
+            try {
+                logger.info("setting up the lock");
+                counterLock.lock();
+                condition.await();
+            } catch (InterruptedException e) {
+                logger.warn("Sleep been interrupted");
+            } finally {
+                counterLock.unlock();
+            }
+        }
+    }
+
     int getFreeConnectionPoolSize() {
         return freeConnectionPool.size();
     }
@@ -135,24 +160,8 @@ public class ConnectionPool {
 
     void setServiceModeOff() {
         // sets isOnCalculation flag off
-        isOnCalculation.set(false);
+        isOnCalculation.compareAndSet(true,false);
         logger.info("Service mode was switched off");
-    }
-
-    void onServicePause() {
-        // while flag is on we put lock and wait to both getting and releasing connections methods
-        // to make it possible to count connections within two queues
-        while(isOnCalculation.get()) {
-            try {
-                logger.info("setting up the lock");
-                counterLock.lock();
-                condition.await();
-            } catch (InterruptedException e) {
-                logger.warn("Sleep been interrupted");
-            } finally {
-                counterLock.unlock();
-            }
-        }
     }
 
     boolean addNewConnection() {
@@ -168,15 +177,6 @@ public class ConnectionPool {
         logger.info("Was connection added? {}", isAdded);
 
         return freeConnectionPool.offer(proxyConnection);
-    }
-
-    public static ConnectionPool getInstance() {
-        if (instance == null) {
-            if (isInitialized.compareAndSet(false,true)) {
-                instance = new ConnectionPool();
-            }
-        }
-        return instance;
     }
 
     public void destroyPool() throws ConnectionPoolException {
