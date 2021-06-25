@@ -12,7 +12,6 @@ public class ConnectionCheckerTimerTask extends TimerTask {
     private static final Logger logger = LogManager.getLogger();
     private final Lock lock;
     private final Condition condition;
-    private final ConnectionPool pool = ConnectionPool.getInstance();
 
     ConnectionCheckerTimerTask(Lock lock, Condition condition) {
         this.lock = lock;
@@ -21,6 +20,8 @@ public class ConnectionCheckerTimerTask extends TimerTask {
 
     @Override
     public void run() {
+        ConnectionPool pool = ConnectionPool.getInstance();
+
         try {
             logger.info("ConnectionPool counter service been called");
             TimeUnit.MILLISECONDS.sleep(100);
@@ -32,6 +33,9 @@ public class ConnectionCheckerTimerTask extends TimerTask {
             if (pool.getBusyConnectionPoolSize() + pool.getFreeConnectionPoolSize() != ConnectionCreator.POOL_SIZE) {
                 logger.error("There are not enough connections, gonna add some...");
                 pool.addNewConnection();
+            } else {
+                logger.info("ConnectionPool contains {} connections in total (as sum of free and busy)",
+                        pool.getBusyConnectionPoolSize() + pool.getFreeConnectionPoolSize());
             }
 
             lock.lock();

@@ -20,8 +20,8 @@ public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger();
     private static final AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static final AtomicBoolean isOnCalculation = new AtomicBoolean(false);
-    private static final long TIMER_COUNTER_DELAY_IN_MINUTES = 30;
-    private static final long TIMER_COUNTER_REPEAT_IN_MINUTES = 30;
+    private static final long TIMER_COUNTER_DELAY_IN_MINUTES = 10;
+    private static final long TIMER_COUNTER_REPEAT_IN_MINUTES = 10;
     private static final int CONNECTION_VALIDITY_TIMEOUT = 0;
     private final Lock counterLock = new ReentrantLock();
     private final Condition condition = counterLock.newCondition();
@@ -153,7 +153,7 @@ public class ConnectionPool {
 
     void setServiceModeOn() {
         // whenever we need to count connections in both queues we set isOnCalculation flag on
-        isOnCalculation.set(true);
+        isOnCalculation.compareAndSet(false, true);
         logger.info("Connection pool is in service mode");
     }
 
@@ -168,6 +168,7 @@ public class ConnectionPool {
         // to make it possible to count connections within two queues
         while(isOnCalculation.get()) {
             try {
+                logger.info("setting up the lock");
                 counterLock.lock();
                 condition.await();
             } catch (InterruptedException e) {
