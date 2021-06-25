@@ -84,7 +84,7 @@ public class ConnectionPool {
 
     public boolean releaseConnection(ProxyConnection proxyConnection) {
         logger.info("releaseConnection() method been called");
-        // checking out whether we need to suspend this method
+        // checking out whether it needs to suspend this method
         if (isOnCalculation.get()) {
             onServicePause();
         }
@@ -117,30 +117,6 @@ public class ConnectionPool {
                 "Connection releasing error");
 
         return isRemoved && isAdded;
-    }
-
-    void shutdownPool() {
-        freeConnectionPool.forEach(proxyConnection -> {
-            try {
-                proxyConnection.reallyClose();
-            } catch (SQLException throwables) {
-                logger.error("Connection closing error", throwables);
-                throw new RuntimeException("Connection closing error", throwables);
-            } finally {
-                deregisterDriver();
-            }
-        });
-    }
-
-    private void deregisterDriver() {
-        DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
-            try {
-                DriverManager.deregisterDriver(driver);
-            } catch (SQLException throwables) {
-                logger.error("Drivers deregistration error", throwables);
-                throw new RuntimeException("Drivers deregistration error", throwables);
-            }
-        });
     }
 
     int getFreeConnectionPoolSize() {
@@ -201,5 +177,30 @@ public class ConnectionPool {
             }
         }
         return instance;
+    }
+
+    public void destroyPool() throws ConnectionPoolException {
+        try {
+            for (int i = 0; i < ConnectionCreator.POOL_SIZE; i++) {
+                ProxyConnection proxyConnection = freeConnectionPool.take();
+                proxyConnection.reallyClose();
+            }
+        } catch (InterruptedException | SQLException e) {
+            logger.error("error destroying Connection Pool",e );
+            throw new ConnectionPoolException("error destroying Connection Pool", e);
+        } finally {
+            deregisterDriver();
+        }
+    }
+
+    private void deregisterDriver() {
+        DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
+            try {
+                DriverManager.deregisterDriver(driver);
+            } catch (SQLException throwables) {
+                logger.error("Drivers deregistration error", throwables);
+                throw new RuntimeException("Drivers deregistration error", throwables);
+            }
+        });
     }
 }
