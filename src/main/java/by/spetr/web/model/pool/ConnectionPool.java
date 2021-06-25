@@ -30,11 +30,10 @@ public class ConnectionPool {
     private static ConnectionPool instance;
 
     private ConnectionPool() {
-        int poolSize = ConnectionCreator.POOL_SIZE;
-        freeConnectionPool = new LinkedBlockingDeque<>(poolSize);
+        freeConnectionPool = new LinkedBlockingDeque<>(ConnectionCreator.POOL_SIZE);
         busyConnectionPool = new LinkedBlockingDeque<>();
 
-        for (int i = 0; i < poolSize; i++) {
+        for (int i = 0; i < ConnectionCreator.POOL_SIZE; i++) {
             Connection connection = null;
             try {
                 connection = ConnectionCreator.createConnection();
