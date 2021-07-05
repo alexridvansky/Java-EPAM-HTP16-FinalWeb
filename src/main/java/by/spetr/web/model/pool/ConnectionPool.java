@@ -20,8 +20,8 @@ public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger();
     private static final AtomicBoolean isInitialized = new AtomicBoolean(false);
     private static final AtomicBoolean isOnCalculation = new AtomicBoolean(false);
-    private static final long TIMER_COUNTER_DELAY_IN_MINUTES = 10;
-    private static final long TIMER_COUNTER_REPEAT_IN_MINUTES = 10;
+    private static final long TIMER_COUNTER_DELAY_IN_MINUTES = 10; // Delay before the first check
+    private static final long TIMER_COUNTER_REPEAT_IN_MINUTES = 10; // How often to repeat the check
     private static final int CONNECTION_VALIDITY_TIMEOUT = 0;
     private final Lock counterLock = new ReentrantLock();
     private final Condition condition = counterLock.newCondition();
@@ -48,7 +48,7 @@ public class ConnectionPool {
             }
         }
 
-        // TimerTask for checking out (every hour or so) whether ConnectionPool is full or not
+        // Sets on the TimerTask for checking out (like every hour/a half or so) whether ConnectionPool is full or not
         Timer timer = new Timer();
         timer.schedule(
                 new ConnectionCheckerTimerTask(counterLock, condition),
@@ -121,7 +121,7 @@ public class ConnectionPool {
         }
 
         logger.info(isRemoved && isAdded ?
-                "Connection has been successfully released and moved to freeConnectionPoll" :
+                "Connection been successfully released and moved to freeConnectionPoll" :
                 "Connection releasing error");
 
         return isRemoved && isAdded;
