@@ -105,24 +105,27 @@ public class ConnectionPool {
         boolean isRemoved = false;
         boolean isAdded = false;
 
+        logger.debug("checking out if connection returned is valid...");
         try {
             if (proxyConnection.isValid(CONNECTION_VALIDITY_TIMEOUT)) {
                 // if connection is valid we move it from one queue to another
                 isRemoved = busyConnectionPool.remove(proxyConnection);
                 isAdded = freeConnectionPool.offer(proxyConnection);
+                logger.debug("connection validity - ok, return to free connections list");
             } else {
                 // if connection isn't valid we have to remove it and add another one instead
                 isRemoved = busyConnectionPool.remove(proxyConnection);
                 isAdded = addNewConnection();
+                logger.debug("connection isn't valid, gonna remove and replace by new one");
             }
         } catch (SQLException throwables) {
             // Pretty much impossible scenario
             logger.error("Connection validity error");
         }
 
-        logger.info(isRemoved && isAdded ?
-                "Connection been successfully released and moved to freeConnectionPoll" :
-                "Connection releasing error");
+        logger.info(isRemoved && isAdded
+                ? "Connection been successfully moved to freeConnectionPoll"
+                : "Connection releasing error");
 
         return isRemoved && isAdded;
     }
