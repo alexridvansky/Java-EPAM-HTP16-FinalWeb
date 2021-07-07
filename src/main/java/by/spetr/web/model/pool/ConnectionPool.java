@@ -23,6 +23,7 @@ public class ConnectionPool {
     private static final long TIMER_COUNTER_DELAY_IN_MINUTES = 10; // Delay before the first check
     private static final long TIMER_COUNTER_REPEAT_IN_MINUTES = 10; // How often to repeat the check
     private static final int CONNECTION_VALIDITY_TIMEOUT = 0;
+    private final Timer timer;
     private final Lock counterLock = new ReentrantLock();
     private final Condition condition = counterLock.newCondition();
     private final BlockingQueue<ProxyConnection> freeConnectionPool;
@@ -49,7 +50,7 @@ public class ConnectionPool {
         }
 
         // Sets on the TimerTask for checking out (like every hour/a half or so) whether ConnectionPool is full or not
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.schedule(
                 new ConnectionCheckerTimerTask(counterLock, condition),
                 TimeUnit.MINUTES.toMillis(TIMER_COUNTER_DELAY_IN_MINUTES),
@@ -186,6 +187,8 @@ public class ConnectionPool {
     }
 
     public void destroyPool() throws ConnectionPoolException {
+        logger.info("TimerTask.cancel");
+        timer.cancel();
         try {
             for (int i = 0; i < ConnectionCreator.POOL_SIZE; i++) {
                 ProxyConnection proxyConnection = freeConnectionPool.take();
