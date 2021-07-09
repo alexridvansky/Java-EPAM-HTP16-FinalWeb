@@ -13,7 +13,7 @@ import java.util.Properties;
 class ConnectionCreator {
     private static final Logger logger = LogManager.getLogger();
     private static final Properties PROP = new Properties();
-    private static final String PROPERTIES_PATH = "properties/db.properties";
+    private static final String PROPERTIES_PATH = "db.properties";
     private static final String DRIVER_TAG = "db.driver";
     private static final String URL_TAG = "db.url";
     private static final String POOL_SIZE_TAG = "pool.size";
