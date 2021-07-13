@@ -6,27 +6,35 @@ import by.spetr.web.model.entity.SignUpData;
 import by.spetr.web.model.entity.User;
 import by.spetr.web.model.exception.DaoException;
 import by.spetr.web.model.exception.ServiceException;
+import by.spetr.web.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Optional;
 
-public class DefaultUserService implements UserService{
+public class UserServiceImpl implements UserService{
     private static final Logger logger = LogManager.getLogger();
-    private static final DefaultUserService instance = new DefaultUserService();
+    private static final UserServiceImpl instance = new UserServiceImpl();
     private static final UserDao userDao = new DefaultUserDao();
 
-    private DefaultUserService(){
+    private UserServiceImpl(){
     }
 
-    public static DefaultUserService getInstance() {
+    public static UserServiceImpl getInstance() {
         return instance;
     }
 
     @Override
     public boolean registerUser(SignUpData signUpData) {
+        String comment = "";
+        StringBuilder builder = new StringBuilder(comment);
 
+        boolean isUserNameValid = UserValidator.validateUsername(signUpData.getLogin());
+        if (!isUserNameValid) {
+            signUpData.setLogin("");
+            builder.append("login isn't valid");
+        }
 
         return false; // todo:
     }
@@ -77,7 +85,7 @@ public class DefaultUserService implements UserService{
     @Override
     public List<User> getUserList() throws ServiceException {
         try {
-            return userDao.getListOfUsers();
+            return userDao.findAll();
         } catch (DaoException e) {
             logger.error("Data can't be received from DAO layer", e);
             throw new ServiceException("Data can't be received from DAO layer", e);
