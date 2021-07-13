@@ -16,6 +16,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static by.spetr.web.model.pool.ConnectionCreator.POOL_SIZE;
+
 public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger();
     private static final AtomicBoolean isInitialized = new AtomicBoolean(false);
@@ -31,22 +33,13 @@ public class ConnectionPool {
     private static ConnectionPool instance;
 
     private ConnectionPool() {
-        freeConnectionPool = new LinkedBlockingDeque<>(ConnectionCreator.POOL_SIZE);
+        freeConnectionPool = new LinkedBlockingDeque<>(POOL_SIZE);
         busyConnectionPool = new LinkedBlockingDeque<>();
 
-        for (int i = 0; i < ConnectionCreator.POOL_SIZE; i++) {
-            Connection connection = null;
-            try {
-                connection = ConnectionCreator.createConnection();
-            } catch (SQLException throwables) {
-                logger.error("Connection can't be created", throwables);
-            }
-            ProxyConnection proxyConnection = new ProxyConnection(connection);
-            boolean isAdded = freeConnectionPool.offer(proxyConnection);
-            if (!isAdded) {
-                logger.error("Connection hasn't been added to busy connections list");
-                throw new RuntimeException("Connection hasn't been added to busy connections list");
-            }
+        for (int i = 0; i < POOL_SIZE; i++) {
+            addNewConnection();
+            logger.debug("pool size is {}/{}", getActualPoolSize(), POOL_SIZE);
+
         }
 
         // Sets on the TimerTask for checking out (like every hour/a half or so) whether ConnectionPool is full or not
@@ -79,7 +72,8 @@ public class ConnectionPool {
             proxyConnection = freeConnectionPool.take();
             busyConnectionPool.put(proxyConnection);
         } catch (InterruptedException e) {
-            logger.warn("Interrupted waiting for a queue", e);
+            logger.warn("Interrupted waiting for a free connection", e);
+            Thread.currentThread().interrupt();
         }
 
         if (proxyConnection == null) {
@@ -111,48 +105,81 @@ public class ConnectionPool {
             if (proxyConnection.isValid(CONNECTION_VALIDITY_TIMEOUT)) {
                 // if connection is valid we move it from one queue to another
                 isRemoved = busyConnectionPool.remove(proxyConnection);
-                isAdded = freeConnectionPool.offer(proxyConnection);
-                logger.debug("connection validity - ok, return to free connections list");
+                freeConnectionPool.put(proxyConnection);
+                isAdded = true;
+                logger.debug("connection is valid, return to free connections list");
             } else {
                 // if connection isn't valid we have to remove it and add another one instead
                 isRemoved = busyConnectionPool.remove(proxyConnection);
                 isAdded = addNewConnection();
-                logger.debug("connection isn't valid, gonna remove and replace by new one");
+                logger.info("connection isn't valid, gonna remove and replace by new one");
             }
-        } catch (SQLException throwables) {
+        } catch (SQLException e) {
             // Pretty much impossible scenario
-            logger.error("Connection validity error");
+            logger.error("Connection validity checking error");
+        } catch (InterruptedException e) {
+            logger.error("Awaiting been interrupted, error adding connection to free connections list", e);
+            Thread.currentThread().interrupt();
         }
 
         logger.info(isRemoved && isAdded
-                ? "Connection been successfully moved to freeConnectionPoll"
+                ? "Connection been successfully released moved to freeConnectionPoll"
                 : "Connection releasing error");
+        logger.debug("pool size is {}/{}", getActualPoolSize(), POOL_SIZE);
 
         return isRemoved && isAdded;
     }
 
+    boolean addNewConnection() {
+        logger.info("Adding new connection method been called");
+
+        Connection connection = null;
+        try {
+            connection = ConnectionCreator.createConnection();
+        } catch (SQLException e) {
+            logger.error("Connection can't be created", e);
+            throw new RuntimeException("Connection can't be created", e);
+        }
+
+        ProxyConnection proxyConnection = new ProxyConnection(connection);
+
+        try {
+            freeConnectionPool.put(proxyConnection);
+            logger.debug("connection been added to free connection list");
+            return true;
+        } catch (InterruptedException e) {
+            logger.error("error adding connection to the free connection list, awaiting been interrupted", e);
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    /**
+     *  while the flag is on we put lock and wait to both getting and releasing connections
+     *  methods to make it possible to count connections within two queues
+     */
     private void onServicePause() {
-        // while flag is on we put lock and wait to both getting and releasing connections methods
-        // to make it possible to count connections within two queues
         while(isOnCalculation.get()) {
             try {
                 logger.info("setting up the lock");
                 counterLock.lock();
                 condition.await();
             } catch (InterruptedException e) {
-                logger.warn("Sleep been interrupted");
+                logger.error("Sleep been interrupted");
+                Thread.currentThread().interrupt();
             } finally {
                 counterLock.unlock();
             }
         }
     }
 
-    int getFreeConnectionPoolSize() {
-        return freeConnectionPool.size();
-    }
-
-    int getBusyConnectionPoolSize() {
-        return busyConnectionPool.size();
+    /**
+     * the action should be performed under the service mode on
+     *
+     * @return the size of Pool in total as a sum of free and used connections
+     */
+    int getActualPoolSize() {
+        return freeConnectionPool.size() + busyConnectionPool.size();
     }
 
     boolean setServiceModeOn() {
@@ -171,44 +198,35 @@ public class ConnectionPool {
         return isSetOff;
     }
 
-    boolean addNewConnection() {
-        logger.info("Adding new connection method been called");
-        Connection connection = null;
-        try {
-            connection = ConnectionCreator.createConnection();
-        } catch (SQLException throwables) {
-            logger.error("Connection can't be created", throwables);
-        }
-        ProxyConnection proxyConnection = new ProxyConnection(connection);
-        boolean isAdded = freeConnectionPool.offer(proxyConnection);
-        logger.info("Was connection added? {}", isAdded);
-
-        return isAdded;
-    }
-
     public void destroyPool() throws ConnectionPoolException {
-        logger.info("TimerTask.cancel");
+        logger.info("TimerTask is gonna to be cancelled");
         timer.cancel();
+        int actualPoolSize = getActualPoolSize();
         try {
-            for (int i = 0; i < ConnectionCreator.POOL_SIZE; i++) {
+            for (int i = 1; i <= actualPoolSize; i++) {
                 ProxyConnection proxyConnection = freeConnectionPool.take();
                 proxyConnection.reallyClose();
+                logger.debug("{}/{} connections closed", i, actualPoolSize);
             }
-        } catch (InterruptedException | SQLException e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (SQLException e) {
             logger.error("error destroying Connection Pool",e );
             throw new ConnectionPoolException("error destroying Connection Pool", e);
         } finally {
             deregisterDriver();
         }
+        //deregisterDriver();
     }
 
     private void deregisterDriver() {
         DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
             try {
                 DriverManager.deregisterDriver(driver);
-            } catch (SQLException throwables) {
-                logger.error("Drivers deregistration error", throwables);
-                throw new RuntimeException("Drivers deregistration error", throwables);
+                logger.info("Drivers deregistered successfully ");
+            } catch (SQLException e) {
+                logger.error("Drivers deregistration error", e);
+                throw new RuntimeException("Drivers deregistration error", e);
             }
         });
     }
