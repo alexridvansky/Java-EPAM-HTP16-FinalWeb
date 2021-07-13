@@ -1,0 +1,18 @@
+body {
+    background-color: black;
+    font-family: Verdana, sans-serif;
+    font-size: 16px;
+    color: silver;
+}
+h1 {
+    background-color: black;
+    font-family: Georgia, serif;
+    font-size: 60px;
+    color: white;
+}
+a {
+    background-color: black;
+    font-family: Verdana, sans-serif;
+    font-size: 16px;
+    color: silver;
+}

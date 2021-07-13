@@ -40,7 +40,7 @@
             <td>${user.getState()}</td>
             <td>${user.getEmail()}</td>
             <td>${user.getPhone()}</td>
-            <td>${user.getRegistrationDate()}</td>
+            <td>${user.getRegDate()}</td>
         </tr>
     </c:forEach>
 
