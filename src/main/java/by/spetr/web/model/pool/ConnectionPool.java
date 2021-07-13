@@ -4,7 +4,6 @@ import by.spetr.web.model.exception.ConnectionPoolException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Timer;
@@ -28,8 +27,8 @@ public class ConnectionPool {
     private final Timer timer;
     private final Lock counterLock = new ReentrantLock();
     private final Condition condition = counterLock.newCondition();
-    private final BlockingQueue<ProxyConnection> freeConnectionPool;
-    private final BlockingQueue<ProxyConnection> busyConnectionPool;
+    private final BlockingQueue<Connection> freeConnectionPool;
+    private final BlockingQueue<Connection> busyConnectionPool;
     private static ConnectionPool instance;
 
     private ConnectionPool() {
@@ -60,39 +59,39 @@ public class ConnectionPool {
         return instance;
     }
 
-    public ProxyConnection getConnection() throws ConnectionPoolException {
+    public Connection getConnection() throws ConnectionPoolException {
         logger.info("getConnection() method been called");
         // checking out whether we need to suspend this method
         if (isOnCalculation.get()) {
             onServicePause();
         }
 
-        ProxyConnection proxyConnection = null;
+        Connection connection = null;
         try {
-            proxyConnection = freeConnectionPool.take();
-            busyConnectionPool.put(proxyConnection);
+            connection = freeConnectionPool.take();
+            busyConnectionPool.put(connection);
         } catch (InterruptedException e) {
             logger.warn("Interrupted waiting for a free connection", e);
             Thread.currentThread().interrupt();
         }
 
-        if (proxyConnection == null) {
+        if (connection == null) {
             throw new ConnectionPoolException("Error getting free connection");
         }
 
         logger.info("Connection been given");
 
-        return proxyConnection;
+        return connection;
     }
 
-    public boolean releaseConnection(ProxyConnection proxyConnection) {
+    public boolean releaseConnection(Connection connection) {
         logger.info("releaseConnection() method been called");
         // checking out whether it needs to suspend this method
         if (isOnCalculation.get()) {
             onServicePause();
         }
 
-        if (proxyConnection.getClass() != ProxyConnection.class) {
+        if (connection.getClass() != Connection.class) {
             logger.error("Wild connection been returned");
             return false;
         }
@@ -102,15 +101,15 @@ public class ConnectionPool {
 
         logger.debug("checking out if connection returned is valid...");
         try {
-            if (proxyConnection.isValid(CONNECTION_VALIDITY_TIMEOUT)) {
+            if (connection.isValid(CONNECTION_VALIDITY_TIMEOUT)) {
                 // if connection is valid we move it from one queue to another
-                isRemoved = busyConnectionPool.remove(proxyConnection);
-                freeConnectionPool.put(proxyConnection);
+                isRemoved = busyConnectionPool.remove(connection);
+                freeConnectionPool.put(connection);
                 isAdded = true;
                 logger.debug("connection is valid, return to free connections list");
             } else {
                 // if connection isn't valid we have to remove it and add another one instead
-                isRemoved = busyConnectionPool.remove(proxyConnection);
+                isRemoved = busyConnectionPool.remove(connection);
                 isAdded = addNewConnection();
                 logger.info("connection isn't valid, gonna remove and replace by new one");
             }
@@ -133,7 +132,7 @@ public class ConnectionPool {
     boolean addNewConnection() {
         logger.info("Adding new connection method been called");
 
-        Connection connection = null;
+        java.sql.Connection connection = null;
         try {
             connection = ConnectionCreator.createConnection();
         } catch (SQLException e) {
@@ -141,7 +140,7 @@ public class ConnectionPool {
             throw new RuntimeException("Connection can't be created", e);
         }
 
-        ProxyConnection proxyConnection = new ProxyConnection(connection);
+        Connection proxyConnection = new Connection(connection);
 
         try {
             freeConnectionPool.put(proxyConnection);
@@ -204,8 +203,8 @@ public class ConnectionPool {
         int actualPoolSize = getActualPoolSize();
         try {
             for (int i = 1; i <= actualPoolSize; i++) {
-                ProxyConnection proxyConnection = freeConnectionPool.take();
-                proxyConnection.reallyClose();
+                Connection connection = freeConnectionPool.take();
+                connection.reallyClose();
                 logger.debug("{}/{} connections closed", i, actualPoolSize);
             }
         } catch (InterruptedException e) {
