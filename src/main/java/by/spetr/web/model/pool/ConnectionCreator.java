@@ -29,13 +29,10 @@ class ConnectionCreator {
             JDBC_DRIVER_NAME = PROP.getProperty(DRIVER_TAG);
             DB_URL = PROP.getProperty(URL_TAG);
             POOL_SIZE = Integer.parseInt(PROP.getProperty(POOL_SIZE_TAG));
+            Class.forName(JDBC_DRIVER_NAME);
         } catch (IOException e) {
             logger.fatal("Properties file not found or error loading properties from the file", e);
             throw new RuntimeException("Properties file not found or error loading properties from the file", e);
-        }
-
-        try {
-            Class.forName(JDBC_DRIVER_NAME);
         } catch (ClassNotFoundException e) {
             logger.fatal("JDBCDriver class not found", e);
             throw new RuntimeException("JDBCDriver class not found", e);
@@ -45,8 +42,7 @@ class ConnectionCreator {
     private ConnectionCreator() {}
 
     static Connection createConnection() throws SQLException {
-        Connection connection = null;
-        connection = DriverManager.getConnection(DB_URL, PROP);
+        Connection connection = DriverManager.getConnection(DB_URL, PROP);
 
         return connection;
     }
