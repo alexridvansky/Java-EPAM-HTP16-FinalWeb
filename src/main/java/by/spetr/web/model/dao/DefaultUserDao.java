@@ -55,6 +55,7 @@ public class DefaultUserDao extends AbstractDAO<User> implements UserDao {
             "INNER JOIN user_role ON role_id = user_role_id " +
             "INNER JOIN user_state ON state_id = user_state_id " +
             "WHERE login = ? AND pass = ?;";
+    // below statement was for testing purposes
     private static final String SQL_ADD_NEW_USER
             = "INSERT INTO user (role_id, state_id, login, pass, email, phone, registration_date) " +
             "values (3, 1, 'spetr', 'spetr1', 'spetr@tut.by', '+375296290069', '2019-01-01');";
