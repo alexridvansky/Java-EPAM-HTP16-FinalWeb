@@ -123,7 +123,7 @@ public class ConnectionPool {
         }
 
         logger.info(isRemoved && isAdded
-                ? "Connection been successfully released moved to freeConnectionPoll"
+                ? "Connection been successfully released and moved to freeConnectionPoll"
                 : "Connection releasing error");
         logger.debug("pool size is {}/{}", getActualPoolSize(), POOL_SIZE);
 
