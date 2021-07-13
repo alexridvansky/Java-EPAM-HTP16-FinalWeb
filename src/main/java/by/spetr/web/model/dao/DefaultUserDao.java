@@ -77,8 +77,8 @@ public class DefaultUserDao extends AbstractDAO<User> implements UserDao {
             return users;
 
         } catch (SQLException e) {
-            logger.error("database access error occurs or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurs or this method is called on a closed connection", e);
+            logger.error("database access error occurred or this method is called on a closed connection", e);
+            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -135,8 +135,8 @@ public class DefaultUserDao extends AbstractDAO<User> implements UserDao {
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error("database access error occurs or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurs or this method is called on a closed connection", e);
+            logger.error("database access error occurred or this method is called on a closed connection", e);
+            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -165,8 +165,8 @@ public class DefaultUserDao extends AbstractDAO<User> implements UserDao {
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error("database access error occurs or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurs or this method is called on a closed connection", e);
+            logger.error("database access error occurred or this method is called on a closed connection", e);
+            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -194,8 +194,8 @@ public class DefaultUserDao extends AbstractDAO<User> implements UserDao {
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error("database access error occurs or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurs or this method is called on a closed connection", e);
+            logger.error("database access error occurred or this method is called on a closed connection", e);
+            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -224,8 +224,8 @@ public class DefaultUserDao extends AbstractDAO<User> implements UserDao {
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error("database access error occurs or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurs or this method is called on a closed connection", e);
+            logger.error("database access error occurred or this method is called on a closed connection", e);
+            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
