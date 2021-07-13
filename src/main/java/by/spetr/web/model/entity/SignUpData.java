@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.EnumMap;
 
 public class SignUpData implements Cloneable, Serializable {
-    private enum RegFields {
+    private enum SignUpFields {
         LOGIN,
         PASSWORD,
         PASSWORD_REPEAT,
@@ -13,65 +13,65 @@ public class SignUpData implements Cloneable, Serializable {
         COMMENT
     }
 
-    private final EnumMap<RegFields, String> regData = new EnumMap<RegFields, String>(RegFields.class);
+    private final EnumMap<SignUpFields, String> regData = new EnumMap<SignUpFields, String>(SignUpFields.class);
 
     public SignUpData() {
     }
 
     public SignUpData(String login, String password, String passwordRepeat, String email, String phone) {
-        regData.put(RegFields.LOGIN, login);
-        regData.put(RegFields.PASSWORD, password);
-        regData.put(RegFields.PASSWORD_REPEAT, passwordRepeat);
-        regData.put(RegFields.EMAIL, email);
-        regData.put(RegFields.PHONE, phone);
+        regData.put(SignUpFields.LOGIN, login);
+        regData.put(SignUpFields.PASSWORD, password);
+        regData.put(SignUpFields.PASSWORD_REPEAT, passwordRepeat);
+        regData.put(SignUpFields.EMAIL, email);
+        regData.put(SignUpFields.PHONE, phone);
     }
 
     public String getLogin() {
-        return regData.get(RegFields.LOGIN);
+        return regData.get(SignUpFields.LOGIN);
     }
 
     public void setLogin(String login) {
-        regData.put(RegFields.LOGIN, login);
+        regData.put(SignUpFields.LOGIN, login);
     }
 
     public String getPassword() {
-        return regData.get(RegFields.PASSWORD);
+        return regData.get(SignUpFields.PASSWORD);
     }
 
     public void setPassword(String password) {
-        regData.put(RegFields.PASSWORD, password);
+        regData.put(SignUpFields.PASSWORD, password);
     }
 
     public String getPasswordRepeat() {
-        return regData.get(RegFields.PASSWORD_REPEAT);
+        return regData.get(SignUpFields.PASSWORD_REPEAT);
     }
 
     public void setPasswordRepeat(String passwordRepeat) {
-        regData.put(RegFields.PASSWORD_REPEAT, passwordRepeat);
+        regData.put(SignUpFields.PASSWORD_REPEAT, passwordRepeat);
     }
 
     public String getEmail() {
-        return regData.get(RegFields.EMAIL);
+        return regData.get(SignUpFields.EMAIL);
     }
 
     public void setEmail(String email) {
-        regData.put(RegFields.EMAIL, email);
+        regData.put(SignUpFields.EMAIL, email);
     }
 
     public String getPhone() {
-        return regData.get(RegFields.PHONE);
+        return regData.get(SignUpFields.PHONE);
     }
 
     public void setPhone(String phone) {
-        regData.put(RegFields.PHONE, phone);
+        regData.put(SignUpFields.PHONE, phone);
     }
 
     public String getComment() {
-        return regData.get(RegFields.COMMENT);
+        return regData.get(SignUpFields.COMMENT);
     }
 
     public void setComment(String comment) {
-        regData.put(RegFields.COMMENT, comment);
+        regData.put(SignUpFields.COMMENT, comment);
     }
 
 
