@@ -13,26 +13,26 @@ public class User extends AbstractEntity implements Cloneable, Serializable {
     private UserStateType state;
     private String email;
     private String phone;
-    private LocalDate registrationDate;
+    private LocalDate regDate;
 
 
-    public User(String login, UserRoleType role, UserStateType state, String email, String phone, LocalDate registrationDate) {
+    public User(String login, UserRoleType role, UserStateType state, String email, String phone, LocalDate regDate) {
         this.login = login;
         this.role = role;
         this.state = state;
         this.email = email;
         this.phone = phone;
-        this.registrationDate = registrationDate;
+        this.regDate = regDate;
     }
 
-    public User(long userId, String login, UserRoleType role, UserStateType state, String email, String phone, LocalDate registrationDate) {
+    public User(long userId, String login, UserRoleType role, UserStateType state, String email, String phone, LocalDate regDate) {
         this.userId = userId;
         this.login = login;
         this.role = role;
         this.state = state;
         this.email = email;
         this.phone = phone;
-        this.registrationDate = registrationDate;
+        this.regDate = regDate;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class User extends AbstractEntity implements Cloneable, Serializable {
                 + ", state: " + state
                 + ", email: " + email
                 + ", phone: " + phone
-                + ", regdate: " + registrationDate;
+                + ", regdate: " + regDate;
     }
 
     public long getUserId() {
@@ -70,8 +70,8 @@ public class User extends AbstractEntity implements Cloneable, Serializable {
         return phone;
     }
 
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
+    public LocalDate getRegDate() {
+        return regDate;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class User extends AbstractEntity implements Cloneable, Serializable {
         if (state != user.state) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
-        return registrationDate != null ? registrationDate.equals(user.registrationDate) : user.registrationDate == null;
+        return regDate != null ? regDate.equals(user.regDate) : user.regDate == null;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class User extends AbstractEntity implements Cloneable, Serializable {
         result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
-        result = 31 * result + (registrationDate != null ? registrationDate.hashCode() : 0);
+        result = 31 * result + (regDate != null ? regDate.hashCode() : 0);
         return result;
     }
 }
