@@ -15,14 +15,26 @@ public final class Router {
     private final RouterType routerType;
 
     /**
+     * // todo: description
      *
      * @param pagePath path to page
      * @param routerType forward or redirect
      */
     public Router(String pagePath, RouterType routerType) {
-        logger.debug("pagePath: {}, routerType: {}", pagePath, routerType);
         this.pagePath = pagePath;
         this.routerType = routerType;
+        logger.debug("pagePath: {}, routerType: {}", pagePath, routerType);
+    }
+
+    /**
+     * in this constructor Forward is predefined type
+     *
+     * @param pagePath path to page
+     */
+    public Router(String pagePath) {
+        this.pagePath = pagePath;
+        this.routerType = RouterType.FORWARD;
+        logger.debug("pagePath: {}, routerType: {}", pagePath, routerType);
     }
 
     public String getPagePath() {
