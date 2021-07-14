@@ -11,36 +11,18 @@ public final class Router {
     }
 
     private static final Logger logger = LogManager.getLogger();
-    private static String lastPagePath;
-    private static RouterType lastRouterType;
     private final String pagePath;
     private final RouterType routerType;
 
     /**
-     * // todo: description
      *
      * @param pagePath path to page
      * @param routerType forward or redirect
      */
     public Router(String pagePath, RouterType routerType) {
+        logger.debug("pagePath: {}, routerType: {}", pagePath, routerType);
         this.pagePath = pagePath;
-        lastPagePath = pagePath;
         this.routerType = routerType;
-        lastRouterType = routerType;
-        logger.debug("pagePath: {}, routerType: {}", pagePath, routerType);
-    }
-
-    /**
-     * in this constructor Forward is predefined type
-     *
-     * @param pagePath path to page
-     */
-    public Router(String pagePath) {
-        this.pagePath = pagePath;
-        lastPagePath = pagePath;
-        this.routerType = RouterType.FORWARD;
-        lastRouterType = routerType;
-        logger.debug("pagePath: {}, routerType: {}", pagePath, routerType);
     }
 
     public String getPagePath() {
@@ -49,13 +31,5 @@ public final class Router {
 
     public RouterType getRouterType() {
         return routerType;
-    }
-
-    public static Router getLastRoute(){
-        if (lastPagePath != null && lastRouterType != null) {
-            return new Router(lastPagePath, lastRouterType);
-        } else {
-            return new Router(PagePath.INDEX_PAGE, RouterType.FORWARD);
-        }
     }
 }
