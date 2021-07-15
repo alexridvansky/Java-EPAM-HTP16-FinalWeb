@@ -1,6 +1,6 @@
 package by.spetr.web.model.service;
 
-import by.spetr.web.model.entity.SignUpData;
+import by.spetr.web.model.entity.RegistrationFormData;
 import by.spetr.web.model.entity.User;
 import by.spetr.web.model.exception.ServiceException;
 
@@ -15,11 +15,11 @@ public interface UserService {
     /**
      * is used to interact with UsedDao layer and create new {@code User}
      *
-     * @param signUpData - class containing registration form parameters
+     * @param registrationFormData - class containing registration form parameters
      * @return - {@code true} if registration parameters were valid and new user been created
      * @throws ServiceException if no data been received from DAO layer or in case when data can't be validated
      */
-    public boolean registerUser(SignUpData signUpData) throws ServiceException;
+    public boolean registerUser(RegistrationFormData registrationFormData) throws ServiceException;
 
     /**
      * is used to check whether username is already taken
