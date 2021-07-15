@@ -17,6 +17,16 @@ public final class Router {
     /**
      *
      * @param pagePath path to page
+     */
+    public Router(String pagePath) {
+        logger.debug("pagePath: {}, routerType: {}", pagePath, RouterType.FORWARD);
+        this.pagePath = pagePath;
+        this.routerType = RouterType.FORWARD;
+    }
+
+    /**
+     *
+     * @param pagePath path to page
      * @param routerType forward or redirect
      */
     public Router(String pagePath, RouterType routerType) {
