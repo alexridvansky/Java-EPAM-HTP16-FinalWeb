@@ -1,6 +1,8 @@
 package by.spetr.web.command;
 
-import by.spetr.web.command.list.*;
+import by.spetr.web.command.impl.*;
+import by.spetr.web.command.redirect.GoToSignUpPageCommand;
+import by.spetr.web.command.user.*;
 
 import java.util.EnumMap;
 
@@ -11,10 +13,11 @@ public class CommandProvider {
     public CommandProvider() {
         commands.put(CommandType.DEFAULT, new DefaultCommand());
         commands.put(CommandType.GO_TO_SIGN_UP_PAGE, new GoToSignUpPageCommand());
-        commands.put(CommandType.PRINT_OUT_ALL_USERS, new PrintOutAllUsersCommand());
-        commands.put(CommandType.GO_TO_SIGN_IN_RESULT_PAGE, new GoToSignInResultPageCommand());
-        commands.put(CommandType.GO_TO_LOGIN_ERROR_PAGE, new GoToLoginErrorPageCommand());
-        commands.put(CommandType.GO_TO_SIGN_UP_RESULT_PAGE, new GoToSignUpResultPageCommand());
+        commands.put(CommandType.PRINT_ALL_USERS, new PrintAllUsersCommand());
+        commands.put(CommandType.CREATE_USER_COMMAND, new CreateUserCommand());
+        commands.put(CommandType.SIGN_IN_COMMAND, new SignInCommand());
+        commands.put(CommandType.LOG_OUT_COMMAND, new LogOutCommand());
+        commands.put(CommandType.CHANGE_LOCALE, new ChangeLocaleCommand());
     }
 
     public static CommandProvider getInstance() {
