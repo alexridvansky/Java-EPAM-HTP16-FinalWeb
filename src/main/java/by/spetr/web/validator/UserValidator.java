@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class UserValidator {
     private static final Logger logger = LogManager.getLogger();
     private static final String REGEXP_USERNAME = "regexp.username";
-    private static final String REGEXP_PASSWORD = "regexp.password2";
+    private static final String REGEXP_PASSWORD = "regexp.password";
     private static final String REGEXP_EMAIL = "regexp.email";
     private static final String REGEXP_PHONE = "regexp.phone";
 
