@@ -1,7 +1,7 @@
 package by.spetr.web.model.entity.type;
 
 public enum UserStateType {
-    CONFIRMATION(1),
+    CONFIRM(1),
     ENABLED(2),
     BANNED(3),
     DISABLED(4);
