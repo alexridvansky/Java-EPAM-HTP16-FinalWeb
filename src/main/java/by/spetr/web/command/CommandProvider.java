@@ -1,6 +1,6 @@
 package by.spetr.web.command;
 
-import by.spetr.web.command.impl.*;
+import by.spetr.web.command.redirect.DefaultCommand;
 import by.spetr.web.command.redirect.GoToSignUpPageCommand;
 import by.spetr.web.command.user.*;
 
@@ -18,6 +18,8 @@ public class CommandProvider {
         commands.put(CommandType.SIGN_IN_COMMAND, new SignInCommand());
         commands.put(CommandType.LOG_OUT_COMMAND, new LogOutCommand());
         commands.put(CommandType.CHANGE_LOCALE, new ChangeLocaleCommand());
+        commands.put(CommandType.CHANGE_USER_STATE, new ChangeUserState());
+        commands.put(CommandType.CHANGE_USER_ROLE, new ChangeUserRole());
     }
 
     public static CommandProvider getInstance() {
