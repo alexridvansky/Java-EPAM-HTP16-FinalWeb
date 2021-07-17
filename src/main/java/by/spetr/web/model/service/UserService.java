@@ -2,6 +2,8 @@ package by.spetr.web.model.service;
 
 import by.spetr.web.model.entity.RegistrationFormData;
 import by.spetr.web.model.entity.User;
+import by.spetr.web.model.entity.type.UserRoleType;
+import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.ServiceException;
 
 import java.util.List;
@@ -65,4 +67,24 @@ public interface UserService {
      * @throws ServiceException if no data been received from DAO layer
      */
     List<User> getUserList() throws ServiceException;
+
+    /**
+     * is used for updating user status by username
+     *
+     * @param userName username or login
+     * @param userState new user state to be changed to
+     * @return true if status been changed successfully
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    boolean updateUserState(String userName, UserStateType userState) throws ServiceException;
+
+    /**
+     * is used for updating user status by username
+     *
+     * @param userName username or login
+     * @param userRole new user role to be changed to
+     * @return true if status been changed successfully
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    boolean updateUserRole(String userName, UserRoleType userRole) throws ServiceException;
 }
