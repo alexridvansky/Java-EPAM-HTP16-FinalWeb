@@ -23,7 +23,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             = "SELECT user_id, role, state, login, email, phone, registration_date " +
             "FROM user " +
             "INNER JOIN user_role ON role_id = user_role_id " +
-            "INNER JOIN user_state ON state_id = user_state_id;";
+            "INNER JOIN user_state ON state_id = user_state_id " +
+            "ORDER BY user_id;";
     private static final String SQL_SELECT_USER_BY_ID
             = "SELECT user_id, role, state, login, email, phone, registration_date " +
             "FROM user " +
@@ -80,6 +81,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
                 User user = extractUserFromResultSet(resultSet);
                 users.add(user);
             }
+
+            users.forEach(logger::debug);
 
             return users;
 
