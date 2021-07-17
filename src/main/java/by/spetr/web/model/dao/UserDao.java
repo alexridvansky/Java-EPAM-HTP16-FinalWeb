@@ -1,6 +1,8 @@
 package by.spetr.web.model.dao;
 
 import by.spetr.web.model.entity.User;
+import by.spetr.web.model.entity.type.UserRoleType;
+import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.DaoException;
 
 import java.util.List;
@@ -16,7 +18,7 @@ public interface UserDao {
      * @return {@code List<User>}
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    List<User> getListOfUsers() throws DaoException;
+    List<User> findAll() throws DaoException;
 
     /**
      * Returns {@code Optional<User>} if such was found by userId given.
@@ -64,7 +66,53 @@ public interface UserDao {
      */
     Optional<User> logIn(String login, String passHash) throws DaoException;
 
-    boolean create(User entity);
+    /**
+     * is used to create a new user with user.Role = user and user.State = confirmation.
+     *
+     * @param entity {@code User} class
+     * @return true if user has been created successfully
+     */
+    boolean create(User entity, String pass) throws DaoException;
+
+    /**
+     * is used for changing status of given user
+     *
+     * @param userId userId
+     * @param userState new {@code UserState.Type}
+     * @return true if user status has been changed successfully
+     * @throws DaoException if error occurred on DAO layer
+     */
+    boolean changeState(long userId, UserStateType userState) throws DaoException;
+
+    /**
+     * is used for changing status of given user
+     *
+     * @param userName {@code User} name
+     * @param userState new {@code UserState.Type}
+     * @return true if user status has been changed successfully
+     * @throws DaoException if error occurred on DAO layer
+     */
+    boolean changeState(String userName, UserStateType userState) throws DaoException;
+
+    /**
+     * is used for changing status of given user
+     *
+     * @param userId userId
+     * @param userRole new {@code UserState.Type}
+     * @return true if user status has been changed successfully
+     * @throws DaoException if error occurred on DAO layer
+     */
+    boolean changeRole(long userId, UserRoleType userRole) throws DaoException;
+
+    /**
+     * is used for changing status of given user
+     *
+     * @param userName {@code User} name
+     * @param userRole new {@code UserState.Type}
+     * @return true if user status has been changed successfully
+     * @throws DaoException if error occurred on DAO layer
+     */
+    boolean changeRole(String userName, UserRoleType userRole) throws DaoException;
 
     boolean delete(User entity);
 
