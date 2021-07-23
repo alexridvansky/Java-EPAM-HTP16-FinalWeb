@@ -21,7 +21,7 @@ public class CreateUserCommand implements Command {
         UserService userService = DefaultUserService.getInstance();
 
         RegistrationFormData registrationFormData = new RegistrationFormData(
-                request.getParameter(USERNAME_PARAM),
+                request.getParameter(USER_NAME_PARAM),
                 request.getParameter(PASSWORD_PARAM),
                 request.getParameter(PASSWORD_AGAIN_PARAM),
                 request.getParameter(EMAIL_PARAM),
