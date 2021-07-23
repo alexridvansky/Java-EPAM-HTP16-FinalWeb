@@ -4,6 +4,7 @@ import by.spetr.web.model.exception.ConnectionPoolException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Timer;
@@ -91,7 +92,7 @@ public class ConnectionPool {
             onServicePause();
         }
 
-        if (connection.getClass() != Connection.class) {
+        if (connection.getClass() != ProxyConnection.class) {
             logger.error("Wild connection been returned");
             return false;
         }
@@ -132,7 +133,7 @@ public class ConnectionPool {
     boolean addNewConnection() {
         logger.info("Adding new connection method been called");
 
-        java.sql.Connection connection = null;
+        Connection connection = null;
         try {
             connection = ConnectionCreator.createConnection();
         } catch (SQLException e) {
@@ -140,7 +141,7 @@ public class ConnectionPool {
             throw new RuntimeException("Connection can't be created", e);
         }
 
-        Connection proxyConnection = new Connection(connection);
+        ProxyConnection proxyConnection = new ProxyConnection(connection);
 
         try {
             freeConnectionPool.put(proxyConnection);
@@ -203,8 +204,8 @@ public class ConnectionPool {
         int actualPoolSize = getActualPoolSize();
         try {
             for (int i = 1; i <= actualPoolSize; i++) {
-                Connection connection = freeConnectionPool.take();
-                connection.reallyClose();
+                ProxyConnection proxyConnection = (ProxyConnection) freeConnectionPool.take();
+                proxyConnection.reallyClose();
                 logger.debug("{}/{} connections closed", i, actualPoolSize);
             }
         } catch (InterruptedException e) {
