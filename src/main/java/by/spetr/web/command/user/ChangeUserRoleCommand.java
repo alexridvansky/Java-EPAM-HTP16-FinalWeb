@@ -2,9 +2,7 @@ package by.spetr.web.command.user;
 
 import by.spetr.web.command.Command;
 import by.spetr.web.command.PagePath;
-import by.spetr.web.command.RequestParameter;
 import by.spetr.web.command.Router;
-import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.DefaultUserService;
@@ -12,8 +10,6 @@ import by.spetr.web.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
 
 import static by.spetr.web.command.RequestParameter.*;
 
