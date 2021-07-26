@@ -8,14 +8,15 @@ import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.DefaultUserService;
 import by.spetr.web.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static by.spetr.web.command.PagePath.UNSUPPORTED_COMMAND;
-import static by.spetr.web.command.RequestParameter.AUTHENTICATION_ERROR;
-import static by.spetr.web.command.RequestParameter.USER_PARAM;
+import static by.spetr.web.command.RequestParameter.*;
 
 public class SignInCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -25,6 +26,8 @@ public class SignInCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute(USER_PARAM);
+        String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
+
         if (user != null) {
             logger.error("Attempt to authenticate from already authenticated user");
             return new Router(UNSUPPORTED_COMMAND, Router.RouterType.REDIRECT);
@@ -42,7 +45,7 @@ public class SignInCommand implements Command {
                 request.setAttribute(AUTHENTICATION_ERROR, LOGIN_ERROR_MESSAGE);
             }
 
-            return new Router(PagePath.INDEX_PAGE);
+            return new Router(Objects.requireNonNullElse(lastPage, PagePath.INDEX_PAGE));
 
         } catch (ServiceException e) {
             e.printStackTrace(); // todo: exc
