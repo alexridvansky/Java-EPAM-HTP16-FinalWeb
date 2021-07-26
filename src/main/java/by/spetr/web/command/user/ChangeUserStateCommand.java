@@ -11,10 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static by.spetr.web.command.RequestParameter.USER_STATE_PARAM;
-import static by.spetr.web.command.RequestParameter.USER_NAME_PARAM;
+import static by.spetr.web.command.RequestParameter.*;
 
-public class ChangeUserState implements Command {
+public class ChangeUserStateCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     private static final UserService userService = DefaultUserService.getInstance();
 
@@ -28,14 +27,15 @@ public class ChangeUserState implements Command {
         try {
             userService.updateUserState(userName, UserStateType.valueOf(userState));
             logger.debug("'{}' - '{}'", userName, userState);
+            String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
+
+            return new Router(lastPage, Router.RouterType.FORWARD);
+
         } catch (ServiceException e) {
             logger.error("state for the '{}' not changed", userName);
             // todo: goto error page? show message ?
+
+            return new Router(PagePath.ERROR_PAGE, Router.RouterType.REDIRECT);
         }
-
-        Command command = new PrintAllUsersCommand();
-        command.execute(request);
-
-        return new Router(PagePath.PRINT_ALL_USERS, Router.RouterType.FORWARD);
     }
 }
