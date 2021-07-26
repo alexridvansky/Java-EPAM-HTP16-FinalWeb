@@ -4,7 +4,10 @@ import by.spetr.web.command.redirect.DefaultCommand;
 import by.spetr.web.command.redirect.GoToMainPageCommand;
 import by.spetr.web.command.redirect.GoToSignUpPageCommand;
 import by.spetr.web.command.user.*;
-import by.spetr.web.command.vehicle.ShowVehicleInfo;
+import by.spetr.web.command.vehicle.ShowVehicleAdsCommand;
+import by.spetr.web.command.vehicle.ShowVehicleInfoCommand;
+import by.spetr.web.command.vehicle.UpdateVehicleAdsCommand;
+import by.spetr.web.command.vehicle.UploadVehiclePhotoCommand;
 
 import java.util.EnumMap;
 
@@ -17,16 +20,18 @@ public class CommandProvider {
         commands.put(CommandType.GO_TO_SIGN_UP_PAGE, new GoToSignUpPageCommand());
         commands.put(CommandType.GO_TO_MAIN_PAGE, new GoToMainPageCommand());
         commands.put(CommandType.SHOW_USER_LIST, new ShowUserListCommand());
-        commands.put(CommandType.SHOW_VEHICLE_INFO, new ShowVehicleInfo());
+        commands.put(CommandType.SHOW_VEHICLE_INFO, new ShowVehicleInfoCommand());
         commands.put(CommandType.SHOW_VEHICLE_LIST, new ShowVehicleListCommand());
-        commands.put(CommandType.SHOW_VEHICLE_ADS, new ShowVehicleAds());
-        commands.put(CommandType.CREATE_USER_COMMAND, new CreateUserCommand());
-        commands.put(CommandType.SIGN_IN_COMMAND, new SignInCommand());
-        commands.put(CommandType.LOG_OUT_COMMAND, new LogOutCommand());
+        commands.put(CommandType.SHOW_VEHICLE_ADS, new ShowVehicleAdsCommand());
+        commands.put(CommandType.UPDATE_VEHICLE_ADS, new UpdateVehicleAdsCommand());
+        commands.put(CommandType.UPLOAD_VEHICLE_PHOTO, new UploadVehiclePhotoCommand());
+        commands.put(CommandType.CREATE_USER, new CreateUserCommand());
+        commands.put(CommandType.SIGN_IN, new SignInCommand());
+        commands.put(CommandType.LOG_OUT, new LogOutCommand());
         commands.put(CommandType.CHANGE_LOCALE, new ChangeLocaleCommand());
-        commands.put(CommandType.CHANGE_USER_STATE, new ChangeUserState());
-        commands.put(CommandType.CHANGE_USER_ROLE, new ChangeUserRole());
-        commands.put(CommandType.CHANGE_VEHICLE_STATE, new ChangeVehicleState());
+        commands.put(CommandType.CHANGE_USER_STATE, new ChangeUserStateCommand());
+        commands.put(CommandType.CHANGE_USER_ROLE, new ChangeUserRoleCommand());
+        commands.put(CommandType.CHANGE_VEHICLE_STATE, new ChangeVehicleStateCommand());
     }
 
     public static CommandProvider getInstance() {
