@@ -15,6 +15,7 @@ import java.io.IOException;
 /**
  * class {@code Controller} is used for processing requests matching '*.do' pattern
  */
+
 @WebServlet(name = "controller", urlPatterns = {"/controller", "*.do"})
 public class Controller extends HttpServlet {
     private static final Logger logger = LogManager.getLogger();
@@ -24,8 +25,8 @@ public class Controller extends HttpServlet {
      *
      * @param request - {@code HttpServletRequest} request
      * @param response - {@code HttpServletResponse} response
-     * @throws ServletException
-     * @throws IOException
+     * @throws ServletException – if the target resource throws this exception
+     * @throws IOException – if the target resource throws this exception
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,8 +39,8 @@ public class Controller extends HttpServlet {
      *
      * @param request - {@code HttpServletRequest} request
      * @param response - {@code HttpServletResponse} response
-     * @throws ServletException
-     * @throws IOException
+     * @throws ServletException – if the target resource throws this exception
+     * @throws IOException – if the target resource throws this exception
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,7 +56,7 @@ public class Controller extends HttpServlet {
      * @throws ServletException – if the target resource throws this exception
      * @throws IOException – if the target resource throws this exception
      */
-    private <Users> void processRequest(HttpServletRequest request, HttpServletResponse response)
+    private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         logger.debug("New request (Url: {})",
                 request.getRequestURL() + (request.getQueryString() != null
@@ -74,7 +75,7 @@ public class Controller extends HttpServlet {
             dispatcher.forward(request, response);
         } else {
             logger.error("Incorrect router type: {}", router.getRouterType());
-            response.sendRedirect(PagePathConstant.ERROR_PAGE);
+            response.sendRedirect(PagePath.ERROR_PAGE);
             // todo: ASK! in case if router is any other type to throw some servletException OR redirect to error_page?
         }
     }
