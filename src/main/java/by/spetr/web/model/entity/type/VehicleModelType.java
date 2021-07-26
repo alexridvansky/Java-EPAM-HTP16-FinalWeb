@@ -1,8 +1,9 @@
 package by.spetr.web.model.entity.type;
 
 public enum VehicleModelType {
-    SERIES1(1,VehicleMakeType.BMW.getMakeId()),
-    SERIES2(2,VehicleMakeType.BMW.getMakeId());
+    A1(1, VehicleMakeType.AUDI.getMakeId()),
+    SERIES1(2,VehicleMakeType.BMW.getMakeId()),
+    SERIES2(3,VehicleMakeType.BMW.getMakeId());
 
     private final int modelId;
     private final int makeId;
