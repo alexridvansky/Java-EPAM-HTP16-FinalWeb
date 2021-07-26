@@ -1,22 +1,242 @@
 package by.spetr.web.model.entity;
 
+import by.spetr.web.model.entity.type.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringJoiner;
 
-public class Vehicle extends AbstractEntity implements Cloneable, Serializable {
+public class Vehicle extends AbstractEntity implements Serializable {
     private long id;
-    private byte adState;
-    private long ownerId;
-    private long modelId;
+    private VehicleStateType state;
+    private String owner;
+    private String make;
+    private String model;
     private Year modelYear;
     private BigDecimal price;
-    private byte powertrainId;
-    private byte transmissionId;
-    private byte driveId;
+    private VehiclePowertrainType powertrain;
+    private VehicleTransmissionType transmission;
+    private VehicleDriveType drive;
     private int displacement;
     private int power;
+    private Set<Integer> optionSet = new HashSet<>();
     private LocalDate dateCreated;
 
+    public Vehicle() {
+    }
+
+    public Vehicle(VehicleStateType state, String owner, String make, String model,
+                   Year modelYear, BigDecimal price, VehiclePowertrainType powertrain,
+                   VehicleTransmissionType transmission, VehicleDriveType drive, int displacement, int power,
+                   LocalDate dateCreated) {
+        this.state = state;
+        this.owner = owner;
+        this.make = make;
+        this.model = model;
+        this.modelYear = modelYear;
+        this.price = price;
+        this.powertrain = powertrain;
+        this.transmission = transmission;
+        this.drive = drive;
+        this.displacement = displacement;
+        this.power = power;
+        this.dateCreated = dateCreated;
+    }
+
+    public Vehicle(long id, VehicleStateType state, String owner, String make, String model,
+                   Year modelYear, BigDecimal price, VehiclePowertrainType powertrain,
+                   VehicleTransmissionType transmission, VehicleDriveType drive, int displacement, int power,
+                   LocalDate dateCreated) {
+        this.id = id;
+        this.state = state;
+        this.owner = owner;
+        this.make = make;
+        this.model = model;
+        this.modelYear = modelYear;
+        this.price = price;
+        this.powertrain = powertrain;
+        this.transmission = transmission;
+        this.drive = drive;
+        this.displacement = displacement;
+        this.power = power;
+        this.dateCreated = dateCreated;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public VehicleStateType getState() {
+        return state;
+    }
+
+    public void setState(VehicleStateType state) {
+        this.state = state;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getMake() {
+        return make;
+    }
+
+    public void setMake(String make) {
+        this.make = make;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public Year getModelYear() {
+        return modelYear;
+    }
+
+    public void setModelYear(Year modelYear) {
+        this.modelYear = modelYear;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public VehiclePowertrainType getPowertrain() {
+        return powertrain;
+    }
+
+    public void setPowertrain(VehiclePowertrainType powertrain) {
+        this.powertrain = powertrain;
+    }
+
+    public VehicleTransmissionType getTransmission() {
+        return transmission;
+    }
+
+    public void setTransmission(VehicleTransmissionType transmission) {
+        this.transmission = transmission;
+    }
+
+    public VehicleDriveType getDrive() {
+        return drive;
+    }
+
+    public void setDrive(VehicleDriveType drive) {
+        this.drive = drive;
+    }
+
+    public int getDisplacement() {
+        return displacement;
+    }
+
+    public void setDisplacement(int displacement) {
+        this.displacement = displacement;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
+    }
+
+    public Set<Integer> getOptionSet() {
+        return optionSet;
+    }
+
+    public void setOptionSet(Set<Integer> optionSet) {
+        this.optionSet = optionSet;
+    }
+
+    public LocalDate getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDate dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vehicle)) return false;
+
+        Vehicle vehicle = (Vehicle) o;
+
+        if (id != vehicle.id) return false;
+        if (displacement != vehicle.displacement) return false;
+        if (power != vehicle.power) return false;
+        if (state != vehicle.state) return false;
+        if (owner != null ? !owner.equals(vehicle.owner) : vehicle.owner != null) return false;
+        if (make != null ? !make.equals(vehicle.make) : vehicle.make != null) return false;
+        if (model != null ? !model.equals(vehicle.model) : vehicle.model != null) return false;
+        if (modelYear != null ? !modelYear.equals(vehicle.modelYear) : vehicle.modelYear != null) return false;
+        if (price != null ? !price.equals(vehicle.price) : vehicle.price != null) return false;
+        if (powertrain != vehicle.powertrain) return false;
+        if (transmission != vehicle.transmission) return false;
+        if (drive != vehicle.drive) return false;
+        if (optionSet != null ? !optionSet.equals(vehicle.optionSet) : vehicle.optionSet != null) return false;
+        return dateCreated != null ? dateCreated.equals(vehicle.dateCreated) : vehicle.dateCreated == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        result = 31 * result + (make != null ? make.hashCode() : 0);
+        result = 31 * result + (model != null ? model.hashCode() : 0);
+        result = 31 * result + (modelYear != null ? modelYear.hashCode() : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (powertrain != null ? powertrain.hashCode() : 0);
+        result = 31 * result + (transmission != null ? transmission.hashCode() : 0);
+        result = 31 * result + (drive != null ? drive.hashCode() : 0);
+        result = 31 * result + displacement;
+        result = 31 * result + power;
+        result = 31 * result + (optionSet != null ? optionSet.hashCode() : 0);
+        result = 31 * result + (dateCreated != null ? dateCreated.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Vehicle.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("state=" + state)
+                .add("owner='" + owner + "'")
+                .add("make='" + make + "'")
+                .add("model='" + model + "'")
+                .add("modelYear=" + modelYear)
+                .add("price=" + price)
+                .add("powertrain=" + powertrain)
+                .add("transmission=" + transmission)
+                .add("drive=" + drive)
+                .add("displacement=" + displacement)
+                .add("power=" + power)
+                .add("optionSet=" + optionSet)
+                .add("dateCreated=" + dateCreated)
+                .toString();
+    }
 }
