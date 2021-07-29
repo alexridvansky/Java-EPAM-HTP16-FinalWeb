@@ -2,7 +2,7 @@ package by.spetr.web.model.service;
 
 import by.spetr.web.model.dao.DefaultUserDao;
 import by.spetr.web.model.dao.UserDao;
-import by.spetr.web.model.entity.RegistrationFormData;
+import by.spetr.web.model.dto.RegistrationFormDto;
 import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.entity.type.UserStateType;
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static by.spetr.web.model.service.UserServiceMessage.*;
+import static by.spetr.web.model.service.ServiceMessageList.*;
 
 public class DefaultUserService implements UserService {
     private static final Logger logger = LogManager.getLogger();
@@ -33,71 +33,74 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public boolean registerUser(RegistrationFormData registrationFormData) throws ServiceException {
+    public boolean registerUser(RegistrationFormDto registrationFormDto) throws ServiceException {
         boolean dataValidity = true;
 
-        if (!UserValidator.validateUsername(registrationFormData.getLogin())) {
-            registrationFormData.setLogin("");
-            registrationFormData.appendComment(USERNAME_INVALID);
+        if (!UserValidator.validateUsername(registrationFormDto.getLogin())) {
+            registrationFormDto.setLogin("");
+            registrationFormDto.appendComment(USERNAME_INVALID);
             dataValidity = false;
-        } else if (!isUsernameFree(registrationFormData.getLogin())) {
-            registrationFormData.setLogin("");
-            registrationFormData.appendComment(USERNAME_TAKEN);
-            dataValidity = false;
-        }
-        if (!registrationFormData.getPassword().equals(registrationFormData.getPasswordRepeat())) {
-            registrationFormData.setPassword("");
-            registrationFormData.setPasswordRepeat("");
-            registrationFormData.appendComment(PASSWORDS_DIFFERENT);
-            dataValidity = false;
-        } else if (!UserValidator.validatePassword(registrationFormData.getPassword())) {
-            registrationFormData.setPassword("");
-            registrationFormData.setPasswordRepeat("");
-            registrationFormData.appendComment(PASSWORD_INVALID);
+        } else if (!isUsernameFree(registrationFormDto.getLogin())) {
+            registrationFormDto.setLogin("");
+            registrationFormDto.appendComment(USERNAME_TAKEN);
             dataValidity = false;
         }
-        if (!UserValidator.validateEmail(registrationFormData.getEmail())) {
-            registrationFormData.setEmail("");
-            registrationFormData.appendComment(EMAIL_INVALID);
+
+        if (!registrationFormDto.getPassword().equals(registrationFormDto.getPasswordRepeat())) {
+            registrationFormDto.setPassword("");
+            registrationFormDto.setPasswordRepeat("");
+            registrationFormDto.appendComment(PASSWORDS_DIFFERENT);
             dataValidity = false;
-        } else if (!isEmailFree(registrationFormData.getEmail())) {
-            registrationFormData.setEmail("");
-            registrationFormData.appendComment(EMAIL_TAKEN);
-            dataValidity = false;
-        }
-        if (!UserValidator.validatePhoneNumber(registrationFormData.getPhone())) {
-            registrationFormData.setPhone("");
-            registrationFormData.appendComment(PHONE_INVALID);
-            dataValidity = false;
-        } else if (!isPhoneFree(registrationFormData.getPhone())) {
-            registrationFormData.setPhone("");
-            registrationFormData.appendComment(PHONE_TAKEN);
+        } else if (!UserValidator.validatePassword(registrationFormDto.getPassword())) {
+            registrationFormDto.setPassword("");
+            registrationFormDto.setPasswordRepeat("");
+            registrationFormDto.appendComment(PASSWORD_INVALID);
             dataValidity = false;
         }
+
+        if (!UserValidator.validateEmail(registrationFormDto.getEmail())) {
+            registrationFormDto.setEmail("");
+            registrationFormDto.appendComment(EMAIL_INVALID);
+            dataValidity = false;
+        } else if (!isEmailFree(registrationFormDto.getEmail())) {
+            registrationFormDto.setEmail("");
+            registrationFormDto.appendComment(EMAIL_TAKEN);
+            dataValidity = false;
+        }
+
+        if (!UserValidator.validatePhoneNumber(registrationFormDto.getPhone())) {
+            registrationFormDto.setPhone("");
+            registrationFormDto.appendComment(PHONE_INVALID);
+            dataValidity = false;
+        } else if (!isPhoneFree(registrationFormDto.getPhone())) {
+            registrationFormDto.setPhone("");
+            registrationFormDto.appendComment(PHONE_TAKEN);
+            dataValidity = false;
+        }
+
         if (dataValidity) {
             User user = new User(
-                    registrationFormData.getLogin(),
+                    registrationFormDto.getLogin(),
                     UserRoleType.USER,
                     UserStateType.CONFIRM,
-                    registrationFormData.getEmail(),
-                    registrationFormData.getPhone(),
+                    registrationFormDto.getEmail(),
+                    registrationFormDto.getPhone(),
                     LocalDate.now()
             );
 
-            // generating hash
-            String passHash = BCrypt.hashpw(registrationFormData.getPassword(), BCrypt.gensalt());
-            // todo: clear passwords in regDataForm
+            String passHash = BCrypt.hashpw(registrationFormDto.getPassword(), BCrypt.gensalt());
+            // todo: plain passwords in regDataForm
 
             try {
-                return userDao.create(user, registrationFormData.getPassword());
+                return userDao.create(user, passHash);
             } catch (DaoException e) {
                 logger.error(DAO_ERROR, e);
                 throw new ServiceException(DAO_ERROR, e);
             } finally {
                 // either afterward creating new user or in case when user is not going to be created, passwords fields
                 // are to be cleared unconditionally in order to prevent sending them back to the registration form
-                registrationFormData.setPassword("");
-                registrationFormData.setPasswordRepeat("");
+                registrationFormDto.setPassword("");
+                registrationFormDto.setPasswordRepeat("");
             }
         } else {
             return false;
@@ -138,9 +141,20 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public Optional<User> logIn(String login, String passwordHash) throws ServiceException {
+    public Optional<User> logIn(String login, String password) throws ServiceException {
         try {
-            return userDao.logIn(login, passwordHash);
+            Optional<String> optionalPassword = userDao.findUserPassword(login);
+            logger.debug("optionalPassword {}", optionalPassword);
+            Optional<User> optionalUser = Optional.empty();
+
+            logger.debug("check: {}", BCrypt.checkpw(password,optionalPassword.get()));
+
+            if (optionalPassword.isPresent() && BCrypt.checkpw(password,optionalPassword.get())) {
+                logger.debug("user {} logged in", login);
+                optionalUser = userDao.findUserByLogin(login);
+            }
+
+            return optionalUser;
         } catch (DaoException e) {
             logger.error(DAO_ERROR, e);
             throw new ServiceException(DAO_ERROR, e);
@@ -165,7 +179,7 @@ public class DefaultUserService implements UserService {
                 logger.error(errorMsg);
                 throw new ServiceException(errorMsg.toString());
             }
-            return userDao.changeState(userName, userState);
+            return userDao.updateState(userName, userState);
         } catch (DaoException e) {
             logger.error(DAO_ERROR, e);
             throw new ServiceException(DAO_ERROR, e);
@@ -180,7 +194,7 @@ public class DefaultUserService implements UserService {
                 logger.error(errorMsg);
                 throw new ServiceException(errorMsg.toString());
             }
-            return userDao.changeRole(userName, userRole);
+            return userDao.updateRole(userName, userRole);
         } catch (DaoException e) {
             logger.error(DAO_ERROR, e);
             throw new ServiceException(DAO_ERROR, e);

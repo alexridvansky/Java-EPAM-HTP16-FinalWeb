@@ -60,11 +60,10 @@ public interface UserDao {
      * the method is used to user authentication, matching username and password hash with stored in database.
      *
      * @param login username or login
-     * @param passHash hashed passcode
      * @return {@code Optional<User>}
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    Optional<User> logIn(String login, String passHash) throws DaoException;
+    Optional<String> findUserPassword(String login) throws DaoException;
 
     /**
      * is used to create a new user with user.Role = user and user.State = confirmation.
@@ -75,44 +74,44 @@ public interface UserDao {
     boolean create(User entity, String pass) throws DaoException;
 
     /**
-     * is used for changing status of given user
+     * is used for updating status of given user
      *
      * @param userId userId
-     * @param userState new {@code UserState.Type}
+     * @param userState new {@code UserStateType}
      * @return true if user status has been changed successfully
      * @throws DaoException if error occurred on DAO layer
      */
-    boolean changeState(long userId, UserStateType userState) throws DaoException;
+    boolean updateState(long userId, UserStateType userState) throws DaoException;
 
     /**
-     * is used for changing status of given user
+     * is used for updating status of given user
      *
      * @param userName {@code User} name
-     * @param userState new {@code UserState.Type}
+     * @param userState new {@code UserStateType}
      * @return true if user status has been changed successfully
      * @throws DaoException if error occurred on DAO layer
      */
-    boolean changeState(String userName, UserStateType userState) throws DaoException;
+    boolean updateState(String userName, UserStateType userState) throws DaoException;
 
     /**
-     * is used for changing status of given user
+     * is used for updating role of given user
      *
      * @param userId userId
-     * @param userRole new {@code UserState.Type}
+     * @param userRole new {@code UserRoleType}
      * @return true if user status has been changed successfully
      * @throws DaoException if error occurred on DAO layer
      */
-    boolean changeRole(long userId, UserRoleType userRole) throws DaoException;
+    boolean updateRole(long userId, UserRoleType userRole) throws DaoException;
 
     /**
-     * is used for changing status of given user
+     * is used for updating role of given user
      *
      * @param userName {@code User} name
-     * @param userRole new {@code UserState.Type}
+     * @param userRole new {@code UserRoleType}
      * @return true if user status has been changed successfully
      * @throws DaoException if error occurred on DAO layer
      */
-    boolean changeRole(String userName, UserRoleType userRole) throws DaoException;
+    boolean updateRole(String userName, UserRoleType userRole) throws DaoException;
 
     boolean delete(User entity);
 

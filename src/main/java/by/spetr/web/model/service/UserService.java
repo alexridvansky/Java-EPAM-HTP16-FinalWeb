@@ -1,6 +1,6 @@
 package by.spetr.web.model.service;
 
-import by.spetr.web.model.entity.RegistrationFormData;
+import by.spetr.web.model.dto.RegistrationFormDto;
 import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.entity.type.UserStateType;
@@ -17,11 +17,11 @@ public interface UserService {
     /**
      * is used to interact with UsedDao layer and create new {@code User}
      *
-     * @param registrationFormData - class containing registration form parameters
+     * @param registrationFormDto - class containing registration form parameters
      * @return - {@code true} if registration parameters were valid and new user been created
      * @throws ServiceException if no data been received from DAO layer or in case when data can't be validated
      */
-    public boolean registerUser(RegistrationFormData registrationFormData) throws ServiceException;
+    public boolean registerUser(RegistrationFormDto registrationFormDto) throws ServiceException;
 
     /**
      * is used to check whether username is already taken
@@ -54,11 +54,11 @@ public interface UserService {
      * Authenticates user by matching login with password hash
      *
      * @param login - {@code User} login
-     * @param passwordHash - {@code User} password hash
+     * @param password - {@code User} password
      * @return {@code User} if so been found matching login and password hash
      * @throws ServiceException if no data been received from DAO layer
      */
-    Optional<User> logIn(String login, String passwordHash) throws ServiceException;
+    Optional<User> logIn(String login, String password) throws ServiceException;
 
     /**
      * Returns list of all users or empty List<User> if there's no users in the database

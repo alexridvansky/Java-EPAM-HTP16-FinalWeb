@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static by.spetr.web.model.dao.ColumnName.USER_LOGIN;
+import static by.spetr.web.model.dao.ColumnName.USER_PASSHASH;
+
 public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     private static final Logger logger = LogManager.getLogger();
 
@@ -49,22 +52,20 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             "INNER JOIN user_role ON role_id = user_role_id " +
             "INNER JOIN user_state ON state_id = user_state_id " +
             "WHERE phone = ?;";
-    private static final String SQL_LOGIN_PASSWORD_MATCHER
-            = "SELECT user_id, role, state, login, pass, email, phone, registration_date " +
+    private static final String SQL_PASSWORD_FINDER
+            = "SELECT pass " +
             "FROM user " +
-            "INNER JOIN user_role ON role_id = user_role_id " +
-            "INNER JOIN user_state ON state_id = user_state_id " +
-            "WHERE login = ? AND pass = ?;";
-    private static final String SQL_ADD_NEW_USER
+            "WHERE login = ?;";
+    private static final String SQL_CREATE_NEW_USER
             = "INSERT INTO user (login, pass, role_id, state_id, email, phone, registration_date) " +
             "values (?, ?, 3, 1, ?, ?, ?);";
-    private static final String SQL_CHANGE_STATE_BY_ID
+    private static final String SQL_UPDATE_STATE_BY_ID
             = "UPDATE user SET state_id = ? WHERE user_id = ?;";
-    private static final String SQL_CHANGE_STATE_BY_LOGIN
+    private static final String SQL_UPDATE_STATE_BY_LOGIN
             = "UPDATE user SET state_id = ? WHERE login = ?;";
-    private static final String SQL_CHANGE_ROLE_BY_ID
+    private static final String SQL_UPDATE_ROLE_BY_ID
             = "UPDATE user SET role_id = ? WHERE user_id = ?;";
-    private static final String SQL_CHANGE_ROLE_BY_LOGIN
+    private static final String SQL_UPDATE_ROLE_BY_LOGIN
             = "UPDATE user SET role_id = ? WHERE login = ?;";
 
     @Override
@@ -82,13 +83,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
                 users.add(user);
             }
 
-            users.forEach(logger::debug);
-
             return users;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -116,8 +115,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -145,8 +144,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -174,8 +173,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -203,8 +202,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -212,29 +211,28 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> logIn(String login, String passHash) throws DaoException {
-        logger.info("logIn() method been called");
+    public Optional<String> findUserPassword(String login) throws DaoException {
+        logger.info("findUserPassword() method been called with {}", login);
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_LOGIN_PASSWORD_MATCHER)){
+             PreparedStatement statement = connection.prepareStatement(SQL_PASSWORD_FINDER)){
 
             statement.setString(1, login);
-            statement.setString(2, passHash);
 
             ResultSet resultSet = statement.executeQuery();
-            User user = null;
+            String password = null;
 
             if (resultSet.next()) {
-                user = extractUserFromResultSet(resultSet);
+                password = resultSet.getString(USER_PASSHASH);
             } else {
-                logger.info("No data matching the request, null-User, wrapped in Optional, is to be sent");
+                logger.info("no such user in the database");
             }
 
-            return Optional.ofNullable(user);
+            return Optional.ofNullable(password);
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -244,15 +242,15 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     /**
      * Method creates {@code User} with {@code ResultSet} given.
      *
-     * @param resultSet {@code ResultSet.class}
+     * @param resultSet ResultSet.class
      * @return {@code User}
-     * @throws {@code SQLException} in case of impossibility to extract all fields
+     * @throws SQLException in case of impossibility of extracting all fields
      */
     private User extractUserFromResultSet(ResultSet resultSet) throws SQLException {
 
         return new User(
                 resultSet.getLong("user_id"),
-                resultSet.getString("login"),
+                resultSet.getString(USER_LOGIN),
                 UserRoleType.valueOf(resultSet.getString("role")),
                 UserStateType.valueOf(resultSet.getString("state")),
                 resultSet.getString("email"),
@@ -266,7 +264,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         logger.info("create() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_ADD_NEW_USER)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_CREATE_NEW_USER)) {
 
             statement.setString(1, entity.getLogin());
             statement.setString(2, pass);
@@ -281,8 +279,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -290,11 +288,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public boolean changeState(long userId, UserStateType userState) throws DaoException {
+    public boolean updateState(long userId, UserStateType userState) throws DaoException {
         logger.info("Update user_state by user_id method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SQL_CHANGE_STATE_BY_ID)) {
+        PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_ID)) {
 
             // check if such user exists, if not - exit
             Optional<User> optionalUser = findUserById(userId);
@@ -314,8 +312,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -323,11 +321,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public boolean changeState(String userName, UserStateType userState) throws DaoException {
+    public boolean updateState(String userName, UserStateType userState) throws DaoException {
         logger.info("Update user_state by user_id method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_CHANGE_STATE_BY_LOGIN)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_LOGIN)) {
 
             statement.setInt(1, userState.getStateId());
             statement.setString(2, userName);
@@ -339,8 +337,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -348,11 +346,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public boolean changeRole(long userId, UserRoleType userRole) throws DaoException {
+    public boolean updateRole(long userId, UserRoleType userRole) throws DaoException {
         logger.info("Update user_role by user_id method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_CHANGE_ROLE_BY_ID)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ROLE_BY_ID)) {
 
             statement.setInt(1, userRole.getRoleId());
             statement.setLong(2, userId);
@@ -364,8 +362,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
@@ -373,11 +371,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public boolean changeRole(String userName, UserRoleType userRole) throws DaoException {
+    public boolean updateRole(String userName, UserRoleType userRole) throws DaoException {
         logger.info("Update user_role by user_name method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_CHANGE_ROLE_BY_LOGIN)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ROLE_BY_LOGIN)) {
 
             statement.setInt(1, userRole.getRoleId());
             statement.setString(2, userName);
@@ -389,8 +387,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or this method is called on a closed connection", e);
-            throw new DaoException("database access error occurred or this method is called on a closed connection", e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
