@@ -5,8 +5,9 @@ import by.spetr.web.model.entity.type.UserStateType;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.StringJoiner;
 
-public class User extends AbstractEntity implements Cloneable, Serializable {
+public class User extends AbstractEntity implements Serializable {
     private long userId;
     private String login;
     private UserRoleType role;
@@ -33,17 +34,6 @@ public class User extends AbstractEntity implements Cloneable, Serializable {
         this.email = email;
         this.phone = phone;
         this.regDate = regDate;
-    }
-
-    @Override
-    public String toString() {
-        return "id: " + userId
-                + ", login: " + login
-                + ", role: " + role
-                + ", state: " + state
-                + ", email: " + email
-                + ", phone: " + phone
-                + ", regdate: " + regDate;
     }
 
     public long getUserId() {
@@ -100,5 +90,18 @@ public class User extends AbstractEntity implements Cloneable, Serializable {
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (regDate != null ? regDate.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+                .add("userId=" + userId)
+                .add("login='" + login + "'")
+                .add("role=" + role)
+                .add("state=" + state)
+                .add("email='" + email + "'")
+                .add("phone='" + phone + "'")
+                .add("regDate=" + regDate)
+                .toString();
     }
 }
