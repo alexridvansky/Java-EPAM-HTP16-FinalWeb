@@ -7,8 +7,7 @@ public class RegexpPropertyUtil {
     private static final RegexpPropertyUtil instance = new RegexpPropertyUtil();
     private final ResourceBundle resourceBundle = ResourceBundle.getBundle("regexp", Locale.getDefault());
 
-    private RegexpPropertyUtil() {
-    }
+    private RegexpPropertyUtil() {}
 
     public static RegexpPropertyUtil getInstance() {
         return instance;
