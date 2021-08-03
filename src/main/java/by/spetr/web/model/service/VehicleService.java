@@ -7,6 +7,7 @@ import by.spetr.web.model.exception.ServiceException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * declare service methods for {@code Vehicle.class}
@@ -66,7 +67,7 @@ public interface VehicleService {
      * @return true if photo added successfully
      * @throws ServiceException in case of errors on DAO layer or Cloudinary service
      */
-    boolean uploadVehiclePhoto(long vehicleId, String... filenames) throws ServiceException;
+    boolean uploadVehiclePhoto(long vehicleId, Set<String> filenames) throws ServiceException;
 
     /**
      * is used to get from the database publicId of stored picture and getting the path to it
