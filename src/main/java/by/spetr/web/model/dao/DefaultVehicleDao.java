@@ -31,17 +31,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
             "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
             "ORDER BY vehicle_id;";
-    private static final String SQL_SELECT_ALL_VEHICLES_WITH_PREVIEW_PATH
-            = "SELECT make, model, modelyear, price, powertrain, " +
-            "transmission, drive, displacement, img_path " +
-            "FROM vehicle " +
-            "INNER JOIN vehicle_make ON make_id = vehicle_make_id " +
-            "INNER JOIN vehicle_model ON model_id = vehicle_model_id " +
-            "INNER JOIN vehicle_powertrain ON powertrain_id = vehicle_powertrain_id " +
-            "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
-            "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
-            "INNER JOIN vehicle_gallery vg ON vehicle.vehicle_id = vg.vehicle_id " +
-            "ORDER BY vehicle_id;";
     private static final String SQL_SELECT_VEHICLES_BY_USER_ID
             = "SELECT vehicle_id, state, login, make, model, modelyear, price, powertrain, " +
             "transmission, drive, displacement, power, creation_date " +
@@ -221,6 +210,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     @Override
     public boolean createPhoto(long vehicleId, Set<String> cloudinaryPublicIdSet) throws DaoException {
         logger.info("changeRole() method called");
+        cloudinaryPublicIdSet.forEach(logger::debug);
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_CREATE_NEW_PHOTO_RECORD)) {
