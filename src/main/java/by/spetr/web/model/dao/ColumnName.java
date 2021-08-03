@@ -16,4 +16,6 @@ public class ColumnName {
     public static final String VEHICLE_DISPLACEMENT = "displacement";
     public static final String VEHICLE_POWER = "power";
     public static final String VEHICLE_CREATION_DATE = "creation_date";
+    public static final String USER_LOGIN = "login";
+    public static final String USER_PASSHASH = "pass";
 }
