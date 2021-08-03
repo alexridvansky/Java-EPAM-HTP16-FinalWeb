@@ -112,7 +112,7 @@ public class ConnectionPool {
                 // if connection isn't valid we have to remove it and add another one instead
                 isRemoved = busyConnectionPool.remove(connection);
                 isAdded = addNewConnection();
-                logger.info("connection isn't valid, gonna remove and replace by new one");
+                logger.info("connection isn't valid, gonna remove it and replace by new one");
             }
         } catch (SQLException e) {
             // Pretty much impossible scenario
@@ -199,7 +199,7 @@ public class ConnectionPool {
     }
 
     public void destroyPool() throws ConnectionPoolException {
-        logger.info("TimerTask is gonna to be cancelled");
+        logger.info("TimerTask is gonna be cancelled");
         timer.cancel();
         int actualPoolSize = getActualPoolSize();
         try {
