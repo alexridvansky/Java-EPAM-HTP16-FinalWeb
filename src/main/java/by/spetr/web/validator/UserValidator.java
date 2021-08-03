@@ -16,6 +16,8 @@ public class UserValidator {
 
     private static final RegexpPropertyUtil regexpPropertyUtil = RegexpPropertyUtil.getInstance();
 
+    private UserValidator() {}
+
     public static boolean validateUsername(String login) {
         logger.debug("login given: {}", login);
 
