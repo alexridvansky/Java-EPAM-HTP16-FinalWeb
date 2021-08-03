@@ -76,7 +76,7 @@ public class Controller extends HttpServlet {
         } else {
             logger.error("Incorrect router type: {}", router.getRouterType());
             response.sendRedirect(PagePath.ERROR_PAGE);
-            // todo: ASK! in case if router is any other type to throw some servletException OR redirect to error_page?
+            // todo: error_page?
         }
     }
 
