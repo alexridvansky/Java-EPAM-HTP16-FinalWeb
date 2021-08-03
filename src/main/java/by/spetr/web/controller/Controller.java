@@ -16,17 +16,17 @@ import java.io.IOException;
  * class {@code Controller} is used for processing requests matching '*.do' pattern
  */
 
-@WebServlet(name = "controller", urlPatterns = {"/controller", "*.do"})
+@WebServlet(name = "controller", urlPatterns = {"/controller"})
 public class Controller extends HttpServlet {
     private static final Logger logger = LogManager.getLogger();
 
     /**
      * Redirects {@code doGet} requests toward {@code Controller Servlet}
      *
-     * @param request - {@code HttpServletRequest} request
+     * @param request  - {@code HttpServletRequest} request
      * @param response - {@code HttpServletResponse} response
      * @throws ServletException – if the target resource throws this exception
-     * @throws IOException – if the target resource throws this exception
+     * @throws IOException      – if the target resource throws this exception
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,10 +37,10 @@ public class Controller extends HttpServlet {
     /**
      * Redirects {@code doPost} requests toward {@code Controller Servlet}
      *
-     * @param request - {@code HttpServletRequest} request
+     * @param request  - {@code HttpServletRequest} request
      * @param response - {@code HttpServletResponse} response
      * @throws ServletException – if the target resource throws this exception
-     * @throws IOException – if the target resource throws this exception
+     * @throws IOException      – if the target resource throws this exception
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,10 +51,10 @@ public class Controller extends HttpServlet {
     /**
      * Processes redirected doGet and doPost requests
      *
-     * @param request - {@code HttpServletRequest} request
+     * @param request  - {@code HttpServletRequest} request
      * @param response - {@code HttpServletResponse} response
      * @throws ServletException – if the target resource throws this exception
-     * @throws IOException – if the target resource throws this exception
+     * @throws IOException      – if the target resource throws this exception
      */
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
