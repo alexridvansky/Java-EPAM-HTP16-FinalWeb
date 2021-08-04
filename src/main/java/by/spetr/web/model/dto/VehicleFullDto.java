@@ -18,6 +18,7 @@ public class VehicleFullDto implements Serializable {
     private long id;
     private VehicleStateType state;
     private String owner;
+    private String ownerPhone;
     private String make;
     private String model;
     private Year modelYear;
@@ -29,6 +30,7 @@ public class VehicleFullDto implements Serializable {
     private VehicleDriveType drive;
     private int displacement;
     private int power;
+    private String comment = "";
     private LocalDate dateCreated;
 
     public List<String> getAlbum() {
@@ -69,6 +71,14 @@ public class VehicleFullDto implements Serializable {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getOwnerPhone() {
+        return ownerPhone;
+    }
+
+    public void setOwnerPhone(String ownerPhone) {
+        this.ownerPhone = ownerPhone;
     }
 
     public String getMake() {
@@ -157,6 +167,14 @@ public class VehicleFullDto implements Serializable {
 
     public void setPower(int power) {
         this.power = power;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public LocalDate getDateCreated() {
