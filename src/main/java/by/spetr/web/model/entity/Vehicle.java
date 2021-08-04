@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.StringJoiner;
 
 public class Vehicle extends AbstractEntity implements Serializable {
     private long id;
@@ -28,45 +27,6 @@ public class Vehicle extends AbstractEntity implements Serializable {
     private Set<Integer> optionSet = new HashSet<>();
     private LocalDate dateCreated;
 
-    public Vehicle() {
-    }
-
-    public Vehicle(VehicleStateType state, String owner, String make, String model,
-                   Year modelYear, BigDecimal price, VehiclePowertrainType powertrain,
-                   VehicleTransmissionType transmission, VehicleDriveType drive, int displacement, int power,
-                   LocalDate dateCreated) {
-        this.state = state;
-        this.owner = owner;
-        this.make = make;
-        this.model = model;
-        this.modelYear = modelYear;
-        this.price = price;
-        this.powertrain = powertrain;
-        this.transmission = transmission;
-        this.drive = drive;
-        this.displacement = displacement;
-        this.power = power;
-        this.dateCreated = dateCreated;
-    }
-
-    public Vehicle(long id, VehicleStateType state, String owner, String make, String model,
-                   Year modelYear, BigDecimal price, VehiclePowertrainType powertrain,
-                   VehicleTransmissionType transmission, VehicleDriveType drive, int displacement, int power,
-                   LocalDate dateCreated) {
-        this.id = id;
-        this.state = state;
-        this.owner = owner;
-        this.make = make;
-        this.model = model;
-        this.modelYear = modelYear;
-        this.price = price;
-        this.powertrain = powertrain;
-        this.transmission = transmission;
-        this.drive = drive;
-        this.displacement = displacement;
-        this.power = power;
-        this.dateCreated = dateCreated;
-    }
 
     public long getId() {
         return id;
