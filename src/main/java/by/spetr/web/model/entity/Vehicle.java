@@ -24,8 +24,9 @@ public class Vehicle extends AbstractEntity implements Serializable {
     private VehicleDriveType drive;
     private int displacement;
     private int power;
-    private Set<Integer> optionSet = new HashSet<>();
+    private String comment = "";
     private LocalDate dateCreated;
+    private Set<Integer> optionSet = new HashSet<>();
 
 
     public long getId() {
@@ -140,12 +141,12 @@ public class Vehicle extends AbstractEntity implements Serializable {
         this.power = power;
     }
 
-    public Set<Integer> getOptionSet() {
-        return optionSet;
+    public String getComment() {
+        return comment;
     }
 
-    public void setOptionSet(Set<Integer> optionSet) {
-        this.optionSet = optionSet;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public LocalDate getDateCreated() {
@@ -154,6 +155,14 @@ public class Vehicle extends AbstractEntity implements Serializable {
 
     public void setDateCreated(LocalDate dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public Set<Integer> getOptionSet() {
+        return optionSet;
+    }
+
+    public void setOptionSet(Set<Integer> optionSet) {
+        this.optionSet = optionSet;
     }
 
     @Override
@@ -177,8 +186,9 @@ public class Vehicle extends AbstractEntity implements Serializable {
         if (powertrain != vehicle.powertrain) return false;
         if (transmission != vehicle.transmission) return false;
         if (drive != vehicle.drive) return false;
-        if (optionSet != null ? !optionSet.equals(vehicle.optionSet) : vehicle.optionSet != null) return false;
-        return dateCreated != null ? dateCreated.equals(vehicle.dateCreated) : vehicle.dateCreated == null;
+        if (comment != null ? !comment.equals(vehicle.comment) : vehicle.comment != null) return false;
+        if (dateCreated != null ? !dateCreated.equals(vehicle.dateCreated) : vehicle.dateCreated != null) return false;
+        return optionSet != null ? optionSet.equals(vehicle.optionSet) : vehicle.optionSet == null;
     }
 
     @Override
@@ -197,8 +207,9 @@ public class Vehicle extends AbstractEntity implements Serializable {
         result = 31 * result + (drive != null ? drive.hashCode() : 0);
         result = 31 * result + displacement;
         result = 31 * result + power;
-        result = 31 * result + (optionSet != null ? optionSet.hashCode() : 0);
+        result = 31 * result + (comment != null ? comment.hashCode() : 0);
         result = 31 * result + (dateCreated != null ? dateCreated.hashCode() : 0);
+        result = 31 * result + (optionSet != null ? optionSet.hashCode() : 0);
         return result;
     }
 
@@ -219,8 +230,9 @@ public class Vehicle extends AbstractEntity implements Serializable {
         sb.append(", drive=").append(drive);
         sb.append(", displacement=").append(displacement);
         sb.append(", power=").append(power);
-        sb.append(", optionSet=").append(optionSet);
+        sb.append(", comment='").append(comment).append('\'');
         sb.append(", dateCreated=").append(dateCreated);
+        sb.append(", optionSet=").append(optionSet);
         sb.append('}');
         return sb.toString();
     }

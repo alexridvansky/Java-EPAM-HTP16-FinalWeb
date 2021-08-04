@@ -26,8 +26,9 @@ public final class VehicleBuilder {
     private VehicleDriveType drive;
     private int displacement;
     private int power;
-    private Set<Integer> optionSet = new HashSet<>();
+    private String comment = "";
     private LocalDate dateCreated;
+    private Set<Integer> optionSet = new HashSet<>();
 
     private VehicleBuilder() {
     }
@@ -106,13 +107,18 @@ public final class VehicleBuilder {
         return this;
     }
 
-    public VehicleBuilder optionSet(Set<Integer> optionSet) {
-        this.optionSet = optionSet;
+    public VehicleBuilder comment(String comment) {
+        this.comment = comment;
         return this;
     }
 
     public VehicleBuilder dateCreated(LocalDate dateCreated) {
         this.dateCreated = dateCreated;
+        return this;
+    }
+
+    public VehicleBuilder optionSet(Set<Integer> optionSet) {
+        this.optionSet = optionSet;
         return this;
     }
 
@@ -132,8 +138,9 @@ public final class VehicleBuilder {
         vehicle.setDrive(drive);
         vehicle.setDisplacement(displacement);
         vehicle.setPower(power);
-        vehicle.setOptionSet(optionSet);
+        vehicle.setComment(comment);
         vehicle.setDateCreated(dateCreated);
+        vehicle.setOptionSet(optionSet);
         return vehicle;
     }
 }
