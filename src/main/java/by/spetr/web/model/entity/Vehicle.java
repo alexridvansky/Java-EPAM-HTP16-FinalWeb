@@ -17,6 +17,8 @@ public class Vehicle extends AbstractEntity implements Serializable {
     private String make;
     private String model;
     private Year modelYear;
+    private int mileage;
+    private String color;
     private BigDecimal price;
     private VehiclePowertrainType powertrain;
     private VehicleTransmissionType transmission;
@@ -114,6 +116,22 @@ public class Vehicle extends AbstractEntity implements Serializable {
         this.modelYear = modelYear;
     }
 
+    public int getMileage() {
+        return mileage;
+    }
+
+    public void setMileage(int mileage) {
+        this.mileage = mileage;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -186,6 +204,7 @@ public class Vehicle extends AbstractEntity implements Serializable {
         Vehicle vehicle = (Vehicle) o;
 
         if (id != vehicle.id) return false;
+        if (mileage != vehicle.mileage) return false;
         if (displacement != vehicle.displacement) return false;
         if (power != vehicle.power) return false;
         if (state != vehicle.state) return false;
@@ -193,6 +212,7 @@ public class Vehicle extends AbstractEntity implements Serializable {
         if (make != null ? !make.equals(vehicle.make) : vehicle.make != null) return false;
         if (model != null ? !model.equals(vehicle.model) : vehicle.model != null) return false;
         if (modelYear != null ? !modelYear.equals(vehicle.modelYear) : vehicle.modelYear != null) return false;
+        if (color != null ? !color.equals(vehicle.color) : vehicle.color != null) return false;
         if (price != null ? !price.equals(vehicle.price) : vehicle.price != null) return false;
         if (powertrain != vehicle.powertrain) return false;
         if (transmission != vehicle.transmission) return false;
@@ -209,6 +229,8 @@ public class Vehicle extends AbstractEntity implements Serializable {
         result = 31 * result + (make != null ? make.hashCode() : 0);
         result = 31 * result + (model != null ? model.hashCode() : 0);
         result = 31 * result + (modelYear != null ? modelYear.hashCode() : 0);
+        result = 31 * result + mileage;
+        result = 31 * result + (color != null ? color.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (powertrain != null ? powertrain.hashCode() : 0);
         result = 31 * result + (transmission != null ? transmission.hashCode() : 0);
@@ -222,21 +244,24 @@ public class Vehicle extends AbstractEntity implements Serializable {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Vehicle.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("state=" + state)
-                .add("owner='" + owner + "'")
-                .add("make='" + make + "'")
-                .add("model='" + model + "'")
-                .add("modelYear=" + modelYear)
-                .add("price=" + price)
-                .add("powertrain=" + powertrain)
-                .add("transmission=" + transmission)
-                .add("drive=" + drive)
-                .add("displacement=" + displacement)
-                .add("power=" + power)
-                .add("optionSet=" + optionSet)
-                .add("dateCreated=" + dateCreated)
-                .toString();
+        final StringBuilder sb = new StringBuilder("Vehicle{");
+        sb.append("id=").append(id);
+        sb.append(", state=").append(state);
+        sb.append(", owner='").append(owner).append('\'');
+        sb.append(", make='").append(make).append('\'');
+        sb.append(", model='").append(model).append('\'');
+        sb.append(", modelYear=").append(modelYear);
+        sb.append(", mileage=").append(mileage);
+        sb.append(", color='").append(color).append('\'');
+        sb.append(", price=").append(price);
+        sb.append(", powertrain=").append(powertrain);
+        sb.append(", transmission=").append(transmission);
+        sb.append(", drive=").append(drive);
+        sb.append(", displacement=").append(displacement);
+        sb.append(", power=").append(power);
+        sb.append(", optionSet=").append(optionSet);
+        sb.append(", dateCreated=").append(dateCreated);
+        sb.append('}');
+        return sb.toString();
     }
 }

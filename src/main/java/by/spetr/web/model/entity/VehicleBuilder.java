@@ -18,6 +18,8 @@ public final class VehicleBuilder {
     private String make;
     private String model;
     private Year modelYear;
+    private int mileage;
+    private String color;
     private BigDecimal price;
     private VehiclePowertrainType powertrain;
     private VehicleTransmissionType transmission;
@@ -61,6 +63,16 @@ public final class VehicleBuilder {
 
     public VehicleBuilder modelYear(Year modelYear) {
         this.modelYear = modelYear;
+        return this;
+    }
+
+    public VehicleBuilder mileage(int mileage) {
+        this.mileage = mileage;
+        return this;
+    }
+
+    public VehicleBuilder color(String color) {
+        this.color = color;
         return this;
     }
 
@@ -112,6 +124,8 @@ public final class VehicleBuilder {
         vehicle.setMake(make);
         vehicle.setModel(model);
         vehicle.setModelYear(modelYear);
+        vehicle.setMileage(mileage);
+        vehicle.setColor(color);
         vehicle.setPrice(price);
         vehicle.setPowertrain(powertrain);
         vehicle.setTransmission(transmission);
