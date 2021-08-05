@@ -9,6 +9,7 @@ public class PagePath {
     public static final String SHOW_VEHICLE_INFO = "/jsp/show_vehicle_info.jsp";
     public static final String SHOW_VEHICLE_NOT_FOUND = "/jsp/show_vehicle_not_found.jsp";
     public static final String VEHICLE_CREATION_PAGE = "/jsp/create_vehicle.jsp";
+    public static final String MAKE_MODEL_CREATION_PAGE = "/jsp/create_make_model.jsp";
     public static final String ERROR_404_PAGE = "/jsp/error/error_404.jsp";
     public static final String ERROR_PAGE = "/jsp/error.jsp";
     public static final String INDEX_PAGE = "index.jsp";

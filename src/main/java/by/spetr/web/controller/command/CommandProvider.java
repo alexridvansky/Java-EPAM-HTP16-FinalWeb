@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.EnumMap;
 
+import static by.spetr.web.controller.command.CommandType.*;
+
 public class CommandProvider {
     private static final Logger logger = LogManager.getLogger();
     private static CommandProvider instance;
@@ -26,6 +28,7 @@ public class CommandProvider {
         commands.put(CommandType.SHOW_VEHICLE_LIST, new ShowVehicleListCommand());
         commands.put(CommandType.SHOW_VEHICLE_LIST_ADMIN, new ShowVehicleListAdmCommand());
         commands.put(CommandType.SHOW_VEHICLE_CREATION_PAGE, new ShowVehicleCreationPageCommand());
+        commands.put(SHOW_MAKE_MODEL_CREATION_PAGE, new ShowMakeModelCreationPageCommand());
         commands.put(CommandType.UPDATE_VEHICLE_ADS, new UpdateVehicleAdsCommand());
         commands.put(CommandType.UPLOAD_VEHICLE_PHOTO, new UploadVehiclePhotoCommand());
         commands.put(CommandType.CREATE_USER, new CreateUserCommand());

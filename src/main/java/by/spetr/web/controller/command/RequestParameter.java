@@ -14,6 +14,7 @@ public final class RequestParameter {
     public static final String VEHICLE_ID_PARAM = "vehicle_id";
     public static final String VEHICLE_STATE_PARAM = "vehicle_state";
     public static final String VEHICLE_MAKE_LIST = "makes";
+    public static final String VEHICLE_MODEL_LIST = "makes";
     public static final String VEHICLE_MAKE_MODEL_LIST = "makes_models";
     public static final String PASSWORD_PARAM = "password";
     public static final String PASSWORD_AGAIN_PARAM = "password_again";
