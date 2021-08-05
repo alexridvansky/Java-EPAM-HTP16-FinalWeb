@@ -8,7 +8,7 @@ import java.util.concurrent.Executor;
 public class ProxyConnection implements Connection, AutoCloseable {
     private final Connection connection;
 
-    public ProxyConnection(java.sql.Connection connection) {
+    ProxyConnection(Connection connection) {
         this.connection = connection;
     }
 
