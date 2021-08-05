@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 
-import static by.spetr.web.command.RequestParameter.LAST_PAGE_PARAM;
+import static by.spetr.web.controller.command.RequestParameter.LAST_PAGE_PARAM;
 
 /**
  * Filter is used to store in the session last page visited
