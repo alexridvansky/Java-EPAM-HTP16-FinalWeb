@@ -19,4 +19,5 @@ User states:
 3. BANNED - such user can look through adverts, see phone numbers, read messages from other users and authorities, but can't write anyone else but moderators.
 4. DISABLED - those users, who are disabled, can't login into the system, their accounts blocked, all messages and adverts are hidden, such accounts will ever stay at the database what means they'll never be able to register again due to policy of unique e-main and phone number, it's better not to get blocked.
 
+DataBase model :
 <img src="/src/main/resources/db_model.png" alt="database model">
