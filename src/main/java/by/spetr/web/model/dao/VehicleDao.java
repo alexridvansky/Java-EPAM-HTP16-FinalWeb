@@ -1,12 +1,12 @@
 package by.spetr.web.model.dao;
 
 import by.spetr.web.model.entity.Vehicle;
+import by.spetr.web.model.entity.VehicleMake;
+import by.spetr.web.model.entity.VehicleModel;
 import by.spetr.web.model.entity.type.VehicleStateType;
 import by.spetr.web.model.exception.DaoException;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * VehicleDao Interface defines service methods for {@code Vehicle} type objects.
@@ -38,6 +38,22 @@ public interface VehicleDao {
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     Optional<Vehicle> findById(long id) throws DaoException;
+
+    /**
+     * is used to get the full list of Vehicle makes
+     *
+     * @return List<VehicleMake> of Vehicle makes
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    List<VehicleMake> findMakeList() throws DaoException;
+
+    /**
+     * is used to get the full list of Vehicle models
+     *
+     * @return List<VehicleModel> of Vehicle models
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    List<VehicleModel> findModelList() throws DaoException;
 
     /**
      * is used for changing status of given vehicle
@@ -76,4 +92,13 @@ public interface VehicleDao {
      * @throws DaoException if error occurred on DAO layer
      */
     List<String> findAllPhotoById(long vehicleId) throws DaoException;
+
+    /**
+     *  is used to get list of options with vehicleId given
+     *
+     * @param vehicleId vehicleId
+     * @return SortedMap<Long, String> of options for vehicle given
+     * @throws DaoException if error occurred on DAO layer
+     */
+    Map<Long, String> findOptionsById(long vehicleId) throws DaoException;
 }

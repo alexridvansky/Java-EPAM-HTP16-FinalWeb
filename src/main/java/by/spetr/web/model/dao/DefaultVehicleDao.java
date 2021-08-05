@@ -1,6 +1,9 @@
 package by.spetr.web.model.dao;
 
 import by.spetr.web.model.entity.Vehicle;
+import by.spetr.web.model.entity.VehicleBuilder;
+import by.spetr.web.model.entity.VehicleMake;
+import by.spetr.web.model.entity.VehicleModel;
 import by.spetr.web.model.entity.type.*;
 import by.spetr.web.model.exception.ConnectionPoolException;
 import by.spetr.web.model.exception.DaoException;
@@ -20,42 +23,54 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     private static final String CONNECTION_GETTING_ERROR = "error of getting connection from ConnectionPool";
 
     private static final String SQL_SELECT_ALL_VEHICLES
-            = "SELECT vehicle_id, state, login, make, model, modelyear, price, powertrain, " +
-            "transmission, drive, displacement, power, creation_date " +
+            = "SELECT vehicle_id, state, login, make, model, modelyear, mileage, color, price, powertrain, " +
+            "transmission, drive, displacement, power, comment, creation_date " +
             "FROM vehicle " +
             "INNER JOIN vehicle_state ON state_id = vehicle_state_id " +
             "INNER JOIN user ON owner_id = user_id " +
             "INNER JOIN vehicle_make ON make_id = vehicle_make_id " +
             "INNER JOIN vehicle_model ON model_id = vehicle_model_id " +
+            "INNER JOIN vehicle_color ON color_id = vehicle_color_id " +
             "INNER JOIN vehicle_powertrain ON powertrain_id = vehicle_powertrain_id " +
             "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
             "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
             "ORDER BY vehicle_id;";
     private static final String SQL_SELECT_VEHICLES_BY_USER_ID
-            = "SELECT vehicle_id, state, login, make, model, modelyear, price, powertrain, " +
-            "transmission, drive, displacement, power, creation_date " +
+            = "SELECT vehicle_id, state, login, make, model, modelyear, mileage, color, price, powertrain, " +
+            "transmission, drive, displacement, power, comment, creation_date " +
             "FROM vehicle " +
             "INNER JOIN vehicle_state ON state_id = vehicle_state_id " +
             "INNER JOIN user ON owner_id = user_id " +
             "INNER JOIN vehicle_make ON make_id = vehicle_make_id " +
             "INNER JOIN vehicle_model ON model_id = vehicle_model_id " +
+            "INNER JOIN vehicle_color ON color_id = vehicle_color_id " +
             "INNER JOIN vehicle_powertrain ON powertrain_id = vehicle_powertrain_id " +
             "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
             "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
             "WHERE owner_id = ? " +
             "ORDER BY vehicle_id;";
     private static final String SQL_SELECT_VEHICLE_BY_ID
-            = "SELECT vehicle_id, state, login, make, model, modelyear, price, powertrain, " +
-            "transmission, drive, displacement, power, creation_date " +
+            = "SELECT vehicle_id, state, login, make, model, modelyear, mileage, color, price, powertrain, " +
+            "transmission, drive, displacement, power, comment, creation_date " +
             "FROM vehicle " +
             "INNER JOIN vehicle_state ON state_id = vehicle_state_id " +
             "INNER JOIN user ON owner_id = user_id " +
             "INNER JOIN vehicle_make ON make_id = vehicle_make_id " +
             "INNER JOIN vehicle_model ON model_id = vehicle_model_id " +
+            "INNER JOIN vehicle_color ON color_id = vehicle_color_id " +
             "INNER JOIN vehicle_powertrain ON powertrain_id = vehicle_powertrain_id " +
             "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
             "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
             "WHERE vehicle_id = ?;";
+    private static final String SQL_SELECT_ALL_MAKES
+            = "SELECT vehicle_make_id, make " +
+            "FROM vehicle_make " +
+            "ORDER BY make;";
+    private static final String SQL_SELECT_ALL_MODELS
+            = "SELECT vehicle_model_id, model, vehicle_make_id, make " +
+            "FROM vehicle_model " +
+            "INNER JOIN vehicle_make ON vehicle_model.make_id = vehicle_make_id " +
+            "ORDER BY model;";
     private static final String SQL_UPDATE_VEHICLE_BY_ID
             = "UPDATE vehicle SET state_id = ? WHERE vehicle_id = ?;";
     private static final String SQL_CREATE_NEW_PHOTO_RECORD
@@ -72,6 +87,11 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "WHERE vehicle_id = ? " +
             "ORDER BY is_preview " +
             "LIMIT 1;";
+    private static final String SQL_SELECT_OPTIONS_BY_VEHICLE_ID
+            = "SELECT option_id, option_description " +
+            "FROM vehicle_option_map " +
+            "INNER JOIN vehicle_option ON option_id = vehicle_option_id " +
+            "WHERE vehicle_id = ?;";
 
     @Override
     public List<Vehicle> findAll() throws DaoException {
@@ -164,22 +184,91 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
      * @throws SQLException in case of impossibility of extracting all fields
      */
     private Vehicle extractVehicleFromResultSet(ResultSet resultSet) throws SQLException {
+        VehicleBuilder vehicleBuilder = VehicleBuilder.getInstance();
+        return vehicleBuilder
+                .id(resultSet.getLong(VEHICLE_ID))
+                .state(VehicleStateType.valueOf(resultSet.getString(VEHICLE_STATE)))
+                .owner(resultSet.getString(VEHICLE_OWNER_LOGIN))
+                .make(resultSet.getString(VEHICLE_MAKE))
+                .model(resultSet.getString(VEHICLE_MODEL))
+                .modelYear(Year.of(resultSet.getDate(VEHICLE_MODEL_YEAR).toLocalDate().getYear()))
+                .mileage(resultSet.getInt(VEHICLE_MILEAGE))
+                .color(resultSet.getString(VEHICLE_COLOR))
+                .price(resultSet.getBigDecimal(VEHICLE_PRICE))
+                .powertrain(VehiclePowertrainType.valueOf(resultSet.getString(VEHICLE_POWERTRAIN)))
+                .transmission(VehicleTransmissionType.valueOf(resultSet.getString(VEHICLE_TRANSMISSION)))
+                .drive(VehicleDriveType.valueOf(resultSet.getString(VEHICLE_DRIVE)))
+                .displacement(resultSet.getInt(VEHICLE_DISPLACEMENT))
+                .power(resultSet.getInt(VEHICLE_POWER))
+                .comment(resultSet.getString(VEHICLE_COMMENT))
+                .dateCreated(resultSet.getDate(VEHICLE_CREATION_DATE).toLocalDate())
+                .build();
+    }
 
-        return new Vehicle(
-                resultSet.getLong(VEHICLE_ID),
-                VehicleStateType.valueOf(resultSet.getString("state")),
-                resultSet.getString(VEHICLE_OWNER_LOGIN),
-                resultSet.getString(VEHICLE_MAKE),
-                resultSet.getString(VEHICLE_MODEL),
-                Year.of(resultSet.getDate(VEHICLE_MODEL_YEAR).toLocalDate().getYear()),
-                resultSet.getBigDecimal(VEHICLE_PRICE),
-                VehiclePowertrainType.valueOf(resultSet.getString(VEHICLE_POWERTRAIN)),
-                VehicleTransmissionType.valueOf(resultSet.getString(VEHICLE_TRANSMISSION)),
-                VehicleDriveType.valueOf(resultSet.getString(VEHICLE_DRIVE)),
-                resultSet.getInt(VEHICLE_DISPLACEMENT),
-                resultSet.getInt(VEHICLE_POWER),
-                resultSet.getDate(VEHICLE_CREATION_DATE).toLocalDate()
-        );
+    @Override
+    public List<VehicleMake> findMakeList() throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_MAKES)) {
+            List<VehicleMake> makes = new ArrayList<>();
+
+            while (resultSet.next()) {
+                int makeId = resultSet.getInt(VEHICLE_MAKE_ID);
+                String makeValue = resultSet.getString(VEHICLE_MAKE);
+
+                VehicleMake make = new VehicleMake();
+                make.setMakeId(makeId);
+                make.setValue(makeValue);
+
+                makes.add(make);
+            }
+
+            return makes;
+
+        } catch (SQLException e) {
+            logger.error(DATABASE_ERROR, e);
+            throw new DaoException(DATABASE_ERROR, e);
+        } catch (ConnectionPoolException e) {
+            logger.error(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+        }
+    }
+
+    @Override
+    public List<VehicleModel> findModelList() throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_MODELS)) {
+
+            List<VehicleModel> models = new ArrayList<>();
+
+            while (resultSet.next()) {
+                int modelId = resultSet.getInt(VEHICLE_MODEL_ID);
+                String modelValue = resultSet.getString(VEHICLE_MODEL);
+                int makeId = resultSet.getInt(VEHICLE_MAKE_ID);
+                String makeValue = resultSet.getString(VEHICLE_MAKE);
+
+                VehicleMake make = new VehicleMake();
+                make.setMakeId(makeId);
+                make.setValue(makeValue);
+
+                VehicleModel model = new VehicleModel();
+                model.setModelId(modelId);
+                model.setValue(modelValue);
+                model.setMake(make);
+
+                models.add(model);
+            }
+
+            return models;
+
+        } catch (SQLException e) {
+            logger.error(DATABASE_ERROR, e);
+            throw new DaoException(DATABASE_ERROR, e);
+        } catch (ConnectionPoolException e) {
+            logger.error(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+        }
     }
 
     @Override
@@ -270,12 +359,40 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             ResultSet resultSet = statement.executeQuery();
             List<String> imagePaths = new ArrayList<>();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 String imagePath = resultSet.getString(IMAGE_PATH);
                 imagePaths.add(imagePath);
             }
 
             return imagePaths;
+
+        } catch (SQLException e) {
+            logger.error(DATABASE_ERROR, e);
+            throw new DaoException(DATABASE_ERROR, e);
+        } catch (ConnectionPoolException e) {
+            logger.error(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+        }
+    }
+
+    @Override
+    public Map<Long, String> findOptionsById(long vehicleId) throws DaoException {
+        logger.info("findOptionsById() method called");
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SQL_SELECT_OPTIONS_BY_VEHICLE_ID)) {
+            statement.setLong(1,vehicleId);
+
+            ResultSet resultSet = statement.executeQuery();
+            Map<Long, String> optionsMap = new TreeMap<>();
+
+            while (resultSet.next()) {
+                long optionId = resultSet.getLong(OPTION_ID);
+                String optionDescription = resultSet.getString(OPTION_DESCRIPTION);
+                optionsMap.put(optionId, optionDescription);
+            }
+
+            return optionsMap;
 
         } catch (SQLException e) {
             logger.error(DATABASE_ERROR, e);
