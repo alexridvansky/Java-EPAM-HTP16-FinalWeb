@@ -1,8 +1,8 @@
-package by.spetr.web.command.redirect;
+package by.spetr.web.controller.command.redirect;
 
-import by.spetr.web.command.Command;
-import by.spetr.web.command.Router;
-import by.spetr.web.command.PagePath;
+import by.spetr.web.controller.command.Command;
+import by.spetr.web.controller.command.Router;
+import by.spetr.web.controller.command.PagePath;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
