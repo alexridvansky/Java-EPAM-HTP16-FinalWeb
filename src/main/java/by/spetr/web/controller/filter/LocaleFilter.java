@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.Locale;
 
-import static by.spetr.web.command.RequestParameter.LOCALE_PARAM;
+import static by.spetr.web.controller.command.RequestParameter.LOCALE_PARAM;
 
 /**
  * Filter is used to set up the locale from user system defaults to session
