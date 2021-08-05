@@ -172,6 +172,16 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    public Optional<String> getUserPhone(String userName) throws ServiceException {
+        try {
+            return userDao.findUserPhoneByName(userName);
+        } catch (DaoException e) {
+            logger.error(DAO_ERROR, e);
+            throw new ServiceException(DAO_ERROR, e);
+        }
+    }
+
+    @Override
     public boolean updateUserState(String userName, UserStateType userState) throws ServiceException {
         try {
             if (isUsernameFree(userName)) {

@@ -51,7 +51,7 @@ public interface UserService {
     boolean isPhoneFree(String phone) throws ServiceException;
 
     /**
-     * Authenticates user by matching login with password hash
+     * Is used for Authentication user through matching login with password hash
      *
      * @param login - {@code User} login
      * @param password - {@code User} password
@@ -67,6 +67,15 @@ public interface UserService {
      * @throws ServiceException if no data been received from DAO layer
      */
     List<User> getUserList() throws ServiceException;
+
+    /**
+     *  Returns user's phone number
+     *
+     * @param userName user Login
+     * @return Optional<User> or Optional.Empty if phone number hasn't been found
+     * @throws ServiceException  if no data been received from DAO layer
+     */
+    Optional<String> getUserPhone(String userName) throws ServiceException;
 
     /**
      * is used for updating user status by username
