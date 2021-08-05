@@ -1,22 +1,21 @@
-package by.spetr.web.command.user;
+package by.spetr.web.controller.command.user;
 
-import by.spetr.web.command.Command;
-import by.spetr.web.command.PagePath;
-import by.spetr.web.command.Router;
+import by.spetr.web.controller.command.Command;
+import by.spetr.web.controller.command.PagePath;
+import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.entity.User;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.DefaultUserService;
 import by.spetr.web.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import static by.spetr.web.command.PagePath.UNSUPPORTED_COMMAND;
-import static by.spetr.web.command.RequestParameter.*;
+import static by.spetr.web.controller.command.PagePath.UNSUPPORTED_COMMAND;
+import static by.spetr.web.controller.command.RequestParameter.*;
 
 public class SignInCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

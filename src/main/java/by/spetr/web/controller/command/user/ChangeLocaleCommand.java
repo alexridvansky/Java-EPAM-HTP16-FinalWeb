@@ -1,15 +1,15 @@
-package by.spetr.web.command.user;
+package by.spetr.web.controller.command.user;
 
-import by.spetr.web.command.Command;
-import by.spetr.web.command.Router;
+import by.spetr.web.controller.command.Command;
+import by.spetr.web.controller.command.Router;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
 
-import static by.spetr.web.command.PagePath.INDEX_PAGE;
-import static by.spetr.web.command.RequestParameter.*;
+import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
+import static by.spetr.web.controller.command.RequestParameter.*;
 
 public class ChangeLocaleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
