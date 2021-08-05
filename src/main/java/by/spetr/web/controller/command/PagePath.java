@@ -1,4 +1,4 @@
-package by.spetr.web.command;
+package by.spetr.web.controller.command;
 
 public class PagePath {
     public static final String SIGN_UP_PAGE = "/jsp/sign_up.jsp";

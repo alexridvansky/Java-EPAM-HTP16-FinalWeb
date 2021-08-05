@@ -1,4 +1,4 @@
-package by.spetr.web.command;
+package by.spetr.web.controller.command;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,4 +1,4 @@
-package by.spetr.web.command;
+package by.spetr.web.controller.command;
 
 public enum CommandType {
     DEFAULT,

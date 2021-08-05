@@ -1,11 +1,11 @@
-package by.spetr.web.command;
+package by.spetr.web.controller.command;
 
-import by.spetr.web.command.redirect.DefaultCommand;
-import by.spetr.web.command.redirect.GoToMainPageCommand;
-import by.spetr.web.command.redirect.GoToSignUpPageCommand;
-import by.spetr.web.command.vehicle.ShowVehicleCreationPageCommand;
-import by.spetr.web.command.user.*;
-import by.spetr.web.command.vehicle.*;
+import by.spetr.web.controller.command.redirect.DefaultCommand;
+import by.spetr.web.controller.command.redirect.GoToMainPageCommand;
+import by.spetr.web.controller.command.redirect.GoToSignUpPageCommand;
+import by.spetr.web.controller.command.vehicle.ShowVehicleCreationPageCommand;
+import by.spetr.web.controller.command.user.*;
+import by.spetr.web.controller.command.vehicle.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
