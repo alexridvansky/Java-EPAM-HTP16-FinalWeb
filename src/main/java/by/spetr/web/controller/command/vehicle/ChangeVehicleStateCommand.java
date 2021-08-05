@@ -1,9 +1,8 @@
-package by.spetr.web.command.user;
+package by.spetr.web.controller.command.vehicle;
 
-import by.spetr.web.command.Command;
-import by.spetr.web.command.PagePath;
-import by.spetr.web.command.Router;
-import by.spetr.web.model.entity.Vehicle;
+import by.spetr.web.controller.command.Command;
+import by.spetr.web.controller.command.PagePath;
+import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.entity.type.VehicleStateType;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.DefaultVehicleService;
@@ -12,9 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
-
-import static by.spetr.web.command.RequestParameter.*;
+import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
+import static by.spetr.web.controller.command.RequestParameter.*;
 
 public class ChangeVehicleStateCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -30,10 +28,13 @@ public class ChangeVehicleStateCommand implements Command {
         try {
             vehicleService.updateVehicleState(Long.parseLong(vehicleId), VehicleStateType.valueOf(vehicleState));
             logger.debug("vehicleId '{}' - '{}'", vehicleId, vehicleState);
-            List<Vehicle> vehicles = vehicleService.getAdminVehicleList();
-            request.setAttribute(VEHICLE_LIST_PARAM, vehicles);
 
-            return new Router(PagePath.SHOW_VEHICLE_LIST, Router.RouterType.FORWARD);
+            String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
+
+            if (lastPage == null) {
+                lastPage = INDEX_PAGE;
+            }
+            return new Router(lastPage, Router.RouterType.FORWARD);
 
         } catch (ServiceException e) {
             logger.error("state for the 'vehicleId {}' not changed", vehicleId);
