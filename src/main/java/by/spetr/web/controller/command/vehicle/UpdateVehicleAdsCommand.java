@@ -1,7 +1,7 @@
-package by.spetr.web.command.vehicle;
+package by.spetr.web.controller.command.vehicle;
 
-import by.spetr.web.command.Command;
-import by.spetr.web.command.Router;
+import by.spetr.web.controller.command.Command;
+import by.spetr.web.controller.command.Router;
 
 import jakarta.servlet.http.HttpServletRequest;
 
