@@ -1,6 +1,6 @@
 package by.spetr.web.controller;
 
-import by.spetr.web.command.*;
+import by.spetr.web.controller.command.*;
 import by.spetr.web.model.exception.ConnectionPoolException;
 import by.spetr.web.model.pool.ConnectionPool;
 import jakarta.servlet.*;
@@ -13,15 +13,15 @@ import java.io.IOException;
 
 
 /**
- * class {@code Controller} is used for processing requests matching '*.do' pattern
+ * class {@code MainController} is used for processing requests matching '*.do' pattern
  */
 
 @WebServlet(name = "controller", urlPatterns = {"/controller"})
-public class Controller extends HttpServlet {
+public class MainController extends HttpServlet {
     private static final Logger logger = LogManager.getLogger();
 
     /**
-     * Redirects {@code doGet} requests toward {@code Controller Servlet}
+     * Redirects {@code doGet} requests toward {@code MainController Servlet}
      *
      * @param request  - {@code HttpServletRequest} request
      * @param response - {@code HttpServletResponse} response
@@ -30,12 +30,12 @@ public class Controller extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("Controller: doGet is being called, redirecting...");
+        logger.info("MainController: doGet is being called, redirecting...");
         processRequest(request, response);
     }
 
     /**
-     * Redirects {@code doPost} requests toward {@code Controller Servlet}
+     * Redirects {@code doPost} requests toward {@code MainController Servlet}
      *
      * @param request  - {@code HttpServletRequest} request
      * @param response - {@code HttpServletResponse} response
@@ -44,7 +44,7 @@ public class Controller extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("Controller: doPost is being called, redirecting...");
+        logger.info("MainController: doPost is being called, redirecting...");
         processRequest(request, response);
     }
 

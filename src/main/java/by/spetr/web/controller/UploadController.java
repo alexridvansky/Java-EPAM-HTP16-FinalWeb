@@ -1,6 +1,6 @@
 package by.spetr.web.controller;
 
-import by.spetr.web.command.*;
+import by.spetr.web.controller.command.*;
 import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.RequestDispatcher;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static by.spetr.web.command.RequestParameter.FILENAME_PARAM;
+import static by.spetr.web.controller.command.RequestParameter.FILENAME_PARAM;
 
 /**
  * class {@code UploadController} is used for processing requests with multipart parameters
