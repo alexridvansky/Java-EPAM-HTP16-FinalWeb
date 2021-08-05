@@ -1,8 +1,8 @@
-package by.spetr.web.command.vehicle;
+package by.spetr.web.controller.command.vehicle;
 
-import by.spetr.web.command.Command;
-import by.spetr.web.command.PagePath;
-import by.spetr.web.command.Router;
+import by.spetr.web.controller.command.Command;
+import by.spetr.web.controller.command.PagePath;
+import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.entity.Vehicle;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.DefaultVehicleService;
@@ -14,10 +14,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 
-import static by.spetr.web.command.PagePath.INDEX_PAGE;
-import static by.spetr.web.command.RequestParameter.*;
+import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
+import static by.spetr.web.controller.command.RequestParameter.*;
 
 
 public class UploadVehiclePhotoCommand implements Command {
@@ -31,16 +32,16 @@ public class UploadVehiclePhotoCommand implements Command {
 
         String vehicleId = request.getParameter(VEHICLE_ID_PARAM);
         logger.debug("vehicle_id: {}", vehicleId);
-        String filename = (String) request.getAttribute(FILENAME_PARAM);
-        logger.debug("filename: {}", filename);
+        Set<String> filenames = (Set<String>) request.getAttribute(FILENAME_PARAM);
+        filenames.forEach(logger::debug);
 
-        if (vehicleId == null || filename == null) {
+        if (vehicleId == null || filenames.isEmpty()) {
             return new Router(PagePath.ERROR_PAGE);
         } else {
             try {
                 logger.debug("last page: {}", request.getParameter(LAST_PAGE_PARAM));
 
-                boolean isUploaded = service.uploadVehiclePhoto(Integer.parseInt(vehicleId), filename);
+                boolean isUploaded = service.uploadVehiclePhoto(Integer.parseInt(vehicleId), filenames);
 
                 String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
                 Optional<Vehicle> optionalVehicle = service.getVehicleById(Long.parseLong(vehicleId));
