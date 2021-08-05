@@ -19,8 +19,7 @@ public class ChangeLocaleCommand implements Command {
         Locale locale = request.getLocale();
         String newLocale = request.getParameter(NEW_LOCALE_PARAM);
         request.getSession().setAttribute(LOCALE_PARAM, newLocale);
-        logger.debug("locale: {}", locale);
-        logger.debug("new requestet locale: {}", newLocale);
+        logger.debug("locale changed: {} -> {}", locale, newLocale);
 
         String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
         if (lastPage == null) {
