@@ -66,10 +66,19 @@ public interface UserDao {
     Optional<String> findUserPassword(String login) throws DaoException;
 
     /**
+     *  is used to get phone number by user name (login)
+     * @param login user login
+     * @return Optional<String> contains phone number or Optional.empty if phone hasn't been found
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    Optional<String> findUserPhoneByName(String login) throws DaoException;
+
+    /**
      * is used to create a new user with user.Role = user and user.State = confirmation.
      *
      * @param entity {@code User} class
      * @return true if user has been created successfully
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean create(User entity, String pass) throws DaoException;
 
@@ -79,7 +88,7 @@ public interface UserDao {
      * @param userId userId
      * @param userState new {@code UserStateType}
      * @return true if user status has been changed successfully
-     * @throws DaoException if error occurred on DAO layer
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean updateState(long userId, UserStateType userState) throws DaoException;
 
@@ -89,7 +98,7 @@ public interface UserDao {
      * @param userName {@code User} name
      * @param userState new {@code UserStateType}
      * @return true if user status has been changed successfully
-     * @throws DaoException if error occurred on DAO layer
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean updateState(String userName, UserStateType userState) throws DaoException;
 
@@ -99,7 +108,7 @@ public interface UserDao {
      * @param userId userId
      * @param userRole new {@code UserRoleType}
      * @return true if user status has been changed successfully
-     * @throws DaoException if error occurred on DAO layer
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean updateRole(long userId, UserRoleType userRole) throws DaoException;
 
@@ -109,7 +118,7 @@ public interface UserDao {
      * @param userName {@code User} name
      * @param userRole new {@code UserRoleType}
      * @return true if user status has been changed successfully
-     * @throws DaoException if error occurred on DAO layer
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean updateRole(String userName, UserRoleType userRole) throws DaoException;
 

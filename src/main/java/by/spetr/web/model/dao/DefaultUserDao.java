@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static by.spetr.web.model.dao.ColumnName.USER_LOGIN;
-import static by.spetr.web.model.dao.ColumnName.USER_PASSHASH;
+import static by.spetr.web.model.dao.ColumnName.*;
 
 public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     private static final Logger logger = LogManager.getLogger();
@@ -59,6 +58,10 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             = "SELECT pass " +
             "FROM user " +
             "WHERE login = ?;";
+    public static final String SQL_PHONE_FINDER
+            = "SELECT phone " +
+            "FROM user " +
+            " WHERE login = ?;";
     private static final String SQL_CREATE_NEW_USER
             = "INSERT INTO user (login, pass, role_id, state_id, email, phone, registration_date) " +
             "values (?, ?, 3, 1, ?, ?, ?);";
@@ -213,6 +216,26 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         }
     }
 
+    /**
+     * Method creates {@code User} with {@code ResultSet} given.
+     *
+     * @param resultSet ResultSet.class
+     * @return {@code User}
+     * @throws SQLException in case of impossibility of extracting all fields
+     */
+    private User extractUserFromResultSet(ResultSet resultSet) throws SQLException {
+
+        return new User(
+                resultSet.getLong("user_id"),
+                resultSet.getString(USER_LOGIN),
+                UserRoleType.valueOf(resultSet.getString("role")),
+                UserStateType.valueOf(resultSet.getString("state")),
+                resultSet.getString("email"),
+                resultSet.getString("phone"),
+                resultSet.getDate("registration_date").toLocalDate()
+        );
+    }
+
     @Override
     public Optional<String> findUserPassword(String login) throws DaoException {
         logger.info("findUserPassword() method been called with {}", login);
@@ -242,24 +265,28 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         }
     }
 
-    /**
-     * Method creates {@code User} with {@code ResultSet} given.
-     *
-     * @param resultSet ResultSet.class
-     * @return {@code User}
-     * @throws SQLException in case of impossibility of extracting all fields
-     */
-    private User extractUserFromResultSet(ResultSet resultSet) throws SQLException {
+    @Override
+    public Optional<String> findUserPhoneByName(String login) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SQL_PHONE_FINDER)) {
+            statement.setString(1, login);
 
-        return new User(
-                resultSet.getLong("user_id"),
-                resultSet.getString(USER_LOGIN),
-                UserRoleType.valueOf(resultSet.getString("role")),
-                UserStateType.valueOf(resultSet.getString("state")),
-                resultSet.getString("email"),
-                resultSet.getString("phone"),
-                resultSet.getDate("registration_date").toLocalDate()
-        );
+            ResultSet resultSet = statement.executeQuery();
+            String phone = null;
+
+            if (resultSet.next()) {
+                phone = resultSet.getString(USER_PHONE);
+            }
+
+            return Optional.ofNullable(phone);
+
+        } catch (SQLException e) {
+            logger.error(DATABASE_ERROR, e);
+            throw new DaoException(DATABASE_ERROR, e);
+        } catch (ConnectionPoolException e) {
+            logger.error(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+        }
     }
 
     @Override
