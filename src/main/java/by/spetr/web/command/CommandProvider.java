@@ -3,26 +3,29 @@ package by.spetr.web.command;
 import by.spetr.web.command.redirect.DefaultCommand;
 import by.spetr.web.command.redirect.GoToMainPageCommand;
 import by.spetr.web.command.redirect.GoToSignUpPageCommand;
+import by.spetr.web.command.vehicle.ShowVehicleCreationPageCommand;
 import by.spetr.web.command.user.*;
-import by.spetr.web.command.vehicle.ShowVehicleAdsCommand;
-import by.spetr.web.command.vehicle.ShowVehicleInfoCommand;
-import by.spetr.web.command.vehicle.UpdateVehicleAdsCommand;
-import by.spetr.web.command.vehicle.UploadVehiclePhotoCommand;
+import by.spetr.web.command.vehicle.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.EnumMap;
 
 public class CommandProvider {
+    private static final Logger logger = LogManager.getLogger();
     private static CommandProvider instance;
     private final EnumMap<CommandType, Command> commands = new EnumMap(CommandType.class);
 
     public CommandProvider() {
         commands.put(CommandType.DEFAULT, new DefaultCommand());
+        commands.put(CommandType.GET_MAKE_MODEL_LIST, new GetMakeModelListCommand());
         commands.put(CommandType.GO_TO_SIGN_UP_PAGE, new GoToSignUpPageCommand());
         commands.put(CommandType.GO_TO_MAIN_PAGE, new GoToMainPageCommand());
-        commands.put(CommandType.SHOW_USER_LIST, new ShowUserListCommand());
+        commands.put(CommandType.SHOW_USER_LIST_ADMIN, new ShowUserListCommand());
         commands.put(CommandType.SHOW_VEHICLE_INFO, new ShowVehicleInfoCommand());
         commands.put(CommandType.SHOW_VEHICLE_LIST, new ShowVehicleListCommand());
-        commands.put(CommandType.SHOW_VEHICLE_ADS, new ShowVehicleAdsCommand());
+        commands.put(CommandType.SHOW_VEHICLE_LIST_ADMIN, new ShowVehicleListAdmCommand());
+        commands.put(CommandType.SHOW_VEHICLE_CREATION_PAGE, new ShowVehicleCreationPageCommand());
         commands.put(CommandType.UPDATE_VEHICLE_ADS, new UpdateVehicleAdsCommand());
         commands.put(CommandType.UPLOAD_VEHICLE_PHOTO, new UploadVehiclePhotoCommand());
         commands.put(CommandType.CREATE_USER, new CreateUserCommand());
@@ -43,6 +46,7 @@ public class CommandProvider {
 
     public Command getCommand(String commandName) {
         if (commandName == null) {
+            logger.error("Command is null");
             return commands.get(CommandType.DEFAULT);
         }
 
@@ -51,6 +55,7 @@ public class CommandProvider {
         try {
             commandType = CommandType.valueOf(commandName.toUpperCase());
         } catch (IllegalArgumentException e) {
+            logger.error("Command '{}' not found. Redirecting to default command", commandName);
             commandType = CommandType.DEFAULT;
         }
 
