@@ -73,7 +73,6 @@ public class ConnectionPool {
             busyConnectionPool.put(connection);
         } catch (InterruptedException e) {
             logger.warn("Interrupted waiting for a free connection", e);
-            Thread.currentThread().interrupt();
         }
 
         logger.info("Connection been given");
@@ -115,7 +114,6 @@ public class ConnectionPool {
             logger.error("Connection validity checking error");
         } catch (InterruptedException e) {
             logger.error("Awaiting been interrupted, error adding connection to free connections list", e);
-            Thread.currentThread().interrupt();
         }
 
         logger.info(isRemoved && isAdded
@@ -145,7 +143,6 @@ public class ConnectionPool {
             return true;
         } catch (InterruptedException e) {
             logger.error("error adding connection to the free connection list, awaiting been interrupted", e);
-            Thread.currentThread().interrupt();
             return false;
         }
     }
@@ -161,8 +158,7 @@ public class ConnectionPool {
                 counterLock.lock();
                 condition.await();
             } catch (InterruptedException e) {
-                logger.error("Sleep been interrupted");
-                Thread.currentThread().interrupt();
+                logger.error("Sleep been interrupted", e);
             } finally {
                 counterLock.unlock();
             }
@@ -205,14 +201,13 @@ public class ConnectionPool {
                 logger.debug("{}/{} connections closed", i, actualPoolSize);
             }
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            logger.error("waiting for connection has been interrupted", e);
         } catch (SQLException e) {
             logger.error("error destroying Connection Pool",e );
             throw new ConnectionPoolException("error destroying Connection Pool", e);
         } finally {
             deregisterDriver();
         }
-        //deregisterDriver();
     }
 
     private void deregisterDriver() {
