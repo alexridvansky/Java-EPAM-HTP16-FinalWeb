@@ -76,10 +76,6 @@ public class ConnectionPool {
             Thread.currentThread().interrupt();
         }
 
-        if (connection == null) {
-            throw new ConnectionPoolException("Error getting free connection");
-        }
-
         logger.info("Connection been given");
 
         return connection;
