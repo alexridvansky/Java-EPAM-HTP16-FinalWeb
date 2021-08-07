@@ -2,7 +2,7 @@ package by.spetr.web.model.entity;
 
 import java.io.Serializable;
 
-public class Option extends AbstractEntity implements Serializable {
+public class VehicleOption extends AbstractEntity implements Serializable {
     private int optionId;
     private String description;
 
@@ -25,12 +25,12 @@ public class Option extends AbstractEntity implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Option)) return false;
+        if (!(o instanceof VehicleOption)) return false;
 
-        Option option = (Option) o;
+        VehicleOption vehicleOption = (VehicleOption) o;
 
-        if (optionId != option.optionId) return false;
-        return description != null ? description.equals(option.description) : option.description == null;
+        if (optionId != vehicleOption.optionId) return false;
+        return description != null ? description.equals(vehicleOption.description) : vehicleOption.description == null;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Option extends AbstractEntity implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Option{");
+        final StringBuilder sb = new StringBuilder("VehicleOption{");
         sb.append("optionId=").append(optionId);
         sb.append(", description='").append(description).append('\'');
         sb.append('}');
