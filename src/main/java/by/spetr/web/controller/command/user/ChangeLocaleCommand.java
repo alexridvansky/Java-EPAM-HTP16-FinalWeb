@@ -1,14 +1,15 @@
 package by.spetr.web.controller.command.user;
 
 import by.spetr.web.controller.command.Command;
+import by.spetr.web.controller.command.PagePath;
 import by.spetr.web.controller.command.Router;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
+import java.util.Objects;
 
-import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
 
 public class ChangeLocaleCommand implements Command {
@@ -22,10 +23,7 @@ public class ChangeLocaleCommand implements Command {
         logger.debug("locale changed: {} -> {}", locale, newLocale);
 
         String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
-        if (lastPage == null) {
-            lastPage = INDEX_PAGE;
-        }
 
-        return new Router(lastPage);
+        return new Router(Objects.requireNonNullElse(lastPage, PagePath.INDEX_PAGE));
     }
 }
