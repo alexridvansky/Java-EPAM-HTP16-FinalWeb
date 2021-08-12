@@ -2,9 +2,10 @@ package by.spetr.web.controller.command.vehicle;
 
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
+import by.spetr.web.model.dto.UserDto;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
-import by.spetr.web.model.form.VehicleForm;
+import by.spetr.web.model.form.VehicleShortForm;
 import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,10 +21,8 @@ public class AddNewMakeCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) {
-        VehicleForm form;
-
         try {
-            form = (VehicleForm) doForm(request);
+            VehicleShortForm form = (VehicleShortForm) doForm(request);
             vehicleService.addMake(form);
             request.setAttribute(FEEDBACK_MESSAGE, form.getFeedbackMsg());
 
@@ -46,14 +45,18 @@ public class AddNewMakeCommand implements Command {
 
     @Override
     public DefaultForm doForm(HttpServletRequest request) {
-        VehicleForm form = new VehicleForm();
+        UserDto executor = (UserDto) request.getSession().getAttribute(USER_PARAM);
+        VehicleShortForm form = new VehicleShortForm();
 
-        String make = request.getParameter(VEHICLE_MAKE);
-        if (make == null || make.isBlank()) {
-            logger.error("Weird thing... Parameter 'make' is null or empty");
-            throw new IllegalArgumentException("Parameter 'make' is null or empty");
+        String make = request.getParameter(VEHICLE_MAKE_PARAM);
+
+        if (executor == null || make == null || make.isBlank()) {
+            logger.error("Wrong parameters' types, parsing error");
+            throw new IllegalArgumentException("Wrong parameters' types, parsing error");
         }
+
         form.setMake(make);
+        form.setExecutor(executor);
 
         return form;
     }
