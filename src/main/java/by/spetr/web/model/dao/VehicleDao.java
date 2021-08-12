@@ -1,10 +1,10 @@
 package by.spetr.web.model.dao;
 
-import by.spetr.web.model.entity.Vehicle;
-import by.spetr.web.model.entity.VehicleMake;
-import by.spetr.web.model.entity.VehicleModel;
+import by.spetr.web.model.entity.*;
+import by.spetr.web.model.entity.type.VehiclePowertrainType;
 import by.spetr.web.model.entity.type.VehicleStateType;
 import by.spetr.web.model.exception.DaoException;
+import by.spetr.web.model.exception.ServiceException;
 
 import java.util.*;
 
@@ -40,12 +40,85 @@ public interface VehicleDao {
     Optional<Vehicle> findById(long id) throws DaoException;
 
     /**
+     * is used to check it out whether given make entry already in the db
+     *
+     * @param make Vehicle.make name
+     * @return true if make name given already in the db
+     */
+    boolean isMakeExist(String make) throws DaoException;
+
+    /**
+     * is used to check it out whether given makeId entry already in the db
+     *
+     * @param makeId Vehicle.makeId name
+     * @return true if makeId given already in the db
+     */
+    boolean isMakeExist(int makeId) throws DaoException;
+
+    /**
      * is used to get the full list of Vehicle makes
      *
      * @return List<VehicleMake> of Vehicle makes
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     List<VehicleMake> findMakeList() throws DaoException;
+
+    /**
+     * is used to insert new entry of Vehicle.make
+     *
+     * @param make new Vehicle.make to be added to
+     * @return true in case of successful adding new value
+     * @throws DaoException in case of error adding new entry
+     */
+    boolean insertMake(String make) throws DaoException;
+
+    /**
+     * is used to check it out whether given model entry already in the db
+     *
+     * @param model Vehicle.model name
+     * @return true if make name given already in the db
+     */
+    boolean isModelExist(String model) throws DaoException;
+
+    /**
+     * is used to check it out whether given modelId presented in the db
+     *
+     * @param modelId Vehicle.modelId
+     * @return true if makeId given already in the db
+     */
+    boolean isModelExist(int modelId) throws DaoException;
+
+    /**
+     * is used to check it out whether given powertrainId presented in the db
+     *
+     * @param powertrainId Vehicle.powertrainId
+     * @return true if powertrainId given already in the db
+     */
+    boolean isPowertrainExist(int powertrainId) throws DaoException;
+
+    /**
+     * is used to check it out whether given transmissionId presented in the db
+     *
+     * @param transmissionId Vehicle.transmissionId
+     * @return true if powertrainId given already in the db
+     */
+    boolean isTransmissionExist(int transmissionId) throws DaoException;
+
+    /**
+     * is used to check it out whether given driveId presented in the db
+     *
+     * @param driveId Vehicle.driveId
+     * @return true if powertrainId given already in the db
+     */
+    boolean isDriveExist(int driveId) throws DaoException;
+
+    /**
+     * is used to check it out whether given colorId presented in the db
+     *
+     * @param colorId Vehicle.colorId
+     * @return true if powertrainId given already in the db
+     */
+    boolean isColorExist(int colorId) throws DaoException;
 
     /**
      * is used to get the full list of Vehicle models
@@ -56,12 +129,31 @@ public interface VehicleDao {
     List<VehicleModel> findModelList() throws DaoException;
 
     /**
+     * is used to insert new entry of Vehicle.model
+     *
+     * @param model new Vehicle.model to be added to
+     * @param makeId makeId Vehicle.model belongs to
+     * @return true in case of successful adding new value
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    boolean insertModel(String model, int makeId) throws DaoException;
+
+    /**
+     * is used to insert new entry of Vehicle into db
+     *
+     * @param vehicle instance of Vehicle class
+     * @return Vehicle created with Vehicle.id
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    Vehicle insertVehicle(Vehicle vehicle) throws DaoException;
+
+    /**
      * is used for changing status of given vehicle
      *
      * @param vehicleId userId
      * @param vehicleState new Vehicle.state
      * @return true if vehicle status has been changed successfully
-     * @throws DaoException if error occurred on DAO layer
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean updateState(long vehicleId, VehicleStateType vehicleState) throws DaoException;
 
@@ -71,7 +163,7 @@ public interface VehicleDao {
      * @param vehicleId vehicleId
      * @param cloudinaryPublicIds Cloudinary publicId to the file
      * @return boolean if ids were stored successfully
-     * @throws DaoException if error occurred on DAO layer
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean createPhoto(long vehicleId, Set<String> cloudinaryPublicIds) throws DaoException;
 
@@ -80,7 +172,7 @@ public interface VehicleDao {
      *
      * @param vehicleId vehicleId
      * @return Cloudinary publicId to preview image
-     * @throws DaoException in case of error on DAO layer
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     Optional<String> findPreviewById(long vehicleId) throws DaoException;
 
@@ -89,16 +181,32 @@ public interface VehicleDao {
      *
      * @param vehicleId vehicle id
      * @return List<String> list of paths to the images
-     * @throws DaoException if error occurred on DAO layer
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     List<String> findAllPhotoById(long vehicleId) throws DaoException;
 
     /**
-     *  is used to get list of options with vehicleId given
+     * is used to get full List of possible Vehicle.Option
+     *
+     * @return List<VehicleOption>
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    List<VehicleOption> findAllOption() throws DaoException;
+
+    /**
+     * is used to get the full List of possible values for Vehicle.Color
+     *
+     * @return List<VehicleColor> of values Vehicle.Color
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    List<VehicleColor> findAllColors() throws DaoException;
+
+    /**
+     *  is used to get the list of options with vehicleId given
      *
      * @param vehicleId vehicleId
-     * @return SortedMap<Long, String> of options for vehicle given
-     * @throws DaoException if error occurred on DAO layer
+     * @return List<VehicleOption> of options for vehicle given
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    Map<Long, String> findOptionsById(long vehicleId) throws DaoException;
+    List<VehicleOption> findOptionByVehicleId(long vehicleId) throws DaoException;
 }
