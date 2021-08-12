@@ -1,9 +1,11 @@
-package by.spetr.web.model.dto;
+package by.spetr.web.model.form;
 
 import java.io.Serializable;
 import java.util.EnumMap;
 
-public class RegistrationFormDto implements  Serializable {
+public class UserRegistrationForm implements  Serializable {
+    private final EnumMap<RegDataType, String> regData = new EnumMap<>(RegDataType.class);
+
     private enum RegDataType {
         LOGIN,
         PASSWORD,
@@ -13,9 +15,7 @@ public class RegistrationFormDto implements  Serializable {
         COMMENT
     }
 
-    private final EnumMap<RegDataType, String> regData = new EnumMap<>(RegDataType.class);
-
-    public RegistrationFormDto(String login, String password, String passwordRepeat, String email, String phone) {
+    public UserRegistrationForm(String login, String password, String passwordRepeat, String email, String phone) {
         regData.put(RegDataType.LOGIN, login);
         regData.put(RegDataType.PASSWORD, password);
         regData.put(RegDataType.PASSWORD_REPEAT, passwordRepeat);
