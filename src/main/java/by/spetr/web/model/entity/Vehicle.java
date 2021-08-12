@@ -6,18 +6,17 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Vehicle extends AbstractEntity implements Serializable {
     private long id;
     private VehicleStateType state;
-    private String owner;
-    private String make;
-    private String model;
+    private long ownerId;
+    private VehicleModel model;
     private Year modelYear;
     private int mileage;
-    private String color;
+    private VehicleColor color;
     private BigDecimal price;
     private VehiclePowertrainType powertrain;
     private VehicleTransmissionType transmission;
@@ -26,8 +25,7 @@ public class Vehicle extends AbstractEntity implements Serializable {
     private int power;
     private String comment = "";
     private LocalDate dateCreated;
-    private Set<Integer> optionSet = new HashSet<>();
-
+    private List<VehicleOption> optionList = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -45,27 +43,19 @@ public class Vehicle extends AbstractEntity implements Serializable {
         this.state = state;
     }
 
-    public String getOwner() {
-        return owner;
+    public long getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
     }
 
-    public String getMake() {
-        return make;
-    }
-
-    public void setMake(String make) {
-        this.make = make;
-    }
-
-    public String getModel() {
+    public VehicleModel getModel() {
         return model;
     }
 
-    public void setModel(String model) {
+    public void setModel(VehicleModel model) {
         this.model = model;
     }
 
@@ -85,11 +75,11 @@ public class Vehicle extends AbstractEntity implements Serializable {
         this.mileage = mileage;
     }
 
-    public String getColor() {
+    public VehicleColor getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(VehicleColor color) {
         this.color = color;
     }
 
@@ -157,12 +147,12 @@ public class Vehicle extends AbstractEntity implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public Set<Integer> getOptionSet() {
-        return optionSet;
+    public List<VehicleOption> getOptionList() {
+        return optionList;
     }
 
-    public void setOptionSet(Set<Integer> optionSet) {
-        this.optionSet = optionSet;
+    public void setOptionList(List<VehicleOption> optionList) {
+        this.optionList = optionList;
     }
 
     @Override
@@ -173,12 +163,11 @@ public class Vehicle extends AbstractEntity implements Serializable {
         Vehicle vehicle = (Vehicle) o;
 
         if (id != vehicle.id) return false;
+        if (ownerId != vehicle.ownerId) return false;
         if (mileage != vehicle.mileage) return false;
         if (displacement != vehicle.displacement) return false;
         if (power != vehicle.power) return false;
         if (state != vehicle.state) return false;
-        if (owner != null ? !owner.equals(vehicle.owner) : vehicle.owner != null) return false;
-        if (make != null ? !make.equals(vehicle.make) : vehicle.make != null) return false;
         if (model != null ? !model.equals(vehicle.model) : vehicle.model != null) return false;
         if (modelYear != null ? !modelYear.equals(vehicle.modelYear) : vehicle.modelYear != null) return false;
         if (color != null ? !color.equals(vehicle.color) : vehicle.color != null) return false;
@@ -188,15 +177,14 @@ public class Vehicle extends AbstractEntity implements Serializable {
         if (drive != vehicle.drive) return false;
         if (comment != null ? !comment.equals(vehicle.comment) : vehicle.comment != null) return false;
         if (dateCreated != null ? !dateCreated.equals(vehicle.dateCreated) : vehicle.dateCreated != null) return false;
-        return optionSet != null ? optionSet.equals(vehicle.optionSet) : vehicle.optionSet == null;
+        return optionList != null ? optionList.equals(vehicle.optionList) : vehicle.optionList == null;
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (state != null ? state.hashCode() : 0);
-        result = 31 * result + (owner != null ? owner.hashCode() : 0);
-        result = 31 * result + (make != null ? make.hashCode() : 0);
+        result = 31 * result + (int) (ownerId ^ (ownerId >>> 32));
         result = 31 * result + (model != null ? model.hashCode() : 0);
         result = 31 * result + (modelYear != null ? modelYear.hashCode() : 0);
         result = 31 * result + mileage;
@@ -209,7 +197,7 @@ public class Vehicle extends AbstractEntity implements Serializable {
         result = 31 * result + power;
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         result = 31 * result + (dateCreated != null ? dateCreated.hashCode() : 0);
-        result = 31 * result + (optionSet != null ? optionSet.hashCode() : 0);
+        result = 31 * result + (optionList != null ? optionList.hashCode() : 0);
         return result;
     }
 
@@ -218,12 +206,11 @@ public class Vehicle extends AbstractEntity implements Serializable {
         final StringBuilder sb = new StringBuilder("Vehicle{");
         sb.append("id=").append(id);
         sb.append(", state=").append(state);
-        sb.append(", owner='").append(owner).append('\'');
-        sb.append(", make='").append(make).append('\'');
-        sb.append(", model='").append(model).append('\'');
+        sb.append(", ownerId=").append(ownerId);
+        sb.append(", model=").append(model);
         sb.append(", modelYear=").append(modelYear);
         sb.append(", mileage=").append(mileage);
-        sb.append(", color='").append(color).append('\'');
+        sb.append(", color=").append(color);
         sb.append(", price=").append(price);
         sb.append(", powertrain=").append(powertrain);
         sb.append(", transmission=").append(transmission);
@@ -232,7 +219,7 @@ public class Vehicle extends AbstractEntity implements Serializable {
         sb.append(", power=").append(power);
         sb.append(", comment='").append(comment).append('\'');
         sb.append(", dateCreated=").append(dateCreated);
-        sb.append(", optionSet=").append(optionSet);
+        sb.append(", optionList=").append(optionList);
         sb.append('}');
         return sb.toString();
     }
