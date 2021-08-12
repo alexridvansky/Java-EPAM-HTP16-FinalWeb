@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static by.spetr.web.controller.command.PagePath.*;
-import static by.spetr.web.controller.command.RequestParameter.LAST_PAGE_PARAM;
 import static by.spetr.web.controller.command.RequestParameter.VEHICLE_LIST_PARAM;
 
 public class ShowVehicleListCommand implements Command {
@@ -22,7 +21,6 @@ public class ShowVehicleListCommand implements Command {
         try {
             List<VehiclePreviewDto> vehicles = vehicleService.getPublicVehicleList();
 
-            request.getSession().setAttribute(LAST_PAGE_PARAM, SHOW_VEHICLE_LIST);
             request.setAttribute(VEHICLE_LIST_PARAM, vehicles);
 
             return new Router(SHOW_VEHICLE_LIST);
