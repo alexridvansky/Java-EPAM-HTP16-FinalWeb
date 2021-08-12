@@ -11,8 +11,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
+import java.util.Objects;
+
+import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class ChangeVehicleStateCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -31,17 +34,13 @@ public class ChangeVehicleStateCommand implements Command {
 
             String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
 
-            if (lastPage == null) {
-                lastPage = INDEX_PAGE;
-            }
-            return new Router(lastPage, Router.RouterType.FORWARD);
+            return new Router(Objects.requireNonNullElse(lastPage, PagePath.INDEX_PAGE));
 
         } catch (ServiceException e) {
             logger.error("state for the 'vehicleId {}' not changed", vehicleId);
-            e.printStackTrace();
+            request.setAttribute(EXCEPTION_MESSAGE, "state not changed");
 
-            return new Router(PagePath.ERROR_PAGE, Router.RouterType.REDIRECT);
-            // todo: goto error page? show message ?
+            return new Router(ERROR_PAGE, REDIRECT);
         }
     }
 }
