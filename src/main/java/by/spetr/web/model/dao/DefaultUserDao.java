@@ -58,13 +58,9 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             = "SELECT pass " +
             "FROM user " +
             "WHERE login = ?;";
-    public static final String SQL_PHONE_FINDER
-            = "SELECT phone " +
-            "FROM user " +
-            " WHERE login = ?;";
     private static final String SQL_CREATE_NEW_USER
             = "INSERT INTO user (login, pass, role_id, state_id, email, phone, registration_date) " +
-            "values (?, ?, 3, 1, ?, ?, ?);";
+            "VALUES (?, ?, 3, 1, ?, ?, ?);";
     private static final String SQL_UPDATE_STATE_BY_ID
             = "UPDATE user SET state_id = ? WHERE user_id = ?;";
     private static final String SQL_UPDATE_STATE_BY_LOGIN
@@ -255,30 +251,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             }
 
             return Optional.ofNullable(password);
-
-        } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
-        } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
-        }
-    }
-
-    @Override
-    public Optional<String> findUserPhoneByName(String login) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SQL_PHONE_FINDER)) {
-            statement.setString(1, login);
-
-            ResultSet resultSet = statement.executeQuery();
-            String phone = null;
-
-            if (resultSet.next()) {
-                phone = resultSet.getString(USER_PHONE);
-            }
-
-            return Optional.ofNullable(phone);
 
         } catch (SQLException e) {
             logger.error(DATABASE_ERROR, e);

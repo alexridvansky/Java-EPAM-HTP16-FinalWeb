@@ -66,14 +66,6 @@ public interface UserDao {
     Optional<String> findUserPassword(String login) throws DaoException;
 
     /**
-     *  is used to get phone number by user name (login)
-     * @param login user login
-     * @return Optional<String> contains phone number or Optional.empty if phone hasn't been found
-     * @throws DaoException if connection can't be obtained or no access to the DataBase
-     */
-    Optional<String> findUserPhoneByName(String login) throws DaoException;
-
-    /**
      * is used to create a new user with user.Role = user and user.State = confirmation.
      *
      * @param entity {@code User} class
