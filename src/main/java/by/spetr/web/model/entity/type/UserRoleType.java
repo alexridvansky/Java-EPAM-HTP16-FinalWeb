@@ -4,7 +4,7 @@ public enum UserRoleType {
     ROOT(1),
     MODERATOR(2),
     USER(3),
-    ANONYMOUS(4);
+    GUEST(4);
 
     private final int roleId;
 
