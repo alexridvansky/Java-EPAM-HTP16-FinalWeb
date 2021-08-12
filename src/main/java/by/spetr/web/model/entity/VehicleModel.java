@@ -1,9 +1,11 @@
 package by.spetr.web.model.entity;
 
-public class VehicleModel {
-    int modelId;
-    VehicleMake make;
-    String value;
+import java.io.Serializable;
+
+public class VehicleModel extends AbstractEntity implements Serializable {
+    private int modelId;
+    private VehicleMake make;
+    private String value;
 
     public int getModelId() {
         return modelId;
@@ -34,11 +36,11 @@ public class VehicleModel {
         if (this == o) return true;
         if (!(o instanceof VehicleModel)) return false;
 
-        VehicleModel that = (VehicleModel) o;
+        VehicleModel vehicleModel = (VehicleModel) o;
 
-        if (modelId != that.modelId) return false;
-        if (make != null ? !make.equals(that.make) : that.make != null) return false;
-        return value != null ? value.equals(that.value) : that.value == null;
+        if (modelId != vehicleModel.modelId) return false;
+        if (make != null ? !make.equals(vehicleModel.make) : vehicleModel.make != null) return false;
+        return value != null ? value.equals(vehicleModel.value) : vehicleModel.value == null;
     }
 
     @Override

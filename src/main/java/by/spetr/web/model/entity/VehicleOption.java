@@ -3,14 +3,14 @@ package by.spetr.web.model.entity;
 import java.io.Serializable;
 
 public class VehicleOption extends AbstractEntity implements Serializable {
-    private int optionId;
+    private long optionId;
     private String description;
 
-    public int getOptionId() {
+    public long getOptionId() {
         return optionId;
     }
 
-    public void setOptionId(int optionId) {
+    public void setOptionId(long optionId) {
         this.optionId = optionId;
     }
 
@@ -27,15 +27,15 @@ public class VehicleOption extends AbstractEntity implements Serializable {
         if (this == o) return true;
         if (!(o instanceof VehicleOption)) return false;
 
-        VehicleOption vehicleOption = (VehicleOption) o;
+        VehicleOption option = (VehicleOption) o;
 
-        if (optionId != vehicleOption.optionId) return false;
-        return description != null ? description.equals(vehicleOption.description) : vehicleOption.description == null;
+        if (optionId != option.optionId) return false;
+        return description != null ? description.equals(option.description) : option.description == null;
     }
 
     @Override
     public int hashCode() {
-        int result = optionId;
+        int result = (int) (optionId ^ (optionId >>> 32));
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
