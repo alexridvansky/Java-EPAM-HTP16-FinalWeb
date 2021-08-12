@@ -5,7 +5,7 @@ import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.entity.VehicleMake;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
-import by.spetr.web.model.form.VehicleForm;
+import by.spetr.web.model.form.VehicleShortForm;
 import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,10 +23,10 @@ public class AddNewModelCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) {
-        VehicleForm form;
+        VehicleShortForm form;
 
         try {
-            form = (VehicleForm) doForm(request);
+            form = (VehicleShortForm) doForm(request);
             vehicleService.addModel(form);
             request.setAttribute(FEEDBACK_MESSAGE, form.getFeedbackMsg());
 
@@ -52,30 +52,32 @@ public class AddNewModelCommand implements Command {
 
     @Override
     public DefaultForm doForm(HttpServletRequest request) {
-        VehicleForm form = new VehicleForm();
-
-        String makeIdStr = request.getParameter(VEHICLE_MAKE_ID);
-        if (makeIdStr == null || makeIdStr.isBlank()) {
-            logger.error("Weird thing... Parameter 'make_id' is null or empty");
-            throw new IllegalArgumentException("Parameter 'make_id' is null or empty");
-        }
-        int makeId;
         try {
+            VehicleShortForm form = new VehicleShortForm();
+
+            String makeIdStr = request.getParameter(VEHICLE_MAKE_ID_PARAM);
+            if (makeIdStr == null || makeIdStr.isBlank()) {
+                logger.error("Weird thing... Parameter 'make_id' is null or empty");
+                throw new IllegalArgumentException("Parameter 'make_id' is null or empty");
+            }
+
+            int makeId;
             makeId = Integer.parseInt(makeIdStr);
+            form.setMakeId(makeId);
+
+            String model = request.getParameter(VEHICLE_MODEL_PARAM);
+            if (model == null || model.isBlank()) {
+                logger.error("Weird thing... Parameter 'model' is null or empty");
+                throw new IllegalArgumentException("Parameter 'model' is null or empty");
+            }
+
+            form.setModel(model);
+
+            return form;
         } catch (NumberFormatException e) {
             logger.error("Weird thing... wrong data in 'make_id' parameter");
             throw new IllegalArgumentException("Wrong data in 'make_id' parameter", e);
         }
-        form.setMakeId(makeId);
-
-        String model = request.getParameter(VEHICLE_MODEL);
-        if (model == null || model.isBlank()) {
-            logger.error("Weird thing... Parameter 'model' is null or empty");
-            throw new IllegalArgumentException("Parameter 'model' is null or empty");
-        }
-        form.setModel(model);
-
-        return form;
     }
 }
 
