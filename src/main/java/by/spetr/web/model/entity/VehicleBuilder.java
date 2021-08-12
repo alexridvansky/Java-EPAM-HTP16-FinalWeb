@@ -8,18 +8,17 @@ import by.spetr.web.model.entity.type.VehicleTransmissionType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class VehicleBuilder {
     private long id;
     private VehicleStateType state;
-    private String owner;
-    private String make;
-    private String model;
+    private long ownerId;
+    private VehicleModel model;
     private Year modelYear;
     private int mileage;
-    private String color;
+    private VehicleColor color;
     private BigDecimal price;
     private VehiclePowertrainType powertrain;
     private VehicleTransmissionType transmission;
@@ -28,7 +27,7 @@ public final class VehicleBuilder {
     private int power;
     private String comment = "";
     private LocalDate dateCreated;
-    private Set<Integer> optionSet = new HashSet<>();
+    private List<VehicleOption> optionList = new ArrayList<>();
 
     private VehicleBuilder() {
     }
@@ -47,17 +46,12 @@ public final class VehicleBuilder {
         return this;
     }
 
-    public VehicleBuilder owner(String owner) {
-        this.owner = owner;
+    public VehicleBuilder ownerId(long ownerId) {
+        this.ownerId = ownerId;
         return this;
     }
 
-    public VehicleBuilder make(String make) {
-        this.make = make;
-        return this;
-    }
-
-    public VehicleBuilder model(String model) {
+    public VehicleBuilder model(VehicleModel model) {
         this.model = model;
         return this;
     }
@@ -72,7 +66,7 @@ public final class VehicleBuilder {
         return this;
     }
 
-    public VehicleBuilder color(String color) {
+    public VehicleBuilder color(VehicleColor color) {
         this.color = color;
         return this;
     }
@@ -117,8 +111,8 @@ public final class VehicleBuilder {
         return this;
     }
 
-    public VehicleBuilder optionSet(Set<Integer> optionSet) {
-        this.optionSet = optionSet;
+    public VehicleBuilder optionList(List<VehicleOption> optionList) {
+        this.optionList = optionList;
         return this;
     }
 
@@ -126,8 +120,7 @@ public final class VehicleBuilder {
         Vehicle vehicle = new Vehicle();
         vehicle.setId(id);
         vehicle.setState(state);
-        vehicle.setOwner(owner);
-        vehicle.setMake(make);
+        vehicle.setOwnerId(ownerId);
         vehicle.setModel(model);
         vehicle.setModelYear(modelYear);
         vehicle.setMileage(mileage);
@@ -140,7 +133,7 @@ public final class VehicleBuilder {
         vehicle.setPower(power);
         vehicle.setComment(comment);
         vehicle.setDateCreated(dateCreated);
-        vehicle.setOptionSet(optionSet);
+        vehicle.setOptionList(optionList);
         return vehicle;
     }
 }
