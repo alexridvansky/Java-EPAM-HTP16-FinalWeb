@@ -36,6 +36,8 @@ public class ConnectionPool {
         freeConnectionPool = new LinkedBlockingDeque<>(POOL_SIZE);
         busyConnectionPool = new LinkedBlockingDeque<>();
 
+        logger.info("Initializing ConnectionPool...");
+
         for (int i = 0; i < POOL_SIZE; i++) {
             addNewConnection();
             logger.debug("pool size is {}/{}", getActualPoolSize(), POOL_SIZE);
@@ -61,7 +63,7 @@ public class ConnectionPool {
     }
 
     public Connection getConnection() throws ConnectionPoolException {
-        logger.info("getConnection() method been called");
+        logger.debug("getConnection() method been called");
         // checking out whether we need to suspend this method
         if (isOnCalculation.get()) {
             onServicePause();
@@ -75,13 +77,13 @@ public class ConnectionPool {
             logger.warn("Interrupted waiting for a free connection", e);
         }
 
-        logger.info("Connection been given");
+        logger.debug("Connection been given");
 
         return connection;
     }
 
     public boolean releaseConnection(Connection connection) {
-        logger.info("releaseConnection() method been called");
+        logger.debug("releaseConnection() method been called");
         // checking out whether it needs to suspend this method
         if (isOnCalculation.get()) {
             onServicePause();
@@ -116,10 +118,9 @@ public class ConnectionPool {
             logger.error("Awaiting been interrupted, error adding connection to free connections list", e);
         }
 
-        logger.info(isRemoved && isAdded
+        logger.debug(isRemoved && isAdded
                 ? "Connection been successfully released and moved to freeConnectionPoll"
                 : "Connection releasing error");
-        logger.debug("pool size is {}/{}", getActualPoolSize(), POOL_SIZE);
 
         return isRemoved && isAdded;
     }
@@ -177,7 +178,7 @@ public class ConnectionPool {
     boolean setServiceModeOn() {
         // whenever we need to count connections in both queues simultaneously we set isOnCalculation flag on
         boolean isSetOn = isOnCalculation.compareAndSet(false, true);
-        logger.info(isSetOn ? "Connection pool is on service" : "Error: Connection poos isn't on service");
+        logger.debug(isSetOn ? "Connection pool is on service" : "Error: Connection poos isn't on service");
 
         return isSetOn;
     }
@@ -185,12 +186,13 @@ public class ConnectionPool {
     boolean setServiceModeOff() {
         // sets isOnCalculation flag off, pool can keep on working
         boolean isSetOff = isOnCalculation.compareAndSet(true,false);
-        logger.info(isSetOff ? "Service mode been switched off" : "Error: Service mode hasn't been switched off");
+        logger.debug(isSetOff ? "Service mode been switched off" : "Error: Service mode hasn't been switched off");
 
         return isSetOff;
     }
 
     public void destroyPool() throws ConnectionPoolException {
+        logger.info("destroyPool() method has been called. Destroying pool...");
         logger.info("TimerTask is gonna be cancelled");
         timer.cancel();
         int actualPoolSize = getActualPoolSize();
@@ -198,7 +200,7 @@ public class ConnectionPool {
             for (int i = 1; i <= actualPoolSize; i++) {
                 ProxyConnection proxyConnection = (ProxyConnection) freeConnectionPool.take();
                 proxyConnection.reallyClose();
-                logger.debug("{}/{} connections closed", i, actualPoolSize);
+                logger.info("{}/{} connections closed", i, actualPoolSize);
             }
         } catch (InterruptedException e) {
             logger.error("waiting for connection has been interrupted", e);
