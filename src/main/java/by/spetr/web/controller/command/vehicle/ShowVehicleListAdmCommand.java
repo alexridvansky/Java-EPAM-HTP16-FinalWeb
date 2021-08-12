@@ -16,6 +16,7 @@ import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.PagePath.SHOW_VEHICLE_LIST_ADM;
 import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE;
 import static by.spetr.web.controller.command.RequestParameter.VEHICLE_LIST_PARAM;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class ShowVehicleListAdmCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -36,7 +37,7 @@ public class ShowVehicleListAdmCommand implements Command {
         } catch (IllegalArgumentException e) {
             logger.error("Parsing parameters error", e);
             request.setAttribute(EXCEPTION_MESSAGE, "Parsing parameters error");
-            return new Router(ERROR_PAGE);
+            return new Router(ERROR_PAGE, REDIRECT);
         }
     }
 }

@@ -17,8 +17,10 @@ import java.util.Optional;
 import java.util.Set;
 
 
+import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 
 public class UploadVehiclePhotoCommand implements Command {
@@ -36,7 +38,7 @@ public class UploadVehiclePhotoCommand implements Command {
         filenames.forEach(logger::debug);
 
         if (vehicleId == null || filenames.isEmpty()) {
-            return new Router(PagePath.ERROR_PAGE);
+            return new Router(ERROR_PAGE, REDIRECT);
         } else {
             try {
                 logger.debug("last page: {}", request.getParameter(LAST_PAGE_PARAM));
@@ -53,13 +55,15 @@ public class UploadVehiclePhotoCommand implements Command {
                 if (optionalVehicle.isPresent()) {
                     request.setAttribute(VEHICLE_PARAM, optionalVehicle.get());
                 } else {
-                    return new Router(PagePath.ERROR_PAGE);
+                    return new Router(ERROR_PAGE);
                 }
 
                 return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
             } catch (ServiceException e) {
-                e.printStackTrace(); // todo: custom_error_page
-                return new Router(PagePath.ERROR_PAGE);
+                logger.error("Error uploading photos", e);
+                request.setAttribute(EXCEPTION_MESSAGE, "Error uploading photos");
+
+                return new Router(ERROR_PAGE, REDIRECT);
             }
         }
     }
