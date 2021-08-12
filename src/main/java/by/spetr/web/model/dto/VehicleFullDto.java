@@ -1,5 +1,6 @@
 package by.spetr.web.model.dto;
 
+import by.spetr.web.model.entity.VehicleOption;
 import by.spetr.web.model.entity.type.VehicleDriveType;
 import by.spetr.web.model.entity.type.VehiclePowertrainType;
 import by.spetr.web.model.entity.type.VehicleStateType;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 public class VehicleFullDto implements Serializable {
     private List<String> album;
-    private Map<Long, String> optionsMap;
+    private List<VehicleOption> optionList;
     private long id;
     private VehicleStateType state;
     private String owner;
@@ -41,12 +42,12 @@ public class VehicleFullDto implements Serializable {
         this.album = album;
     }
 
-    public Map<Long, String> getOptionsMap() {
-        return optionsMap;
+    public List<VehicleOption> getOptionList() {
+        return optionList;
     }
 
-    public void setOptionsMap(Map<Long, String> optionsMap) {
-        this.optionsMap = optionsMap;
+    public void setOptionList(List<VehicleOption> optionList) {
+        this.optionList = optionList;
     }
 
     public long getId() {
