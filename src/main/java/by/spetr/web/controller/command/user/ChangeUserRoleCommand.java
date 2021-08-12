@@ -3,38 +3,63 @@ package by.spetr.web.controller.command.user;
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.PagePath;
 import by.spetr.web.controller.command.Router;
+import by.spetr.web.model.dto.UserDto;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.exception.ServiceException;
+import by.spetr.web.model.form.DefaultForm;
+import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.service.DefaultUserService;
 import by.spetr.web.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
+
+import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
 
 public class ChangeUserRoleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     private static final UserService userService = DefaultUserService.getInstance();
 
-
     @Override
     public Router execute(HttpServletRequest request) {
         logger.info("ChangeUserRoleCommand called");
 
+        try {
+            UserForm form = (UserForm) doForm(request);
+            logger.debug("'{}' -> '{}'", form.getUserName(), form.getRole());
+
+            userService.updateUserRole(form);
+
+            String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
+            return new Router(Objects.requireNonNullElse(lastPage, PagePath.INDEX_PAGE));
+
+        } catch (ServiceException | IllegalArgumentException e) {
+            logger.error(e);
+            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            return new Router(ERROR_PAGE);
+        }
+    }
+
+    @Override
+    public DefaultForm doForm(HttpServletRequest request) {
+        UserForm form = new UserForm();
+
         String userName = request.getParameter(USER_NAME_PARAM);
         String userRole = request.getParameter(USER_ROLE_PARAM);
+        UserDto executor = (UserDto) request.getSession().getAttribute(USER_PARAM);
 
-        try {
-            userService.updateUserRole(userName, UserRoleType.valueOf(userRole));
-            logger.debug("'{}' -> '{}'", userName, userRole);
-            String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
-
-            return new Router(lastPage, Router.RouterType.FORWARD);
-
-        } catch (ServiceException e) {
-            // todo: go to some showing_user_error.page
-            return new Router(PagePath.ERROR_PAGE, Router.RouterType.REDIRECT);
+        if (userRole == null || userName == null || executor == null) {
+            logger.error("Wrong parameters' types, parsing error");
+            throw new IllegalArgumentException("Wrong parameters' types, parsing error");
         }
+
+        form.setUserName(userName);
+        form.setRole(UserRoleType.valueOf(userRole));
+        form.setExecutor(executor);
+
+        return form;
     }
 }
