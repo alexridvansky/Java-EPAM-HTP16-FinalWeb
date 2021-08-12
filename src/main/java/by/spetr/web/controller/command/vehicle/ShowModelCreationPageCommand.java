@@ -1,10 +1,11 @@
 package by.spetr.web.controller.command.vehicle;
 
 import by.spetr.web.controller.command.Command;
-import by.spetr.web.controller.command.PagePath;
 import by.spetr.web.controller.command.Router;
+import by.spetr.web.model.dto.UserDto;
 import by.spetr.web.model.entity.VehicleMake;
 import by.spetr.web.model.exception.ServiceException;
+import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,8 @@ import java.util.List;
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.PagePath.MODEL_CREATION_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.model.entity.type.UserRoleType.MODERATOR;
+import static by.spetr.web.model.entity.type.UserRoleType.ROOT;
 
 
 public class ShowModelCreationPageCommand implements Command {
@@ -27,6 +30,7 @@ public class ShowModelCreationPageCommand implements Command {
         logger.debug("ShowModelCreationPageCommand() called");
 
         try {
+            doForm(request);
             List<VehicleMake> makes = vehicleService.getMakeList();
             request.setAttribute(VEHICLE_MAKE_LIST, makes);
 
@@ -38,6 +42,23 @@ public class ShowModelCreationPageCommand implements Command {
             request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
 
             return new Router(ERROR_PAGE);
+
+        } catch (IllegalArgumentException e) {
+            logger.error(e.getMessage(), e);
+            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+
+            return new Router(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public DefaultForm doForm(HttpServletRequest request) {
+        UserDto executor = (UserDto) request.getSession().getAttribute(USER_PARAM);
+        if (executor == null || (!(executor.getRole() == ROOT || executor.getRole() == MODERATOR))) {
+            logger.error("Wrong parameters' types, parsing error");
+            throw new IllegalArgumentException("Wrong parameters' types, parsing error");
+        }
+
+        return new DefaultForm();
     }
 }

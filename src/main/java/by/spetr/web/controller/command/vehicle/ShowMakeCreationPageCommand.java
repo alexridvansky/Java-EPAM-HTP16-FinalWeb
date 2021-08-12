@@ -27,8 +27,7 @@ public class ShowMakeCreationPageCommand implements Command {
             return new Router(MAKE_CREATION_PAGE);
 
         } catch (IllegalArgumentException e) {
-            logger.error("Error getting makes list from Vehicle.service", e);
-            request.setAttribute(FEEDBACK_MESSAGE, "Error getting makes list from Vehicle.service");
+            logger.error(e.getMessage(), e);
             request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
 
             return new Router(ERROR_PAGE);
