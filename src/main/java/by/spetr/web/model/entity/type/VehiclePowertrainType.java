@@ -16,7 +16,7 @@ public enum VehiclePowertrainType {
         return powertrainId;
     }
 
-    public static VehiclePowertrainType getId(int powertrainId) {
+    public static VehiclePowertrainType getType(int powertrainId) {
         for (VehiclePowertrainType type : values()) {
             if (type.powertrainId == powertrainId) {
                 return type;

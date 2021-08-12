@@ -15,7 +15,7 @@ public enum VehicleDriveType {
         return driveId;
     }
 
-    public static VehicleDriveType getId(int driveId) {
+    public static VehicleDriveType getType(int driveId) {
         for (VehicleDriveType type : values()) {
             if (type.driveId == driveId) {
                 return type;
