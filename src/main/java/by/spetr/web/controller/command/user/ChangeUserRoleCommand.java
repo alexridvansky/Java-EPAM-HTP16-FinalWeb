@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class ChangeUserRoleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -39,7 +40,7 @@ public class ChangeUserRoleCommand implements Command {
         } catch (ServiceException | IllegalArgumentException e) {
             logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
-            return new Router(ERROR_PAGE);
+            return new Router(ERROR_PAGE, REDIRECT);
         }
     }
 
