@@ -52,11 +52,7 @@ public class ShowVehicleListAdmCommand implements Command {
             throw new IllegalArgumentException();
         }
 
-        String command = (String) request.getAttribute(COMMAND);
-        CommandType requestedCommand = CommandType.valueOf(command.toUpperCase());
-
         form.setExecutor(executor);
-        form.setRequestedCommand(requestedCommand);
 
         return form;
     }
