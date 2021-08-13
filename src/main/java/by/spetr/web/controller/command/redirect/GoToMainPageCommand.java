@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static by.spetr.web.controller.command.PagePath.MAIN_PAGE;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class GoToMainPageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -15,6 +16,6 @@ public class GoToMainPageCommand implements Command {
     public Router execute(HttpServletRequest request) {
         logger.debug("redirecting to Main page");
 
-        return new Router(MAIN_PAGE);
+        return new Router(MAIN_PAGE, REDIRECT);
     }
 }
