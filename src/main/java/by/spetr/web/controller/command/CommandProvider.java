@@ -16,16 +16,16 @@ import static by.spetr.web.controller.command.CommandType.*;
 public class CommandProvider {
     private static final Logger logger = LogManager.getLogger();
     private static CommandProvider instance;
-    private final EnumMap<CommandType, Command> commands = new EnumMap(CommandType.class);
+    private final EnumMap<CommandType, Command> commands = new EnumMap<>(CommandType.class);
 
-    public CommandProvider() {
+    CommandProvider() {
         commands.put(DEFAULT, new DefaultCommand());
         commands.put(ADD_NEW_MAKE, new AddNewMakeCommand());
         commands.put(ADD_NEW_MODEL, new AddNewModelCommand());
-        commands.put(GET_MAKE_MODEL_LIST, new GetMakeModelListCommand());
+        commands.put(ADD_NEW_VEHICLE, new AddNewVehicleCommand());
         commands.put(GO_TO_SIGN_UP_PAGE, new GoToSignUpPageCommand());
         commands.put(GO_TO_MAIN_PAGE, new GoToMainPageCommand());
-        commands.put(SHOW_USER_LIST_ADMIN, new ShowUserListCommand());
+        commands.put(SHOW_USER_LIST_ADMIN, new ShowUserListAdminCommand());
         commands.put(SHOW_VEHICLE_INFO, new ShowVehicleInfoCommand());
         commands.put(SHOW_VEHICLE_LIST, new ShowVehicleListCommand());
         commands.put(SHOW_VEHICLE_LIST_ADMIN, new ShowVehicleListAdmCommand());
