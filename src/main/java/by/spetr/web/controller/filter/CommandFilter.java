@@ -37,7 +37,7 @@ public class CommandFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 
             throws IOException, ServletException {
-        logger.info("CommandFilter...");
+        logger.debug("CommandFilter...");
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         HttpSession session = httpServletRequest.getSession();

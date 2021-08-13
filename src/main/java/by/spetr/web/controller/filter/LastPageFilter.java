@@ -17,7 +17,7 @@ import static by.spetr.web.controller.command.RequestParameter.LAST_PAGE_PARAM;
  * Filter is used to store the last page visited into session
  * There's an ignore-list below
  */
-@WebFilter(urlPatterns = {"*.jsp"}, dispatcherTypes = {DispatcherType.FORWARD}
+@WebFilter(filterName = "LastPageFilter" ,urlPatterns = {"*.jsp"}, dispatcherTypes = {DispatcherType.FORWARD}
         , initParams = {@WebInitParam(name = "PAGES_ROOT_DIRECTORY", value = "/jsp", description = "Pages Param")
         , @WebInitParam(name = "INDEX_PAGE", value = "/index.jsp", description = "Pages Param")})
 public class LastPageFilter implements Filter {

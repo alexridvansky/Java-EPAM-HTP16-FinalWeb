@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 
-@WebFilter(urlPatterns = {"/*"}, initParams = {
+@WebFilter(filterName = "JspSecurityFilter", urlPatterns = {"/*"}, initParams = {
         @WebInitParam(name = "INDEX_PATH", value = "/index.jsp")
 })
 public class JspSecurityFilter implements Filter {
