@@ -27,8 +27,9 @@ public class CommandProvider {
         commands.put(GO_TO_MAIN_PAGE, new GoToMainPageCommand());
         commands.put(SHOW_USER_LIST_ADMIN, new ShowUserListAdminCommand());
         commands.put(SHOW_VEHICLE_INFO, new ShowVehicleInfoCommand());
-        commands.put(SHOW_VEHICLE_LIST_PUBLIC, new ShowVehicleListPublicCommand());
         commands.put(SHOW_VEHICLE_LIST_ADMIN, new ShowVehicleListAdmCommand());
+        commands.put(SHOW_VEHICLE_LIST_PERSONAL, new ShowVehicleListPersonalCommand());
+        commands.put(SHOW_VEHICLE_LIST_PUBLIC, new ShowVehicleListPublicCommand());
         commands.put(SHOW_VEHICLE_CREATION_PAGE, new ShowVehicleCreationPageCommand());
         commands.put(SHOW_MAKE_CREATION_PAGE, new ShowMakeCreationPageCommand());
         commands.put(SHOW_MODEL_CREATION_PAGE, new ShowModelCreationPageCommand());
