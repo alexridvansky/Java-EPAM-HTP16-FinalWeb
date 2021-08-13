@@ -11,6 +11,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
+import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE;
+import static by.spetr.web.controller.command.RequestParameter.FEEDBACK_MESSAGE;
+
 
 /**
  * class {@code MainController} is used for processing requests matching '*.do' pattern
@@ -44,7 +48,7 @@ public class MainController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("MainController: doPost is being called, redirecting...");
+        logger.debug("MainController: doPost is being called, redirecting...");
         processRequest(request, response);
     }
 
@@ -75,8 +79,9 @@ public class MainController extends HttpServlet {
             dispatcher.forward(request, response);
         } else {
             logger.error("Incorrect router type: {}", router.getRouterType());
-            response.sendRedirect(PagePath.ERROR_PAGE);
-            // todo: error_page?
+            request.setAttribute(FEEDBACK_MESSAGE, "Incorrect router type: {}");
+            request.setAttribute(EXCEPTION_MESSAGE, "Router select error");
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 

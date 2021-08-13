@@ -19,7 +19,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static by.spetr.web.controller.command.RequestParameter.FILENAME_PARAM;
+import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
+import static by.spetr.web.controller.command.RequestParameter.*;
 
 /**
  * class {@code UploadController} is used for processing requests with multipart parameters
@@ -44,7 +45,7 @@ public class UploadController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("UploadController: doPost is being called, redirecting...");
+        logger.debug("UploadController: doPost is being called, redirecting...");
         processRequest(request, response);
     }
 
@@ -94,8 +95,9 @@ public class UploadController extends HttpServlet {
             dispatcher.forward(request, response);
         } else {
             logger.error("Incorrect router type: {}", router.getRouterType());
-            response.sendRedirect(PagePath.ERROR_PAGE);
-            // todo: error_page?
+            request.setAttribute(FEEDBACK_MESSAGE, "Incorrect router type: {}");
+            request.setAttribute(EXCEPTION_MESSAGE, "Router select error");
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 }
