@@ -15,6 +15,10 @@ import java.io.IOException;
 
 import static by.spetr.web.controller.command.RequestParameter.USER_PARAM;
 
+/**
+ * Filter is used for checking if session contains information about user
+ * and sets it up if instance of user not been found in sessionScope
+ */
 @WebFilter(filterName = "DefaultUserFilter", urlPatterns = {"/*"}, initParams = {
         @WebInitParam(name = "GUEST_USERNAME", value = "GUEST")
 })
