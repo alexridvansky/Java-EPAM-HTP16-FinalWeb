@@ -1,7 +1,6 @@
 package by.spetr.web.controller.command.user;
 
 import by.spetr.web.controller.command.Command;
-import by.spetr.web.controller.command.PagePath;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.dto.UserDto;
 import by.spetr.web.model.exception.ServiceException;
@@ -15,7 +14,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
+import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class SignInCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -36,7 +37,7 @@ public class SignInCommand implements Command {
             } else {
                 request.setAttribute(AUTHENTICATION_ERROR, "Login error");
             }
-            return new Router(Objects.requireNonNullElse(lastPage, PagePath.INDEX_PAGE));
+            return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE), REDIRECT);
 
         } catch (ServiceException e) {
             logger.error(e);
