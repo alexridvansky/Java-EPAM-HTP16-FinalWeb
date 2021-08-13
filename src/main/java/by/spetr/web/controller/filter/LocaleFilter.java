@@ -12,7 +12,7 @@ import java.util.Locale;
 import static by.spetr.web.controller.command.RequestParameter.LOCALE_PARAM;
 
 /**
- * Filter is used to set up the locale from user system defaults to session
+ * Filter is used to set up the locale from user's system defaults to session
  */
 @WebFilter(filterName = "LocaleFilter", urlPatterns = {"/*"})
 public class LocaleFilter implements Filter {
@@ -20,6 +20,7 @@ public class LocaleFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        logger.debug("Locale filter");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         if (httpRequest.getSession().getAttribute(LOCALE_PARAM) == null) {
             Locale userSystemDefaultLocale = httpRequest.getLocale();
