@@ -262,11 +262,12 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public boolean create(User entity, String pass) throws DaoException {
+    public User createUser(User entity, String pass) throws DaoException {
         logger.info("create() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_CREATE_NEW_USER)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_CREATE_NEW_USER,
+                     Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, entity.getLogin());
             statement.setString(2, pass);
@@ -278,7 +279,18 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
             logger.debug("fields updated: {}", result);
 
-            return result > 0;
+            ResultSet resultSet = statement.getGeneratedKeys();
+            long userId = 0;
+            if (resultSet.next()) {
+                userId = resultSet.getLong(1);
+            }
+
+            Optional<User> optionalUser = findUserById(userId);
+            if (optionalUser.isEmpty()) {
+                throw new DaoException("User can't be created or re-read after creating");
+            } else {
+                return optionalUser.get();
+            }
 
         } catch (SQLException e) {
             logger.error(DATABASE_ERROR, e);

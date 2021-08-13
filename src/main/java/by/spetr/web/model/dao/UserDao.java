@@ -72,7 +72,7 @@ public interface UserDao {
      * @return true if user has been created successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    boolean create(User entity, String pass) throws DaoException;
+    User createUser(User entity, String pass) throws DaoException;
 
     /**
      * is used for updating status of given user
