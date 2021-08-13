@@ -16,9 +16,9 @@ import org.apache.logging.log4j.Logger;
 import java.time.Year;
 import java.util.Set;
 
-import static by.spetr.web.controller.command.PagePath.ADD_PHOTO_PAGE;
-import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
+import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class AddNewVehicleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -41,7 +41,7 @@ public class AddNewVehicleCommand implements Command {
                 logger.error("Wrong request.method. Probably invasion attempt :) Alarm!");
                 request.setAttribute(EXCEPTION_MESSAGE, "Wrong Request.method(). Probably invasion attempt :) Alarm!");
 
-                return new Router(ERROR_PAGE);
+                return new Router(ERROR_PAGE, REDIRECT);
             }
 
             VehicleFullForm form = (VehicleFullForm) doForm(request);
@@ -50,7 +50,7 @@ public class AddNewVehicleCommand implements Command {
 
             request.setAttribute(VEHICLE_PARAM, vehicle);
 
-            return new Router(ADD_PHOTO_PAGE);
+            return new Router(VEHICLE_LIST_PERSONAL);
 
         } catch (IllegalArgumentException | ServiceException e) {
             logger.error(e);
