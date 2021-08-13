@@ -12,8 +12,9 @@ import java.util.List;
 
 import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.VEHICLE_LIST_PARAM;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
-public class ShowVehicleListCommand implements Command {
+public class ShowVehicleListPublicCommand implements Command {
     private static final VehicleService vehicleService = DefaultVehicleService.getInstance();
 
     @Override
@@ -23,10 +24,10 @@ public class ShowVehicleListCommand implements Command {
 
             request.setAttribute(VEHICLE_LIST_PARAM, vehicles);
 
-            return new Router(SHOW_VEHICLE_LIST);
+            return new Router(VEHICLE_LIST_PUBLIC);
 
         } catch (ServiceException e) {
-            return new Router(ERROR_PAGE);
+            return new Router(ERROR_PAGE, REDIRECT);
         }
     }
 }

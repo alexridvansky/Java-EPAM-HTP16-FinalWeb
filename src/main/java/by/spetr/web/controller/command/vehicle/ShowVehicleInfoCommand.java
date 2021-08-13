@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class ShowVehicleInfoCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -27,9 +28,9 @@ public class ShowVehicleInfoCommand implements Command {
             Optional<VehicleFullDto> optionalVehicleFullDto = vehicleService.getFullDtoVehicleById(Long.parseLong(vehicleId));
             if (optionalVehicleFullDto.isPresent()) {
                 request.setAttribute(VEHICLE_PARAM, optionalVehicleFullDto.get());
-                return new Router(SHOW_VEHICLE_INFO);
+                return new Router(VEHICLE_INFO);
             } else {
-                return new Router(SHOW_VEHICLE_NOT_FOUND);
+                return new Router(SHOW_VEHICLE_NOT_FOUND, REDIRECT);
             }
         } catch (ServiceException e) {
             logger.error("Error getting vehicle info from Vehicle.service", e);
