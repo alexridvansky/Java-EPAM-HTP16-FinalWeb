@@ -3,7 +3,6 @@ package by.spetr.web.controller.command.vehicle;
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.dto.UserDto;
-import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.Vehicle;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.exception.ServiceException;
@@ -15,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Year;
+import java.util.Set;
 
 import static by.spetr.web.controller.command.PagePath.ADD_PHOTO_PAGE;
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
@@ -28,7 +28,7 @@ public class AddNewVehicleCommand implements Command {
     public Router execute(HttpServletRequest request) {
         logger.debug("Create new vehicle command");
 
-        User user = (User)request.getSession().getAttribute(USER_PARAM);
+        UserDto user = (UserDto) request.getSession().getAttribute(USER_PARAM);
         if (user.getRole() != UserRoleType.USER) {
             logger.error("Unauthorised access attempt");
             request.setAttribute(EXCEPTION_MESSAGE, "Unauthorised access attempt");
@@ -93,7 +93,7 @@ public class AddNewVehicleCommand implements Command {
 
             String description = request.getParameter(VEHICLE_DESCRIPTION_PARAM);
             if (description != null && description.length() > 300) {
-                description = description.substring(0,300);
+                description = description.substring(0, 300);
             }
             form.setComment(description);
 
@@ -104,6 +104,11 @@ public class AddNewVehicleCommand implements Command {
                     form.getOptionSet().add(optionId);
                 }
             }
+
+            Set<String> filenames = (Set<String>) request.getAttribute(FILENAME_PARAM);
+            filenames.forEach(logger::debug);
+            form.setPhotoSet(filenames);
+
             return form;
 
         } catch (NumberFormatException | NullPointerException e) {
