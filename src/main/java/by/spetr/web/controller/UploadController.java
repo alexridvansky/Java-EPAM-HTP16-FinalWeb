@@ -37,10 +37,10 @@ public class UploadController extends HttpServlet {
     /**
      * Redirects {@code doPost} requests
      *
-     * @param request - {@code HttpServletRequest} request
+     * @param request  - {@code HttpServletRequest} request
      * @param response - {@code HttpServletResponse} response
      * @throws ServletException – if the target resource throws this exception
-     * @throws IOException – if the target resource throws this exception
+     * @throws IOException      – if the target resource throws this exception
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,10 +51,10 @@ public class UploadController extends HttpServlet {
     /**
      * Processes redirected doGet and doPost requests
      *
-     * @param request - {@code HttpServletRequest} request
+     * @param request  - {@code HttpServletRequest} request
      * @param response - {@code HttpServletResponse} response
      * @throws ServletException – if the target resource throws this exception
-     * @throws IOException – if the target resource throws this exception
+     * @throws IOException      – if the target resource throws this exception
      */
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
@@ -76,7 +76,7 @@ public class UploadController extends HttpServlet {
         for (Part part : request.getParts()) {
             fileName = part.getSubmittedFileName();
 
-            if (fileName != null) {
+            if (fileName != null && !fileName.isBlank()) {
                 part.write(uploadPath + File.separator + fileName);
                 files.add(uploadPath + File.separator + fileName);
             }
