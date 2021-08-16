@@ -17,6 +17,7 @@ import java.util.List;
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.PagePath.MODEL_CREATION_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 import static by.spetr.web.model.entity.type.UserRoleType.MODERATOR;
 import static by.spetr.web.model.entity.type.UserRoleType.ROOT;
 
@@ -41,24 +42,7 @@ public class ShowModelCreationPageCommand implements Command {
             request.setAttribute(FEEDBACK_MESSAGE, "Error getting makes list from Vehicle.service");
             request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
 
-            return new Router(ERROR_PAGE);
-
-        } catch (IllegalArgumentException e) {
-            logger.error(e.getMessage(), e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
-
-            return new Router(ERROR_PAGE);
+            return new Router(ERROR_PAGE, REDIRECT);
         }
-    }
-
-    @Override
-    public DefaultForm doForm(HttpServletRequest request) {
-        UserDto executor = (UserDto) request.getSession().getAttribute(USER_PARAM);
-        if (executor == null || (!(executor.getRole() == ROOT || executor.getRole() == MODERATOR))) {
-            logger.error("Wrong parameters' types, parsing error");
-            throw new IllegalArgumentException("Wrong parameters' types, parsing error");
-        }
-
-        return new DefaultForm();
     }
 }
