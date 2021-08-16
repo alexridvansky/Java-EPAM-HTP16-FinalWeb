@@ -2,7 +2,6 @@ package by.spetr.web.controller.command.vehicle;
 
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
-import by.spetr.web.model.dto.UserDto;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.VehicleShortForm;
@@ -12,7 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static by.spetr.web.controller.command.PagePath.*;
+import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
+import static by.spetr.web.controller.command.PagePath.MAKE_CREATION_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
 
 public class AddNewMakeCommand implements Command {
@@ -45,18 +45,16 @@ public class AddNewMakeCommand implements Command {
 
     @Override
     public DefaultForm doForm(HttpServletRequest request) {
-        UserDto executor = (UserDto) request.getSession().getAttribute(USER_PARAM);
         VehicleShortForm form = new VehicleShortForm();
 
         String make = request.getParameter(VEHICLE_MAKE_PARAM);
 
-        if (executor == null || make == null || make.isBlank()) {
+        if (make == null || make.isBlank()) {
             logger.error("Wrong parameters' types, parsing error");
             throw new IllegalArgumentException("Wrong parameters' types, parsing error");
         }
 
         form.setMake(make);
-        form.setExecutor(executor);
 
         return form;
     }
