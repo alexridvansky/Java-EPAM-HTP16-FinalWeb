@@ -16,7 +16,8 @@ import org.apache.logging.log4j.Logger;
 import java.time.Year;
 import java.util.Set;
 
-import static by.spetr.web.controller.command.PagePath.*;
+import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
+import static by.spetr.web.controller.command.PagePath.VEHICLE_LIST_PERSONAL;
 import static by.spetr.web.controller.command.RequestParameter.*;
 import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
@@ -33,30 +34,21 @@ public class AddNewVehicleCommand implements Command {
             logger.error("Unauthorised access attempt");
             request.setAttribute(EXCEPTION_MESSAGE, "Unauthorised access attempt");
 
-            return new Router(ERROR_PAGE);
+            return new Router(ERROR_PAGE, REDIRECT);
         }
 
         try {
-            if (request.getMethod().equals("GET")) {
-                logger.error("Wrong request.method. Probably invasion attempt :) Alarm!");
-                request.setAttribute(EXCEPTION_MESSAGE, "Wrong Request.method(). Probably invasion attempt :) Alarm!");
-
-                return new Router(ERROR_PAGE, REDIRECT);
-            }
-
             VehicleFullForm form = (VehicleFullForm) doForm(request);
-
             Vehicle vehicle = vehicleService.addVehicle(form);
-
             request.setAttribute(VEHICLE_PARAM, vehicle);
 
-            return new Router(VEHICLE_LIST_PERSONAL);
+            return new Router(VEHICLE_LIST_PERSONAL, REDIRECT);
 
         } catch (IllegalArgumentException | ServiceException e) {
             logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
 
-            return new Router(ERROR_PAGE);
+            return new Router(ERROR_PAGE, REDIRECT);
         }
 
     }
