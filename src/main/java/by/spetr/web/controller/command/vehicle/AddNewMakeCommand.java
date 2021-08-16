@@ -24,13 +24,14 @@ public class AddNewMakeCommand implements Command {
         try {
             VehicleShortForm form = (VehicleShortForm) doForm(request);
             vehicleService.addMake(form);
-            request.setAttribute(FEEDBACK_MESSAGE, form.getFeedbackMsg());
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
+            request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
 
             return new Router(MAKE_CREATION_PAGE);
 
         } catch (ServiceException e) {
             logger.error("Error adding new entry of Vehicle.model", e);
-            request.setAttribute(FEEDBACK_MESSAGE, "Error adding new entry of Vehicle.model");
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, "Error adding new entry of Vehicle.model");
             request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
 
             return new Router(ERROR_PAGE);
