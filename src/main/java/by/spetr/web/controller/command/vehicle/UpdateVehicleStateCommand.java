@@ -8,7 +8,6 @@ import by.spetr.web.model.entity.type.VehicleStateType;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.VehicleFullForm;
-import by.spetr.web.model.form.VehicleShortForm;
 import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,13 +35,14 @@ public class UpdateVehicleStateCommand implements Command {
             logger.debug("vehicleId '{}' - '{}'", form.getVehicleId(), form.getState());
 
             String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
-            request.setAttribute(FEEDBACK_MESSAGE, form.getFeedbackMsg());
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
+            request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
 
             return new Router(Objects.requireNonNullElse(lastPage, PagePath.INDEX_PAGE));
 
         } catch (ServiceException e) {
             logger.error("state for the 'vehicleId {}' not changed", form.getVehicleId());
-            request.setAttribute(FEEDBACK_MESSAGE, "state for the '" + form.getVehicleId() + "' not changed");
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, "state for the '" + form.getVehicleId() + "' not changed");
             request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
             return new Router(ERROR_PAGE, REDIRECT);
         } catch (IllegalArgumentException e) {
