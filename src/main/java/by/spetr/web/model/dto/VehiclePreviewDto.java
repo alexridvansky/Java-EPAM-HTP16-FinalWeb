@@ -2,6 +2,7 @@ package by.spetr.web.model.dto;
 
 import by.spetr.web.model.entity.type.VehicleDriveType;
 import by.spetr.web.model.entity.type.VehiclePowertrainType;
+import by.spetr.web.model.entity.type.VehicleStateType;
 import by.spetr.web.model.entity.type.VehicleTransmissionType;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.time.Year;
 
 public class VehiclePreviewDto implements Serializable {
     private long id;
+    private VehicleStateType state;
     private String make;
     private String model;
     private Year modelYear;
@@ -26,6 +28,14 @@ public class VehiclePreviewDto implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public VehicleStateType getState() {
+        return state;
+    }
+
+    public void setState(VehicleStateType state) {
+        this.state = state;
     }
 
     public String getMake() {
