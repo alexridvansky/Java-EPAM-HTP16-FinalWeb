@@ -1,11 +1,16 @@
 package by.spetr.web.model.form;
 
+import by.spetr.web.model.entity.type.VehicleStateType;
+
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class VehicleFullForm extends DefaultForm {
+    private long vehicleId;
     private long ownerId;
+    private VehicleStateType state;
     private int makeId;
     private int modelId;
     private int powertrainId;
@@ -19,6 +24,15 @@ public class VehicleFullForm extends DefaultForm {
     private int price;
     private List<Long> optionSet = new ArrayList<>();
     private String comment;
+    private Set<String> photoSet;
+
+    public long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(long vehicleId) {
+        this.vehicleId = vehicleId;
+    }
 
     public long getOwnerId() {
         return ownerId;
@@ -26,6 +40,14 @@ public class VehicleFullForm extends DefaultForm {
 
     public void setOwnerId(long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public VehicleStateType getState() {
+        return state;
+    }
+
+    public void setState(VehicleStateType state) {
+        this.state = state;
     }
 
     public int getMakeId() {
@@ -130,5 +152,13 @@ public class VehicleFullForm extends DefaultForm {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Set<String> getPhotoSet() {
+        return photoSet;
+    }
+
+    public void setPhotoSet(Set<String> photoSet) {
+        this.photoSet = photoSet;
     }
 }
