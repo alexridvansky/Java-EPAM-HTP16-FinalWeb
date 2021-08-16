@@ -30,6 +30,22 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
             "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
             "ORDER BY vehicle_id;";
+    private static final String SQL_SELECT_ALL_PUBLIC_VEHICLES
+            = "SELECT vehicle_id, state, owner_id, vehicle_model_id, model, vehicle_make_id, make, modelyear, " +
+            "mileage, vehicle_color_id, color, price, powertrain, transmission, drive, displacement, power, comment, " +
+            "creation_date " +
+            "FROM vehicle " +
+            "INNER JOIN vehicle_state ON state_id = vehicle_state_id " +
+            "INNER JOIN vehicle_model ON model_id = vehicle_model_id " +
+            "INNER JOIN vehicle_make ON vehicle_model.make_id = vehicle_make_id " +
+            "INNER JOIN vehicle_color ON color_id = vehicle_color_id " +
+            "INNER JOIN vehicle_powertrain ON powertrain_id = vehicle_powertrain_id " +
+            "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
+            "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
+            "INNER JOIN user ON vehicle.owner_id = user.user_id " +
+            "WHERE state = 'ENABLED' " +
+            "AND user.state_id = 2 " +
+            "ORDER BY vehicle_id;";
     private static final String SQL_SELECT_VEHICLES_BY_USER_ID
             = "SELECT vehicle_id, state, owner_id, vehicle_model_id, model, vehicle_make_id, make, modelyear, " +
             "mileage, vehicle_color_id, color, price, powertrain, transmission, drive, displacement, power, comment, " +
@@ -43,7 +59,12 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
             "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
             "WHERE owner_id = ? " +
+            "AND state IN ('ENABLED', 'DISABLED', 'MODERATION') " +
             "ORDER BY vehicle_id;";
+    private static final String SQL_FIND_VEHICLE_COUNT_BY_USER_ID
+            = "SELECT COUNT(*) " +
+            "FROM vehicle " +
+            "WHERE owner_id = ?;";
     private static final String SQL_SELECT_VEHICLE_BY_ID
             = "SELECT vehicle_id, state, owner_id, vehicle_model_id, model, vehicle_make_id, make, modelyear, " +
             "mileage, vehicle_color_id, color, price, powertrain, transmission, drive, displacement, power, comment, " +
@@ -75,26 +96,30 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             = "SELECT * " +
             "FROM vehicle_model " +
             "WHERE model = ?;";
-    private static final String SQL_SELECT_MODEL_BY_ID =
-            "SELECT * " +
-                    "FROM vehicle_model " +
-                    "WHERE vehicle_model_id = ?;";
-    private static final String SQL_SELECT_POWERTRAIN_BY_ID =
-            "SELECT * " +
-                    "FROM vehicle_powertrain " +
-                    "WHERE vehicle_powertrain_id = ?;";
-    private static final String SQL_SELECT_TRANSMISSION_BY_ID =
-            "SELECT * " +
-                    "FROM vehicle_transmission " +
-                    "WHERE vehicle_transmission_id = ?;";
-    private static final String SQL_SELECT_DRIVE_BY_ID =
-            "SELECT * " +
-                    "FROM vehicle_drive " +
-                    "WHERE vehicle_drive_id = ?;";
-    private static final String SQL_SELECT_COLOR_BY_ID =
-            "SELECT * " +
-                    "FROM vehicle_color " +
-                    "WHERE vehicle_color_id = ?;";
+    private static final String SQL_SELECT_MODEL_BY_ID
+            = "SELECT * " +
+            "FROM vehicle_model " +
+            "WHERE vehicle_model_id = ?;";
+    private static final String SQL_SELECT_POWERTRAIN_BY_ID
+            = "SELECT * " +
+            "FROM vehicle_powertrain " +
+            "WHERE vehicle_powertrain_id = ?;";
+    private static final String SQL_SELECT_TRANSMISSION_BY_ID
+            = "SELECT * " +
+            "FROM vehicle_transmission " +
+            "WHERE vehicle_transmission_id = ?;";
+    private static final String SQL_SELECT_DRIVE_BY_ID
+            = "SELECT * " +
+            "FROM vehicle_drive " +
+            "WHERE vehicle_drive_id = ?;";
+    private static final String SQL_SELECT_COLOR_BY_ID
+            = "SELECT * " +
+            "FROM vehicle_color " +
+            "WHERE vehicle_color_id = ?;";
+    private static final String SQL_SELECT_COLOR_BY_NAME
+            = "SELECT * " +
+            "FROM vehicle_color " +
+            "WHERE color = ?;";
     private static final String SQL_SELECT_ALL_MODELS
             = "SELECT vehicle_model_id, model, vehicle_make_id, make " +
             "FROM vehicle_model " +
@@ -123,7 +148,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     private static final String SQL_FIND_ALL_COLORS
             = "SELECT * " +
             "FROM vehicle_color " +
-            "ORDER BY vehicle_color_id;";
+            "ORDER BY color;";
     private static final String SQL_SELECT_OPTIONS_BY_VEHICLE_ID
             = "SELECT option_id, option_description " +
             "FROM vehicle_option_map " +
@@ -135,6 +160,9 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     private static final String SQL_INSERT_VEHICLE_MODEL
             = "INSERT INTO vehicle_model (model, make_id) " +
             "VALUES (?, ?);";
+    private static final String SQL_INSERT_VEHICLE_COLOR
+            = "INSERT INTO vehicle_color (color)" +
+            "VALUES (?);";
     private static final String SQL_INSERT_VEHICLE
             = "INSERT INTO vehicle (state_id, owner_id, model_id, modelyear, mileage, color_id, price, powertrain_id, " +
             "transmission_id, drive_id, displacement, power, comment) " +
@@ -170,18 +198,16 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     }
 
     @Override
-    public List<Vehicle> findByUserId(long userId) throws DaoException {
-        logger.info("findAllVehiclesByUserId() method called");
+    public List<Vehicle> findAllPublic() throws DaoException {
+        logger.info("findAll() method called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_VEHICLES_BY_USER_ID)) {
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_PUBLIC_VEHICLES)) {
 
-            statement.setLong(1, userId);
-
-            ResultSet resultSet = statement.executeQuery();
             List<Vehicle> vehicles = new ArrayList<>();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 Vehicle vehicle = extractVehicleFromResultSet(resultSet);
                 vehicles.add(vehicle);
             }
@@ -195,6 +221,60 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
+    }
+
+    @Override
+    public List<Vehicle> findByUserId(long userId) throws DaoException {
+        logger.info("findAllVehiclesByUserId() method called");
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_VEHICLES_BY_USER_ID)) {
+
+            statement.setLong(1, userId);
+
+            ResultSet resultSet = statement.executeQuery();
+            List<Vehicle> vehicles = new ArrayList<>();
+
+            while (resultSet.next()) {
+                Vehicle vehicle = extractVehicleFromResultSet(resultSet);
+                vehicles.add(vehicle);
+            }
+
+            return vehicles;
+
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public int findAdNumberByUserId(long userId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_FIND_VEHICLE_COUNT_BY_USER_ID)) {
+
+            statement.setLong(1, userId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            int count = 0;
+            while (resultSet.next()) {
+                count = resultSet.getInt(COUNT);
+            }
+
+            return count;
+
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+
     }
 
     @Override
@@ -497,6 +577,87 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     }
 
     @Override
+    public boolean isColorExist(String color) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_COLOR_BY_NAME)) {
+            statement.setString(1, color);
+
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public Optional<VehicleColor> findColorById(int colorId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_COLOR_BY_ID)) {
+            statement.setInt(1, colorId);
+
+            ResultSet resultSet = statement.executeQuery();
+            VehicleColor vehicleColor = new VehicleColor();
+            if (resultSet.next()) {
+                int vehicleColorId = resultSet.getInt(VEHICLE_COLOR_ID);
+                String vehicleColorValue = resultSet.getString(VEHICLE_COLOR);
+                vehicleColor.setColorId(vehicleColorId);
+                vehicleColor.setValue(vehicleColorValue);
+                return Optional.of(vehicleColor);
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public VehicleColor insertColor(String color) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_INSERT_VEHICLE_COLOR,
+                     Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setString(1, color.toUpperCase());
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+
+            int colorId = 0;
+            if (resultSet.next()) {
+                colorId = resultSet.getInt(1);
+            }
+
+            Optional<VehicleColor> optionalVehicleColor = Optional.empty();
+            if (colorId > 0) {
+                optionalVehicleColor = findColorById(colorId);
+            }
+
+            if (optionalVehicleColor.isPresent()) {
+                return optionalVehicleColor.get();
+            } else {
+                logger.error("New color entry can't be created or re-read afterward");
+                throw new DaoException("New color entry can't be created or re-read afterward");
+            }
+
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
     public boolean insertModel(String model, int makeId) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_VEHICLE_MODEL)) {
@@ -550,12 +711,11 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             }
             optionsStatement.executeBatch();
 
-
             Optional<Vehicle> optionalVehicle = findById(vehicleId);
             if (optionalVehicle.isEmpty()) {
                 throw new DaoException("Vehicle can't be created or re-read after creating");
             } else {
-                return findById(vehicleId).get();
+                return optionalVehicle.get();
             }
 
         } catch (SQLException e) {
@@ -566,6 +726,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
+
+
 
     @Override
     public boolean updateState(long vehicleId, VehicleStateType vehicleState) throws DaoException {
@@ -700,36 +862,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     }
 
     @Override
-    public List<VehicleColor> findAllColors() throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             Statement statement = connection.createStatement()) {
-
-            ResultSet resultSet = statement.executeQuery(SQL_FIND_ALL_COLORS);
-            List<VehicleColor> colorList = new ArrayList<>();
-
-            while (resultSet.next()) {
-                int colorId = resultSet.getInt(VEHICLE_COLOR_ID);
-                String color = resultSet.getString(VEHICLE_COLOR);
-
-                VehicleColor vehicleColor = new VehicleColor();
-                vehicleColor.setColorId(colorId);
-                vehicleColor.setValue(color);
-
-                colorList.add(vehicleColor);
-            }
-
-            return colorList;
-
-        } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
-            throw new DaoException("database access error occurred or error parsing resultSet", e);
-        } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
-            throw new DaoException("error of getting connection from ConnectionPool", e);
-        }
-    }
-
-    @Override
     public List<VehicleOption> findOptionByVehicleId(long vehicleId) throws DaoException {
         logger.info("findOptionsById() method called");
 
@@ -750,6 +882,52 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             }
 
             return optionList;
+
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public List<VehicleOption> reSetOptionList(long vehicleId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement optionsCreateStatement = connection.prepareStatement(SQL_INSERT_OPTION)) {
+
+            return null; // todo:
+
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public List<VehicleColor> findAllColors() throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             Statement statement = connection.createStatement()) {
+
+            ResultSet resultSet = statement.executeQuery(SQL_FIND_ALL_COLORS);
+            List<VehicleColor> colorList = new ArrayList<>();
+
+            while (resultSet.next()) {
+                int colorId = resultSet.getInt(VEHICLE_COLOR_ID);
+                String color = resultSet.getString(VEHICLE_COLOR);
+
+                VehicleColor vehicleColor = new VehicleColor();
+                vehicleColor.setColorId(colorId);
+                vehicleColor.setValue(color);
+
+                colorList.add(vehicleColor);
+            }
+
+            return colorList;
 
         } catch (SQLException e) {
             logger.error("database access error occurred or error parsing resultSet", e);
