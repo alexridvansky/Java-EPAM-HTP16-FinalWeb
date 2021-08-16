@@ -55,7 +55,7 @@ public class UploadVehiclePhotoCommand implements Command {
                 if (optionalVehicle.isPresent()) {
                     request.setAttribute(VEHICLE_PARAM, optionalVehicle.get());
                 } else {
-                    return new Router(ERROR_PAGE);
+                    return new Router(ERROR_PAGE, REDIRECT);
                 }
 
                 return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
