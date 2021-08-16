@@ -28,16 +28,17 @@ public class AddNewModelCommand implements Command {
         try {
             form = (VehicleShortForm) doForm(request);
             vehicleService.addModel(form);
-            request.setAttribute(FEEDBACK_MESSAGE, form.getFeedbackMsg());
 
             List<VehicleMake> makes = vehicleService.getMakeList();
             request.setAttribute(VEHICLE_MAKE_LIST, makes);
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
+            request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
+            request.setAttribute(VEHICLE_LAST_MAKE_ID, form.getMakeId());
 
             return new Router(MODEL_CREATION_PAGE);
 
         } catch (ServiceException e) {
             logger.error("Error adding new entry of Vehicle.model", e);
-            request.setAttribute(FEEDBACK_MESSAGE, "Error adding new entry of Vehicle.model");
             request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
 
             return new Router(ERROR_PAGE);
