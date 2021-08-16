@@ -38,7 +38,6 @@ public class AddNewColorCommand implements Command {
             request.setAttribute(FEEDBACK_MESSAGE_PARAM, e.getMessage());
 
             return new Router(COLOR_CREATION_PAGE);
-
         }
     }
 
