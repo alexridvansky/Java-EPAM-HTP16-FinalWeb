@@ -24,7 +24,7 @@ public class ShowVehicleListPersonalCommand implements Command {
     public Router execute(HttpServletRequest request) {
         try {
             DefaultForm form = doForm(request);
-            List<VehiclePreviewDto> vehicles = vehicleService.getVehicleListByUserId(form.getExecutor().getUserId());
+            List<VehiclePreviewDto> vehicles = vehicleService.getPersonalVehicleList(form.getExecutor().getUserId());
 
             request.setAttribute(VEHICLE_LIST_PARAM, vehicles);
 
