@@ -21,13 +21,13 @@ import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
 import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
-public class ChangeVehicleStateCommand implements Command {
+public class UpdateVehicleStateCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     private static final VehicleService vehicleService = DefaultVehicleService.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) {
-        logger.info("ChangeVehicleStateCommand() method been called");
+        logger.info("UpdateVehicleStateCommand() method been called");
 
         VehicleFullForm form = (VehicleFullForm) doForm(request);
 
@@ -36,17 +36,18 @@ public class ChangeVehicleStateCommand implements Command {
             logger.debug("vehicleId '{}' - '{}'", form.getVehicleId(), form.getState());
 
             String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
+            request.setAttribute(FEEDBACK_MESSAGE, form.getFeedbackMsg());
 
             return new Router(Objects.requireNonNullElse(lastPage, PagePath.INDEX_PAGE));
 
         } catch (ServiceException e) {
             logger.error("state for the 'vehicleId {}' not changed", form.getVehicleId());
-            request.setAttribute(EXCEPTION_MESSAGE, "state not changed");
-
+            request.setAttribute(FEEDBACK_MESSAGE, "state for the '" + form.getVehicleId() + "' not changed");
+            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
             return new Router(ERROR_PAGE, REDIRECT);
         } catch (IllegalArgumentException e) {
-            logger.error("Wrong parameters' types, parsing error", e);
-            request.setAttribute(EXCEPTION_MESSAGE, "Wrong parameters' types, parsing error");
+            logger.error(e.getMessage(), e);
+            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
 
             return new Router(ERROR_PAGE);
         }
