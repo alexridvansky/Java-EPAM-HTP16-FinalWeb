@@ -1,8 +1,8 @@
-package by.spetr.web.model.entity;
+package by.spetr.web.model.entity.type;
 
 import java.io.Serializable;
 
-public class VehicleModel extends AbstractEntity implements Serializable {
+public class VehicleModel implements Serializable {
     private int modelId;
     private VehicleMake make;
     private String value;

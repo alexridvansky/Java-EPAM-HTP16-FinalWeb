@@ -1,8 +1,8 @@
-package by.spetr.web.model.entity;
+package by.spetr.web.model.entity.type;
 
 import java.io.Serializable;
 
-public class VehicleColor extends AbstractEntity implements Serializable {
+public class VehicleColor implements Serializable {
     private int colorId;
     private String value;
 

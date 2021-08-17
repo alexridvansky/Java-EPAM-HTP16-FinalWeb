@@ -1,9 +1,6 @@
 package by.spetr.web.model.entity;
 
-import by.spetr.web.model.entity.type.VehicleDriveType;
-import by.spetr.web.model.entity.type.VehiclePowertrainType;
-import by.spetr.web.model.entity.type.VehicleStateType;
-import by.spetr.web.model.entity.type.VehicleTransmissionType;
+import by.spetr.web.model.entity.type.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
