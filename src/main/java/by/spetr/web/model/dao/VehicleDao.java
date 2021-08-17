@@ -1,10 +1,8 @@
 package by.spetr.web.model.dao;
 
 import by.spetr.web.model.entity.*;
-import by.spetr.web.model.entity.type.VehiclePowertrainType;
 import by.spetr.web.model.entity.type.VehicleStateType;
 import by.spetr.web.model.exception.DaoException;
-import by.spetr.web.model.exception.ServiceException;
 
 import java.util.*;
 
@@ -22,6 +20,24 @@ public interface VehicleDao {
     List<Vehicle> findAll() throws DaoException;
 
     /**
+     * Returns {@code Optional<Vehicle>} if such was found by vehicleId given.
+     *
+     * @param id is vehicleId
+     * @return {@code Optional<Vehicle>}
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    Optional<Vehicle> findById(long id) throws DaoException;
+
+    /**
+     * Returns list of all public vehicles, ordered by vehicleId.
+     *  (i.e. allowed to be shown publicly, it means that user and vehicle states should be ENABLED)
+     *
+     * @return {@code List<Vehicle>}
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    List<Vehicle> findAllPublic() throws DaoException;
+
+    /**
      * Returns list of all vehicles, belong to user given ordered by vehicleId.
      *
      * @param userId userId
@@ -31,13 +47,13 @@ public interface VehicleDao {
     List<Vehicle> findByUserId(long userId) throws DaoException;
 
     /**
-     * Returns {@code Optional<Vehicle>} if such was found by vehicleId given.
+     * Returns the number of all vehicles, belong to user given (currently active and not) ordered by vehicleId.
      *
-     * @param id is vehicleId
-     * @return {@code Optional<Vehicle>}
+     * @param userId id of the User
+     * @return number of adverts for the whole time
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    Optional<Vehicle> findById(long id) throws DaoException;
+    int findAdNumberByUserId(long userId) throws DaoException;
 
     /**
      * is used to check it out whether given make entry already in the db
@@ -113,12 +129,37 @@ public interface VehicleDao {
     boolean isDriveExist(int driveId) throws DaoException;
 
     /**
-     * is used to check it out whether given colorId presented in the db
+     * is used to check it out whether color name with colorId given is presented in the db
      *
      * @param colorId Vehicle.colorId
      * @return true if powertrainId given already in the db
      */
     boolean isColorExist(int colorId) throws DaoException;
+
+    /**
+     * is used to check it out whether color name is presented in the db
+     *
+     * @param color Vehicle.colorId
+     * @return true if powertrainId given already in the db
+     */
+    boolean isColorExist(String color) throws DaoException;
+
+    /**
+     * is used to get Vehicle.color by colorId given
+     *
+     * @param colorId Vehicle.colorId
+     * @return true if powertrainId given already in the db
+     */
+    Optional<VehicleColor> findColorById(int colorId) throws DaoException;
+
+    /**
+     * is used to insert new entry of Vehicle.make
+     *
+     * @param color new Vehicle.color type to be added to
+     * @return VehicleColor of new Vehicle.color type just created
+     * @throws DaoException in case of error adding new entry
+     */
+    VehicleColor insertColor(String color) throws DaoException;
 
     /**
      * is used to get the full list of Vehicle models
@@ -192,6 +233,15 @@ public interface VehicleDao {
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     List<VehicleOption> findAllOption() throws DaoException;
+
+    /**
+     * method is used to renew options set for a specific vehicle
+     *
+     * @param vehicleId id of the affected vehicle
+     * @return List of options
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    List<VehicleOption> reSetOptionList(long vehicleId) throws DaoException;
 
     /**
      * is used to get the full List of possible values for Vehicle.Color

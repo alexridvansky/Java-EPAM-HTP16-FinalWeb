@@ -79,8 +79,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
             "WHERE vehicle_id = ?;";
     private static final String SQL_IS_MAKE_EXIST_BY_NAME
-            = "SELECT EXISTS( " +
-            "SELECT make " +
+            = "SELECT EXISTS" +
+            "(SELECT * " +
             "FROM vehicle_make " +
             "WHERE make = ?);";
     private static final String SQL_IS_MAKE_EXIST_BY_ID
@@ -355,7 +355,12 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             statement.setString(1, make);
 
             ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
+            int result = 0;
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+
+            return result > 0;
 
         } catch (SQLException e) {
             logger.error("database access error occurred or error parsing resultSet", e);

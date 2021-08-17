@@ -27,7 +27,7 @@ public interface UserDao {
      * @return {@code Optional<User>}
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    Optional<User> findUserById(long id) throws DaoException;
+    Optional<User> findById(long id) throws DaoException;
 
     /**
      * Returns {@code Optional<User>} if such was found by username given.
@@ -36,7 +36,7 @@ public interface UserDao {
      * @return {@code Optional<User>}
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    Optional<User> findUserByLogin(String login) throws DaoException;
+    Optional<User> findByLogin(String login) throws DaoException;
 
     /**
      * Returns {@code Optional<User>} if such was found by email given.
@@ -45,7 +45,7 @@ public interface UserDao {
      * @return {@code Optional<User>}
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    Optional<User> findUserByEmail(String email) throws DaoException;
+    Optional<User> findByEmail(String email) throws DaoException;
 
     /**
      * Returns {@code Optional<User>} if such was found by phone number given.
@@ -54,7 +54,7 @@ public interface UserDao {
      * @return {@code Optional<User>}
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    Optional<User> findUserByPhone(String phone) throws DaoException;
+    Optional<User> findByPhone(String phone) throws DaoException;
 
     /**
      * the method is used to user authentication, matching username and password hash with stored in database.

@@ -97,7 +97,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserById(long id) throws DaoException {
+    public Optional<User> findById(long id) throws DaoException {
         logger.info("findById() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -126,7 +126,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByLogin(String login) throws DaoException {
+    public Optional<User> findByLogin(String login) throws DaoException {
         logger.info("findUserByLogin() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -155,7 +155,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) throws DaoException {
+    public Optional<User> findByEmail(String email) throws DaoException {
         logger.info("findUserByEmail() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -184,7 +184,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByPhone(String phone) throws DaoException {
+    public Optional<User> findByPhone(String phone) throws DaoException {
         logger.info("findUserByPhone() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -285,7 +285,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
                 userId = resultSet.getLong(1);
             }
 
-            Optional<User> optionalUser = findUserById(userId);
+            Optional<User> optionalUser = findById(userId);
             if (optionalUser.isEmpty()) {
                 throw new DaoException("User can't be created or re-read after creating");
             } else {
@@ -309,7 +309,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_ID)) {
 
             // check if such user exists, if not - exit
-            Optional<User> optionalUser = findUserById(userId);
+            Optional<User> optionalUser = findById(userId);
             if (optionalUser.isEmpty()) {
                 StringFormattedMessage str = new StringFormattedMessage("user '{}' not found", userId);
                 logger.error(str);
