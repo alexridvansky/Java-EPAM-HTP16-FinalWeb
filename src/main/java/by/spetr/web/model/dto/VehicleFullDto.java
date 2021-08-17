@@ -1,6 +1,6 @@
 package by.spetr.web.model.dto;
 
-import by.spetr.web.model.entity.VehicleOption;
+import by.spetr.web.model.entity.type.VehicleOption;
 import by.spetr.web.model.entity.type.VehicleDriveType;
 import by.spetr.web.model.entity.type.VehiclePowertrainType;
 import by.spetr.web.model.entity.type.VehicleStateType;
@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
-import java.util.Map;
 
 public class VehicleFullDto implements Serializable {
     private List<String> album;
