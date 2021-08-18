@@ -20,6 +20,7 @@ public class CommandProvider {
 
     CommandProvider() {
         commands.put(DEFAULT, new DefaultCommand());
+        commands.put(ADD_NEW_COLOR, new AddNewColorCommand());
         commands.put(ADD_NEW_MAKE, new AddNewMakeCommand());
         commands.put(ADD_NEW_MODEL, new AddNewModelCommand());
         commands.put(ADD_NEW_VEHICLE, new AddNewVehicleCommand());
@@ -31,6 +32,7 @@ public class CommandProvider {
         commands.put(SHOW_VEHICLE_LIST_PERSONAL, new ShowVehicleListPersonalCommand());
         commands.put(SHOW_VEHICLE_LIST_PUBLIC, new ShowVehicleListPublicCommand());
         commands.put(SHOW_VEHICLE_CREATION_PAGE, new ShowVehicleCreationPageCommand());
+        commands.put(SHOW_COLOR_CREATION_PAGE, new ShowColorCreationPageCommand());
         commands.put(SHOW_MAKE_CREATION_PAGE, new ShowMakeCreationPageCommand());
         commands.put(SHOW_MODEL_CREATION_PAGE, new ShowModelCreationPageCommand());
         commands.put(UPDATE_VEHICLE_ADS, new UpdateVehicleAdsCommand());
@@ -41,7 +43,7 @@ public class CommandProvider {
         commands.put(CHANGE_LOCALE, new ChangeLocaleCommand());
         commands.put(CHANGE_USER_STATE, new ChangeUserStateCommand());
         commands.put(CHANGE_USER_ROLE, new ChangeUserRoleCommand());
-        commands.put(CHANGE_VEHICLE_STATE, new ChangeVehicleStateCommand());
+        commands.put(CHANGE_VEHICLE_STATE, new UpdateVehicleStateCommand());
     }
 
     public static CommandProvider getInstance() {

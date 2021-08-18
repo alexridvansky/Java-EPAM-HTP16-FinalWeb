@@ -2,7 +2,7 @@ package by.spetr.web.controller.command.vehicle;
 
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
-import by.spetr.web.model.entity.VehicleColor;
+import by.spetr.web.model.entity.type.VehicleColor;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.VehicleShortForm;
@@ -26,7 +26,7 @@ public class AddNewColorCommand implements Command {
         try {
             VehicleShortForm form = (VehicleShortForm) doForm(request);
             List<VehicleColor> colors = vehicleService.getAllColorList();
-            request.setAttribute(VEHICLE_COLOR_LIST, colors);
+            request.setAttribute(VEHICLE_COLOR_LIST_PARAM, colors);
             vehicleService.addColor(form);
             request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
             request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
