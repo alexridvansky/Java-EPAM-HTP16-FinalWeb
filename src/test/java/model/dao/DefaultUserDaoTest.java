@@ -23,7 +23,7 @@ public class DefaultUserDaoTest {
             UserStateType.ENABLED,
             "admin.in.da.house@gmail.com",
             "+375292772455",
-            LocalDate.of(2021, 7, 29));
+            LocalDate.of(2021, 8, 12));
 
     @BeforeTest
     public void prepareAll() {
