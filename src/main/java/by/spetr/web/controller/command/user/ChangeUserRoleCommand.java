@@ -33,6 +33,7 @@ public class ChangeUserRoleCommand implements Command {
 
             userService.updateUserRole(form);
             request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
+            request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
 
             String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
             return new Router(Objects.requireNonNullElse(lastPage, PagePath.INDEX_PAGE));
