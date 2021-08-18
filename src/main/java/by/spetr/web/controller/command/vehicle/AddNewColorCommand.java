@@ -6,7 +6,6 @@ import by.spetr.web.model.entity.type.VehicleColor;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.VehicleShortForm;
-import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
@@ -19,7 +18,7 @@ import static by.spetr.web.controller.command.RequestParameter.*;
 
 public class AddNewColorCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final VehicleService vehicleService = DefaultVehicleService.getInstance();
+    private static final VehicleService vehicleService = VehicleService.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) {
