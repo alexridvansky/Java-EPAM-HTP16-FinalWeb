@@ -1,7 +1,9 @@
 package by.spetr.web.controller;
 
-import by.spetr.web.controller.command.*;
-import by.spetr.web.model.service.DefaultVehicleService;
+import by.spetr.web.controller.command.Command;
+import by.spetr.web.controller.command.CommandProvider;
+import by.spetr.web.controller.command.RequestParameter;
+import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -32,7 +34,7 @@ import static by.spetr.web.controller.command.RequestParameter.*;
         maxRequestSize = 1024 * 1024 * 5 * 5)
 public class UploadController extends HttpServlet {
     private static final Logger logger = LogManager.getLogger();
-    private static final VehicleService service = DefaultVehicleService.getInstance();
+    private static final VehicleService service = VehicleService.getInstance();
     private static final String UPLOAD_DIRECTORY = "temp";
 
     /**

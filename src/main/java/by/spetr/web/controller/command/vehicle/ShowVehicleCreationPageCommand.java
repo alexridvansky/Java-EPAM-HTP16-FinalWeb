@@ -3,18 +3,11 @@ package by.spetr.web.controller.command.vehicle;
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.dto.UserDto;
-import by.spetr.web.model.entity.type.VehicleColor;
-import by.spetr.web.model.entity.type.VehicleMake;
-import by.spetr.web.model.entity.type.VehicleModel;
-import by.spetr.web.model.entity.type.VehicleOption;
-import by.spetr.web.model.entity.type.VehicleDriveType;
-import by.spetr.web.model.entity.type.VehiclePowertrainType;
-import by.spetr.web.model.entity.type.VehicleTransmissionType;
+import by.spetr.web.model.entity.type.*;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.VehicleFullForm;
 import by.spetr.web.model.service.AccessControlService;
-import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
@@ -25,12 +18,11 @@ import java.util.List;
 import static by.spetr.web.controller.command.PagePath.ADD_VEHICLE_PAGE;
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
-import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 
 public class ShowVehicleCreationPageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    VehicleService vehicleService = DefaultVehicleService.getInstance();
+    VehicleService vehicleService = VehicleService.getInstance();
     AccessControlService accessControlService = AccessControlService.getInstance();
 
     @Override
@@ -60,17 +52,11 @@ public class ShowVehicleCreationPageCommand implements Command {
 
             return new Router(ADD_VEHICLE_PAGE);
 
-        } catch (ServiceException e) {
-            logger.error("Error getting makes list from Vehicle.service", e);
-            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
-
-            return new Router(ERROR_PAGE, REDIRECT);
-
-        } catch (IllegalArgumentException e) {
+        } catch (ServiceException | IllegalArgumentException e) {
             logger.error(e.getMessage(), e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
-            return new Router(ERROR_PAGE, REDIRECT);
+            return new Router(ERROR_PAGE);
         }
     }
 

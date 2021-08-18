@@ -4,7 +4,6 @@ import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.dto.VehicleFullDto;
 import by.spetr.web.model.exception.ServiceException;
-import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
@@ -16,11 +15,10 @@ import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.PagePath.VEHICLE_LIST_ADM;
 import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE_PARAM;
 import static by.spetr.web.controller.command.RequestParameter.VEHICLE_LIST_PARAM;
-import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class ShowVehicleListAdmCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final VehicleService vehicleService = DefaultVehicleService.getInstance();
+    private static final VehicleService vehicleService = VehicleService.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) {
@@ -33,11 +31,14 @@ public class ShowVehicleListAdmCommand implements Command {
         } catch (ServiceException e) {
             logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
-            return new Router(ERROR_PAGE, REDIRECT);
+
+            return new Router(ERROR_PAGE);
+
         } catch (IllegalArgumentException e) {
             logger.error("Parsing parameters error", e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, "Parsing parameters error");
-            return new Router(ERROR_PAGE, REDIRECT);
+
+            return new Router(ERROR_PAGE);
         }
     }
 }

@@ -12,7 +12,6 @@ import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.PagePath.MAKE_CREATION_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE_PARAM;
 import static by.spetr.web.controller.command.RequestParameter.USER_PARAM;
-import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class ShowMakeCreationPageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -30,7 +29,7 @@ public class ShowMakeCreationPageCommand implements Command {
             logger.error(e.getMessage(), e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
-            return new Router(ERROR_PAGE, REDIRECT);
+            return new Router(ERROR_PAGE);
         }
 
     }

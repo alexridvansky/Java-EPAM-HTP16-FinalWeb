@@ -8,7 +8,6 @@ import by.spetr.web.model.entity.type.VehicleStateType;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.VehicleFullForm;
-import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +21,7 @@ import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class UpdateVehicleStateCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final VehicleService vehicleService = DefaultVehicleService.getInstance();
+    private static final VehicleService vehicleService = VehicleService.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) {
@@ -44,7 +43,9 @@ public class UpdateVehicleStateCommand implements Command {
             logger.error("state for the 'vehicleId {}' not changed", form.getVehicleId());
             request.setAttribute(FEEDBACK_MESSAGE_PARAM, "state for the '" + form.getVehicleId() + "' not changed");
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
-            return new Router(ERROR_PAGE, REDIRECT);
+
+            return new Router(ERROR_PAGE);
+
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage(), e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
