@@ -22,8 +22,8 @@ import java.util.*;
 
 public class DefaultVehicleService implements VehicleService {
     private static final Logger logger = LogManager.getLogger();
-    private static final UserService userService = DefaultUserService.getInstance();
-    private static final CloudinaryService cloudinary = CloudinaryService.getCloudinary();
+    private static final UserService userService = UserService.getInstance();
+    private static final MediaService cloudinary = MediaService.getInstance();
     private static final VehicleDao vehicleDao = new DefaultVehicleDao();
     private static final AccessControlService accessControlService = AccessControlService.getInstance();
     private static final BotInformerService botInformerService = BotInformerService.getInstance();
