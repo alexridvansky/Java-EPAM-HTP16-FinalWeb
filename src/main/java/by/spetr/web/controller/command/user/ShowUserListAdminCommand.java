@@ -33,7 +33,7 @@ public class ShowUserListAdminCommand implements Command {
 
             return new Router(SHOW_USER_LIST_ADM);
 
-        } catch (ServiceException e) {
+        } catch (ServiceException | IllegalArgumentException e) {
             logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
             return new Router(ERROR_PAGE);
