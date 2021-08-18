@@ -45,7 +45,14 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "INNER JOIN user ON vehicle.owner_id = user.user_id " +
             "WHERE state = 'ENABLED' " +
             "AND user.state_id = 2 " +
-            "ORDER BY vehicle_id;";
+            "ORDER BY vehicle_id ";
+    private static final String SQL_FIND_PUBLIC_VEHICLES_COUNT
+            = "SELECT COUNT(*) " +
+            "FROM vehicle " +
+            "INNER JOIN vehicle_state ON state_id = vehicle_state_id " +
+            "INNER JOIN user ON vehicle.owner_id = user.user_id " +
+            "WHERE state = 'ENABLED' " +
+            "AND user.state_id = 2;";
     private static final String SQL_SELECT_VEHICLES_BY_USER_ID
             = "SELECT vehicle_id, state, owner_id, vehicle_model_id, model, vehicle_make_id, make, modelyear, " +
             "mileage, vehicle_color_id, color, price, powertrain, transmission, drive, displacement, power, comment, " +
@@ -198,12 +205,13 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     }
 
     @Override
-    public List<Vehicle> findAllPublic() throws DaoException {
+    public List<Vehicle> findAllPublic(int pageSize, int pageNumber) throws DaoException {
         logger.info("findAll() method called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_PUBLIC_VEHICLES)) {
+             ResultSet resultSet =
+                     statement.executeQuery(buildPageableQuery(SQL_SELECT_ALL_PUBLIC_VEHICLES, pageSize, pageNumber))) {
 
             List<Vehicle> vehicles = new ArrayList<>();
 
@@ -220,6 +228,28 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public int findPublicVehicleListSize() throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(SQL_FIND_PUBLIC_VEHICLES_COUNT)) {
+
+            int count = 0;
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+
+            return count;
+
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error(e.getMessage(), e);
+            throw new DaoException(e.getMessage(), e);
         }
     }
 
@@ -731,7 +761,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
-
 
 
     @Override

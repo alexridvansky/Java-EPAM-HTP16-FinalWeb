@@ -7,7 +7,6 @@ class ColumnName {
     public static final String VEHICLE_STATE = "state";
     public static final String IMAGE_PATH = "img_path";
     public static final String VEHICLE_OWNER_ID = "owner_id";
-    public static final String VEHICLE_OWNER_LOGIN = "login";
     public static final String VEHICLE_MAKE_ID = "vehicle_make_id";
     public static final String VEHICLE_MAKE = "make";
     public static final String VEHICLE_MODEL_ID = "vehicle_model_id";
@@ -32,4 +31,5 @@ class ColumnName {
     public static final String OPTION_ID = "option_id";
     public static final String OPTION_DESCRIPTION = "option_description";
     public static final String LAST_INSERT_ID = "last_insert_id()";
+    public static final String COUNT = "COUNT(*)";
 }

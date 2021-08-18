@@ -1,7 +1,7 @@
 package by.spetr.web.model.dao;
 
 import by.spetr.web.model.entity.*;
-import by.spetr.web.model.entity.type.VehicleStateType;
+import by.spetr.web.model.entity.type.*;
 import by.spetr.web.model.exception.DaoException;
 
 import java.util.*;
@@ -32,10 +32,21 @@ public interface VehicleDao {
      * Returns list of all public vehicles, ordered by vehicleId.
      *  (i.e. allowed to be shown publicly, it means that user and vehicle states should be ENABLED)
      *
+     * @param pageSize number of entries on each page
+     * @param pageNumber number of a page
      * @return {@code List<Vehicle>}
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    List<Vehicle> findAllPublic() throws DaoException;
+    List<Vehicle> findAllPublic(int pageSize, int pageNumber) throws DaoException;
+
+    /**
+     * Returns number of all vehicles to be publicly shown (active ads within active users)
+     * (is used mostly for pagination)
+     *
+     * @return number of public ads
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    int findPublicVehicleListSize() throws DaoException;
 
     /**
      * Returns list of all vehicles, belong to user given ordered by vehicleId.
