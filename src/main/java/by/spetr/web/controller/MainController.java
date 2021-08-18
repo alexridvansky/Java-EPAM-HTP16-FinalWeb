@@ -12,8 +12,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
-import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE;
-import static by.spetr.web.controller.command.RequestParameter.FEEDBACK_MESSAGE;
+import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE_PARAM;
+import static by.spetr.web.controller.command.RequestParameter.FEEDBACK_MESSAGE_PARAM;
 
 
 /**
@@ -67,7 +67,7 @@ public class MainController extends HttpServlet {
                         ? "?" + request.getQueryString()
                         : ""));
 
-        String commandName = request.getParameter(RequestParameter.COMMAND);
+        String commandName = request.getParameter(RequestParameter.COMMAND_PARAM);
         logger.debug("commandName: {}", commandName);
         Command command = CommandProvider.getInstance().getCommand(commandName);
         Router router = command.execute(request);
@@ -79,23 +79,9 @@ public class MainController extends HttpServlet {
             dispatcher.forward(request, response);
         } else {
             logger.error("Incorrect router type: {}", router.getRouterType());
-            request.setAttribute(FEEDBACK_MESSAGE, "Incorrect router type: {}");
-            request.setAttribute(EXCEPTION_MESSAGE, "Router select error");
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, "Incorrect router type: {}");
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, "Router select error");
             response.sendRedirect(ERROR_PAGE);
         }
-    }
-
-    /**
-     * Destroys {@code Servlet} and {@code ConnectionPool}
-     */
-    @Override
-    public void destroy() {
-        try {
-            logger.info("pool.destroy()");
-            ConnectionPool.getInstance().destroyPool();
-        } catch (ConnectionPoolException e) {
-            logger.error("Error destroying ConnectionPool", e);
-        }
-        super.destroy();
     }
 }
