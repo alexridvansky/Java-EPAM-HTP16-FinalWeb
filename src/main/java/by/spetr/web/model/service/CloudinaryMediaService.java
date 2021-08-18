@@ -13,22 +13,22 @@ import java.util.Map;
 /**
  *  Class includes individual service settings and performs interaction with Cloudinary service
  */
-public class CloudinaryService {
+public class CloudinaryMediaService implements MediaService{
         private static final Logger logger = LogManager.getLogger();
-        private static final CloudinaryService instance = new CloudinaryService();
+        private static final CloudinaryMediaService instance = new CloudinaryMediaService();
         private static final Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", "autoschrott",
                 "api_key", "884862746761739",
                 "api_secret", "_L51jlX9czVguOaBVTnpS_LLrvw",
                 "secure", true));
 
-        private CloudinaryService() {}
+        private CloudinaryMediaService() {}
 
-        static CloudinaryService getCloudinary() {
+        static CloudinaryMediaService getCloudinary() {
                 return instance;
         }
 
-        String store(String filename) throws ServiceException {
+        public String store(String filename) throws ServiceException {
                 try {
                         Map<String, String> upload = cloudinary.uploader().upload(
                                 filename,
@@ -43,11 +43,11 @@ public class CloudinaryService {
                 }
         }
 
-        String getPreview(String publicId) {
+        public String getPreview(String publicId) {
                 return cloudinary.url().transformation(new Transformation().width(420).height(225).crop("fill").gravity("center")).generate(publicId);
         }
 
-        String getAlbumPhoto(String publicId) {
+        public String getAlbumPhoto(String publicId) {
                 return cloudinary.url().transformation(new Transformation().width(648).height(347).crop("fill").gravity("center")).generate(publicId);
         }
 }
