@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebInitParam;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -12,6 +14,7 @@ import java.io.IOException;
         @WebInitParam(name = "INDEX_PATH", value = "/index.jsp")
 })
 public class JspFragmentSecurityFilter implements Filter {
+    private static final Logger logger = LogManager.getLogger();
     private String indexPath;
 
     @Override
@@ -21,6 +24,7 @@ public class JspFragmentSecurityFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        logger.debug("jsp/fragment filter... sending redirect to Index.jsp");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.sendRedirect(httpRequest.getContextPath() + indexPath);
