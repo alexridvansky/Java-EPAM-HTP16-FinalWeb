@@ -4,7 +4,6 @@ import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.dto.VehicleFullDto;
 import by.spetr.web.model.exception.ServiceException;
-import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +14,6 @@ import java.util.Optional;
 
 import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
-import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class ShowVehicleInfoCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
