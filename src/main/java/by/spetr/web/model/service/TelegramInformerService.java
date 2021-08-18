@@ -9,7 +9,7 @@ import java.io.*;
 import java.net.URLConnection;
 
 
-public class TelegramBotInformerService implements BotInformerService {
+public class TelegramInformerService implements InformerService {
     private static final Logger logger = LogManager.getLogger();
 
     @Override

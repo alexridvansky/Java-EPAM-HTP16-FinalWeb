@@ -2,10 +2,10 @@ package by.spetr.web.model.service;
 
 import by.spetr.web.model.exception.ServiceException;
 
-public interface BotInformerService {
+public interface InformerService {
     void sendMessage(String message) throws ServiceException;
 
-    static BotInformerService getInstance() {
-        return new TelegramBotInformerService();
+    static InformerService getInstance() {
+        return new TelegramInformerService();
     }
 }
