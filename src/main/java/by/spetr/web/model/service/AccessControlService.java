@@ -9,7 +9,7 @@ import by.spetr.web.model.form.VehicleFullForm;
 public interface AccessControlService {
 
     /**
-     * is used to check users' authorisation to access within commands
+     * is user to authorise access within commands
      *
      * @param role    UserRoleType stands for User.role
      * @param command CommandType stands for Command name
