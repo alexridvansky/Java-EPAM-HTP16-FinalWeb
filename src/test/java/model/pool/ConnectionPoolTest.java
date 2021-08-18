@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConnectionPoolGenericTest {
+public class ConnectionPoolTest {
 
     @Test
     public void testAllinAll() throws ConnectionPoolException {
