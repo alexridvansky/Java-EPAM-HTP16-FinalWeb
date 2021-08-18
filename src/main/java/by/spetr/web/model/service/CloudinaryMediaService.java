@@ -52,7 +52,7 @@ public class CloudinaryMediaService implements MediaService {
         }
     }
 
-    public String getPreview(String publicId) {
+    public String getPreviewPhoto(String publicId) {
         return cloudinary.url().transformation(new Transformation().width(420).height(225).crop("fill").gravity("center")).generate(publicId);
     }
 

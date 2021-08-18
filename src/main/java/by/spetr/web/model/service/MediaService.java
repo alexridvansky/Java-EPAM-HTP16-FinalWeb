@@ -5,7 +5,7 @@ import by.spetr.web.model.exception.ServiceException;
 public interface MediaService {
     String store(String filename) throws ServiceException;
 
-    String getPreview(String publicId);
+    String getPreviewPhoto(String publicId);
 
     String getAlbumPhoto(String publicId);
 

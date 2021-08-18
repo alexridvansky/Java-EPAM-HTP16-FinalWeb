@@ -144,7 +144,7 @@ public class DefaultVehicleService implements VehicleService {
         }
 
         if (optionalPreviewPublicId.isPresent()) {
-            previewPublicId = cloudinary.getPreview(optionalPreviewPublicId.get());
+            previewPublicId = cloudinary.getPreviewPhoto(optionalPreviewPublicId.get());
         }
 
         vehiclePreviewDto.setPreviewImagePath(previewPublicId);
@@ -492,7 +492,7 @@ public class DefaultVehicleService implements VehicleService {
             String previewPath = null;
 
             if (optionalPreview.isPresent()) {
-                previewPath = cloudinary.getPreview(optionalPreview.get());
+                previewPath = cloudinary.getPreviewPhoto(optionalPreview.get());
             }
 
             return Optional.ofNullable(previewPath);
