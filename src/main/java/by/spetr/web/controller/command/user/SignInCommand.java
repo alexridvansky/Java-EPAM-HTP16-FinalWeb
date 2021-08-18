@@ -52,8 +52,8 @@ public class SignInCommand implements Command {
     @Override
     public DefaultForm doForm(HttpServletRequest request) {
         LoginForm form = new LoginForm();
-        String login = request.getParameter("login");
-        String pass = request.getParameter("pass");
+        String login = request.getParameter(USER_NAME_PARAM);
+        String pass = request.getParameter(USER_PASSWORD_PARAM);
 
         if (login == null || pass == null) {
             throw new IllegalArgumentException("Illegal parameters error");
