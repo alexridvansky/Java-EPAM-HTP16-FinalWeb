@@ -32,13 +32,13 @@ public class AddNewMakeCommand implements Command {
         } catch (ServiceException e) {
             logger.error("Error adding new entry of Vehicle.model", e);
             request.setAttribute(FEEDBACK_MESSAGE_PARAM, "Error adding new entry of Vehicle.model");
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
 
         } catch (IllegalArgumentException e) {
             logger.error(e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
         }
