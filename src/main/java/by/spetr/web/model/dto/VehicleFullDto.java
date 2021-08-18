@@ -17,6 +17,7 @@ public class VehicleFullDto implements Serializable {
     private List<VehicleOption> optionList;
     private long id;
     private VehicleStateType state;
+    private long ownerId;
     private String owner;
     private String ownerPhone;
     private String make;
@@ -63,6 +64,14 @@ public class VehicleFullDto implements Serializable {
 
     public void setState(VehicleStateType state) {
         this.state = state;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getOwner() {
