@@ -25,7 +25,7 @@ public class ChangeUserStateCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) {
-        logger.info("Change user state method been called");
+        logger.debug("Change user state method been called");
 
         try {
             UserForm form = (UserForm) doForm(request);
