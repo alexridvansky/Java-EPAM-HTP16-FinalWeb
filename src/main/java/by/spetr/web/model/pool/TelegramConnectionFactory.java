@@ -1,7 +1,7 @@
 package by.spetr.web.model.pool;
 
 import by.spetr.web.model.exception.ServiceException;
-import by.spetr.web.model.service.TelegramBotInformerService;
+import by.spetr.web.model.service.TelegramInformerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +25,7 @@ public class TelegramConnectionFactory {
     private static final String CHAT_ID;
 
     static {
-        try (InputStream inputStream = TelegramBotInformerService.class.getClassLoader()
+        try (InputStream inputStream = TelegramInformerService.class.getClassLoader()
                 .getResourceAsStream(RESOURCE)) {
             if (inputStream == null) {
                 logger.fatal("Can't find property file by name: " + RESOURCE);
