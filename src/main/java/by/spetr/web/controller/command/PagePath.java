@@ -10,7 +10,6 @@ public class PagePath {
     public static final String VEHICLE_LIST_PERSONAL = "/jsp/vehicle_list_personal.jsp";
     public static final String VEHICLE_LIST_PUBLIC = "/jsp/vehicle_list_public.jsp";
     public static final String VEHICLE_INFO = "/jsp/vehicle_info.jsp";
-    public static final String SHOW_VEHICLE_NOT_FOUND = "/jsp/show_vehicle_not_found.jsp";
     public static final String COLOR_CREATION_PAGE = "/jsp/add_color.jsp";
     public static final String MAKE_CREATION_PAGE = "/jsp/add_make.jsp";
     public static final String MODEL_CREATION_PAGE = "/jsp/create_model.jsp";
