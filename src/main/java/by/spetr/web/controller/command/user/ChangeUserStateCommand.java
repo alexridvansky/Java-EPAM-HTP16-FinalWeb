@@ -18,7 +18,6 @@ import java.util.Objects;
 
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
-import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class ChangeUserStateCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -33,14 +32,16 @@ public class ChangeUserStateCommand implements Command {
             logger.debug("'{}' -> '{}'", form.getUserName(), form.getState());
 
             userService.updateUserState(form);
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
+            request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
 
             String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
             return new Router(Objects.requireNonNullElse(lastPage, PagePath.INDEX_PAGE));
 
         } catch (ServiceException | IllegalArgumentException e) {
             logger.error(e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
-            return new Router(ERROR_PAGE, REDIRECT);
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
+            return new Router(ERROR_PAGE);
         }
     }
 
