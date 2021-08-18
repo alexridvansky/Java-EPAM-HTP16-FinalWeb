@@ -1,11 +1,15 @@
 package by.spetr.web.controller;
 
-import by.spetr.web.controller.command.*;
-import by.spetr.web.model.exception.ConnectionPoolException;
-import by.spetr.web.model.pool.ConnectionPool;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import by.spetr.web.controller.command.Command;
+import by.spetr.web.controller.command.CommandProvider;
+import by.spetr.web.controller.command.RequestParameter;
+import by.spetr.web.controller.command.Router;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
