@@ -25,7 +25,7 @@ public class ChangeUserRoleCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) {
-        logger.info("ChangeUserRoleCommand called");
+        logger.debug("ChangeUserRoleCommand called");
 
         try {
             UserForm form = (UserForm) doForm(request);
