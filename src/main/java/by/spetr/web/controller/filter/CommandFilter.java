@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-import static by.spetr.web.controller.command.RequestParameter.COMMAND;
+import static by.spetr.web.controller.command.RequestParameter.COMMAND_PARAM;
 import static by.spetr.web.controller.command.RequestParameter.USER_PARAM;
 
 /**
@@ -45,7 +45,7 @@ public class CommandFilter implements Filter {
 
 
         try {
-            String command = servletRequest.getParameter(COMMAND);
+            String command = servletRequest.getParameter(COMMAND_PARAM);
             CommandType requestedCommand = null;
             if (command != null) {
                 requestedCommand = CommandType.valueOf(command.toUpperCase());

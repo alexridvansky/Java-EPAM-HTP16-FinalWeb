@@ -2,6 +2,7 @@ package by.spetr.web.controller.command;
 
 public enum CommandType {
     DEFAULT,
+    ADD_NEW_COLOR,
     ADD_NEW_MAKE,
     ADD_NEW_MODEL,
     ADD_NEW_VEHICLE,
@@ -13,6 +14,7 @@ public enum CommandType {
     SHOW_VEHICLE_CREATION_PAGE,
     SHOW_MAKE_CREATION_PAGE,
     SHOW_MODEL_CREATION_PAGE,
+    SHOW_COLOR_CREATION_PAGE,
     UPDATE_VEHICLE_ADS,
     UPLOAD_VEHICLE_PHOTO,
     GO_TO_MAIN_PAGE,

@@ -32,7 +32,7 @@ public class AddNewVehicleCommand implements Command {
         UserDto user = (UserDto) request.getSession().getAttribute(USER_PARAM);
         if (user.getRole() != UserRoleType.USER) {
             logger.error("Unauthorised access attempt");
-            request.setAttribute(EXCEPTION_MESSAGE, "Unauthorised access attempt");
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, "Unauthorised access attempt");
 
             return new Router(ERROR_PAGE, REDIRECT);
         }
@@ -46,7 +46,7 @@ public class AddNewVehicleCommand implements Command {
 
         } catch (IllegalArgumentException | ServiceException e) {
             logger.error(e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE, REDIRECT);
         }
@@ -89,7 +89,7 @@ public class AddNewVehicleCommand implements Command {
             }
             form.setComment(description);
 
-            String[] optionSet = request.getParameterValues(VEHICLE_OPTIONS_SET);
+            String[] optionSet = request.getParameterValues(VEHICLE_OPTIONS_SET_PARAM);
             if (optionSet != null) {
                 for (String option : optionSet) {
                     long optionId = Long.parseLong(option);

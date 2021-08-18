@@ -1,7 +1,6 @@
 package by.spetr.web.controller.command.vehicle;
 
 import by.spetr.web.controller.command.Command;
-import by.spetr.web.controller.command.PagePath;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.entity.Vehicle;
 import by.spetr.web.model.exception.ServiceException;
@@ -61,7 +60,7 @@ public class UploadVehiclePhotoCommand implements Command {
                 return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
             } catch (ServiceException e) {
                 logger.error("Error uploading photos", e);
-                request.setAttribute(EXCEPTION_MESSAGE, "Error uploading photos");
+                request.setAttribute(EXCEPTION_MESSAGE_PARAM, "Error uploading photos");
 
                 return new Router(ERROR_PAGE, REDIRECT);
             }

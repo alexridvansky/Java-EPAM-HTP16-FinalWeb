@@ -2,7 +2,7 @@ package by.spetr.web.controller.command.vehicle;
 
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
-import by.spetr.web.model.entity.VehicleColor;
+import by.spetr.web.model.entity.type.VehicleColor;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,8 +13,8 @@ import java.util.List;
 
 import static by.spetr.web.controller.command.PagePath.COLOR_CREATION_PAGE;
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
-import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE;
-import static by.spetr.web.controller.command.RequestParameter.VEHICLE_COLOR_LIST;
+import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE_PARAM;
+import static by.spetr.web.controller.command.RequestParameter.VEHICLE_COLOR_LIST_PARAM;
 
 public class ShowColorCreationPageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -26,13 +26,13 @@ public class ShowColorCreationPageCommand implements Command {
 
         try {
             List<VehicleColor> colors = vehicleService.getAllColorList();
-            request.setAttribute(VEHICLE_COLOR_LIST, colors);
+            request.setAttribute(VEHICLE_COLOR_LIST_PARAM, colors);
 
             return new Router(COLOR_CREATION_PAGE);
 
         } catch (ServiceException e) {
             logger.error(e.getMessage(), e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
         }

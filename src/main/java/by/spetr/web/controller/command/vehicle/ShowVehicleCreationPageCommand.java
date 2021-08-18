@@ -1,13 +1,12 @@
 package by.spetr.web.controller.command.vehicle;
 
 import by.spetr.web.controller.command.Command;
-import by.spetr.web.controller.command.PagePath;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.dto.UserDto;
-import by.spetr.web.model.entity.VehicleColor;
-import by.spetr.web.model.entity.VehicleMake;
-import by.spetr.web.model.entity.VehicleModel;
-import by.spetr.web.model.entity.VehicleOption;
+import by.spetr.web.model.entity.type.VehicleColor;
+import by.spetr.web.model.entity.type.VehicleMake;
+import by.spetr.web.model.entity.type.VehicleModel;
+import by.spetr.web.model.entity.type.VehicleOption;
 import by.spetr.web.model.entity.type.VehicleDriveType;
 import by.spetr.web.model.entity.type.VehiclePowertrainType;
 import by.spetr.web.model.entity.type.VehicleTransmissionType;
@@ -51,25 +50,25 @@ public class ShowVehicleCreationPageCommand implements Command {
             List<VehicleColor> colors = vehicleService.getAllColorList();
             List<VehicleOption> options = vehicleService.getOptionList();
 
-            request.setAttribute(VEHICLE_MAKE_LIST, makes);
-            request.setAttribute(VEHICLE_MODEL_LIST, models);
-            request.setAttribute(VEHICLE_POWERTRAIN_LIST, powertrains);
-            request.setAttribute(VEHICLE_TRANSMISSION_LIST, transmissions);
-            request.setAttribute(VEHICLE_DRIVE_LIST, drives);
-            request.setAttribute(VEHICLE_COLOR_LIST, colors);
-            request.setAttribute(VEHICLE_OPTION_LIST, options);
+            request.setAttribute(VEHICLE_MAKE_LIST_PARAM, makes);
+            request.setAttribute(VEHICLE_MODEL_LIST_PARAM, models);
+            request.setAttribute(VEHICLE_POWERTRAIN_LIST_PARAM, powertrains);
+            request.setAttribute(VEHICLE_TRANSMISSION_LIST_PARAM, transmissions);
+            request.setAttribute(VEHICLE_DRIVE_LIST_PARAM, drives);
+            request.setAttribute(VEHICLE_COLOR_LIST_PARAM, colors);
+            request.setAttribute(VEHICLE_OPTION_LIST_PARAM, options);
 
             return new Router(ADD_VEHICLE_PAGE);
 
         } catch (ServiceException e) {
             logger.error("Error getting makes list from Vehicle.service", e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE, REDIRECT);
 
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage(), e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE, REDIRECT);
         }

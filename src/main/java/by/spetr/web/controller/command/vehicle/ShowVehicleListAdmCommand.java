@@ -14,7 +14,7 @@ import java.util.List;
 
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.PagePath.VEHICLE_LIST_ADM;
-import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE;
+import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE_PARAM;
 import static by.spetr.web.controller.command.RequestParameter.VEHICLE_LIST_PARAM;
 import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
@@ -32,11 +32,11 @@ public class ShowVehicleListAdmCommand implements Command {
 
         } catch (ServiceException e) {
             logger.error(e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
             return new Router(ERROR_PAGE, REDIRECT);
         } catch (IllegalArgumentException e) {
             logger.error("Parsing parameters error", e);
-            request.setAttribute(EXCEPTION_MESSAGE, "Parsing parameters error");
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, "Parsing parameters error");
             return new Router(ERROR_PAGE, REDIRECT);
         }
     }

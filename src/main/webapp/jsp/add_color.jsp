@@ -16,7 +16,7 @@
 
 <%@include file="fragment/header.jspf" %>
 
-<link rel="stylesheet" href="${abs}/css/album_style.css">
+<link rel="stylesheet" href="${abs}/css/alert.css">
 
 <main>
     <section class="py-5 mt-2 text-center text-white container">
@@ -42,27 +42,39 @@
                             type="submit">${create}</button>
                 </div>
             </form>
+
             <div class="col-12">
                 <hr class="col-12 text-white">
             </div>
+
             <div class="col-12">
                 <p class="lead text-muted">${new_color_check}</p>
                 <select name="" class="form-control secondList selectFilter mt-3">
                     <option value="" selected disabled>${select_color}</option>
                     <%--@elvariable id="colors" type="java.util.List"--%>
-                    <%--@elvariable id="color_entry" type="by.spetr.web.model.entity.VehicleColor"--%>
+                    <%--@elvariable id="color_entry" type="by.spetr.web.model.entity.type.VehicleColor"--%>
                     <c:forEach items="${colors}" var="color_entry">
                         <option value="${color_entry.colorId}">${color_entry.value}</option>
                     </c:forEach>
                 </select>
+
                 <div class="invalid-feedback">
                     ${color_sel_req}
                 </div>
             </div>
 
-            <p class="lead text-white">${feedback_msg}</p>
-
-            <p class="lead text-danger"> ${e}</p>
+<%--            <c:if test="${feedback_msg != null}">--%>
+<%--                <c:choose>--%>
+<%--                    <c:when test="${success == true}">--%>
+<%--                        <br/>--%>
+<%--                        <div class="alert alert-success" id="message"><b>${feedback_msg}</b></div>--%>
+<%--                    </c:when>--%>
+<%--                    <c:otherwise>--%>
+<%--                        <br/>--%>
+<%--                        <div class="alert alert-danger" id="message"><b>${feedback_msg}</b></div>--%>
+<%--                    </c:otherwise>--%>
+<%--                </c:choose>--%>
+<%--            </c:if>--%>
 
         </div>
 

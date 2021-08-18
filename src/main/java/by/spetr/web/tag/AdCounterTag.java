@@ -27,7 +27,7 @@ public class AdCounterTag extends TagSupport {
         try {
             int counter = vehicleService.getVehicleCountByUserId(userId);
             out.write(String.valueOf(counter));
-        } catch (IOException | ServiceException e) {
+        } catch (ServiceException | IOException e) {
             throw new JspException(e.getMessage());
         }
         return SKIP_BODY;

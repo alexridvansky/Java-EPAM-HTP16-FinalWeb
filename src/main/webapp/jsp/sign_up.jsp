@@ -1,35 +1,132 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: spetr
-  Date: 6/24/2021
-  Time: 1:40 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="abs_path">${pageContext.request.contextPath}</c:set>
-
+<%--@elvariable id="reg_data" type="by.spetr.web.model.form.UserRegForm"--%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="en" class="h-100">
+
 <head>
-    <title>CarSales - register new user</title>
-    <link rel="stylesheet" href="${abs_path}/css/main_style.css">
+
+    <%@include file="fragment/meta.jsp" %>
+
+    <title>${reg_title}</title>
+
 </head>
-<body>
-<h3><%= "new user registration form" %></h3>
-<form action="${abs_path}/controller" method="get">
-    <input type="hidden" name="command" value="go_to_sign_up_result_page">
-    <input type="text" name="username"/> username (4-16 char length, starts from letter)
-    <br>
-    <input type="password" name="password"/> enter password
-    <br>
-    <input type="password" name="password_again"/> reenter password
-    <br>
-    <input type="email" name="email"/> email
-    <br>
-    <input type="text" name="phone"/> phone number (<12 symbols)
-    <br>
-    <input type="submit" value="create">
-</form>
-<br/>
+
+<%@include file="fragment/fmt_msg.jsp" %>
+
+<body class="d-flex flex-column h-100 bg-dark">
+
+<%@include file="fragment/header.jspf" %>
+
+<link rel="stylesheet" href="${abs}/css/album_style.css">
+
+<main>
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-8 col-md-8 mx-auto">
+                <h2 class="fw-light text-white">${reg_greeting}</h2>
+                <p class="lead text-muted">${reg_promotion}</p>
+            </div>
+
+            <div class="text-secondary text-start col-md-7 col-lg-8 mx-auto">
+                <form class="needs-validation" action="${abs}/controller" method="post" novalidate>
+                    <input type="hidden" name="command" value="create_user">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <label for="reg_username" class="form-label">${login}</label>
+                            <div class="input-group has-validation">
+                                <input type="text" class="form-control" id="reg_username" name="reg_username"
+                                       value="${reg_data.login}" placeholder="${login}" required autocomplete="off">
+                                <div class="invalid-feedback">
+                                    ${username_req}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="reg_password" class="form-label">${pass}</label>
+                            <input type="password" class="form-control" id="reg_password" name="password" placeholder="${pass}" value="" required="">
+                            <div class="invalid-feedback">
+                                ${pass_req}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="reg_password_again" class="form-label">${pass_rep}</label>
+                            <input type="password" class="form-control" id="reg_password_again" name="password_again" placeholder="${pass_rep}" value="" required="">
+                            <div class="invalid-feedback">
+                                ${passrep_req}
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="email" class="form-label">${email}</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" value="${reg_data.email}" required="">
+                            <div class="invalid-feedback">
+                                ${email_req}
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="phone" class="form-label">${phone}</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="${reg_data.phone}" placeholder="+375xxxxxxxxx" required="">
+                            <div class="invalid-feedback">
+                                ${phone_req}
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" required="">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                ${terms}
+                            </label>
+                            <div class="invalid-feedback">
+                                ${terms_req}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <hr class="my-4">
+                    <button class="w-100 align-content-lg-center btn btn-primary btn-lg" type="submit">${create}</button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+<%--    <p style="color:red;">${reg_data.comment}</p>--%>
+<%--    <br/>--%>
+</main>
+
+<script>
+    // // Example starter JavaScript for disabling form submissions if there are invalid fields
+    // (function () {
+    //     'use strict'
+    //
+    //     // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    //     var forms = document.querySelectorAll('.needs-validation')
+    //
+    //     // Loop over them and prevent submission
+    //     Array.prototype.slice.call(forms)
+    //         .forEach(function (form) {
+    //             form.addEventListener('submit', function (event) {
+    //                 if (!form.checkValidity()) {
+    //                     event.preventDefault()
+    //                     event.stopPropagation()
+    //                 }
+    //
+    //                 form.classList.add('was-validated')
+    //             }, false)
+    //         })
+    // })()
+
+</script>
+
+<%@include file="fragment/footer.jspf" %>
+
+</body>
+</html>

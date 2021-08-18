@@ -14,7 +14,7 @@
             <name>userId</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.Integer</type>
+            <type>java.lang.Long</type>
         </attribute>
     </tag>
 

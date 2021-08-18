@@ -2,7 +2,7 @@ package by.spetr.web.controller.command.vehicle;
 
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
-import by.spetr.web.model.entity.VehicleMake;
+import by.spetr.web.model.entity.type.VehicleMake;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
@@ -29,14 +29,14 @@ public class ShowModelCreationPageCommand implements Command {
         try {
             doForm(request);
             List<VehicleMake> makes = vehicleService.getMakeList();
-            request.setAttribute(VEHICLE_MAKE_LIST, makes);
+            request.setAttribute(VEHICLE_MAKE_LIST_PARAM, makes);
 
             return new Router(MODEL_CREATION_PAGE);
 
         } catch (ServiceException e) {
             logger.error("Error getting makes list from Vehicle.service", e);
             request.setAttribute(FEEDBACK_MESSAGE_PARAM, "Error getting makes list from Vehicle.service");
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE, REDIRECT);
         }

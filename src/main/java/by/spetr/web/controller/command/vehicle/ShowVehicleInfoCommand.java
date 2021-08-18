@@ -34,7 +34,7 @@ public class ShowVehicleInfoCommand implements Command {
             }
         } catch (ServiceException e) {
             logger.error("Error getting vehicle info from Vehicle.service", e);
-            request.setAttribute(EXCEPTION_MESSAGE, "Error getting vehicle info from Vehicle.service");
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, "Error getting vehicle info from Vehicle.service");
 
             return new Router(ERROR_PAGE);
         }

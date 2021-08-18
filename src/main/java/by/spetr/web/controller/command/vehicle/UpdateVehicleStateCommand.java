@@ -43,11 +43,11 @@ public class UpdateVehicleStateCommand implements Command {
         } catch (ServiceException e) {
             logger.error("state for the 'vehicleId {}' not changed", form.getVehicleId());
             request.setAttribute(FEEDBACK_MESSAGE_PARAM, "state for the '" + form.getVehicleId() + "' not changed");
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
             return new Router(ERROR_PAGE, REDIRECT);
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage(), e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
         }
