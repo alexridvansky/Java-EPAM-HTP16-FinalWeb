@@ -1,0 +1,19 @@
+table { position: relative; }
+tr {
+    height: 1.5em;
+    line-height: 1.5em;
+}
+.rowlink::before {
+    content: "";
+    display: block;
+    position: absolute;
+    right: 230px;
+    width: 100%;
+    height: 2.3em;
+
+    /* to make it easier to see what is going on */
+    /*background: red;*/
+    /*opacity: 0.5;*/
+
+}
+

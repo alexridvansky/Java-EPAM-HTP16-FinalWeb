@@ -28,7 +28,7 @@
             </div>
 
             <div class="text-secondary text-start col-md-7 col-lg-8 mx-auto">
-                <form class="needs-validation" action="${abs}/controller" method="post" novalidate>
+                <form class="needs-validation" action="${abs}/controller" method="post" novalidate autocomplete="off">
                     <input type="hidden" name="command" value="create_user">
 
                     <div class="row g-3">
@@ -46,7 +46,8 @@
 
                         <div class="col-sm-6">
                             <label for="reg_password" class="form-label">${pass}</label>
-                            <input type="password" class="form-control" id="reg_password" name="password" placeholder="${pass}" value="" required="">
+                            <input type="password" class="form-control" id="reg_password" name="password"
+                                   placeholder="${pass}" value="" required autocomplete="off">
                             <div class="invalid-feedback">
                                 ${pass_req}
                             </div>
@@ -54,7 +55,8 @@
 
                         <div class="col-sm-6">
                             <label for="reg_password_again" class="form-label">${pass_rep}</label>
-                            <input type="password" class="form-control" id="reg_password_again" name="password_again" placeholder="${pass_rep}" value="" required="">
+                            <input type="password" class="form-control" id="reg_password_again" name="password_again"
+                                   placeholder="${pass_rep}" value="" required autocomplete="off">
                             <div class="invalid-feedback">
                                 ${passrep_req}
                             </div>
