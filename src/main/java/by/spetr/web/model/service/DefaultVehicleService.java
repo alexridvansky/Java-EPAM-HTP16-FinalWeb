@@ -4,17 +4,19 @@ import by.spetr.web.model.dao.DefaultVehicleDao;
 import by.spetr.web.model.dao.VehicleDao;
 import by.spetr.web.model.dto.VehicleFullDto;
 import by.spetr.web.model.dto.VehiclePreviewDto;
-import by.spetr.web.model.entity.*;
+import by.spetr.web.model.entity.User;
+import by.spetr.web.model.entity.Vehicle;
+import by.spetr.web.model.entity.VehicleBuilder;
 import by.spetr.web.model.entity.type.*;
 import by.spetr.web.model.exception.DaoException;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.VehicleFullForm;
 import by.spetr.web.model.form.VehicleShortForm;
+import by.spetr.web.util.TagRemover;
 import by.spetr.web.validator.VehicleValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
-import org.jsoup.Jsoup;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -307,7 +309,7 @@ public class DefaultVehicleService implements VehicleService {
 
         try {
             String description = form.getComment();
-            description = Jsoup.parse(description).text();
+            description = TagRemover.doText(description);
             if (description.length() > 300) {
                 description = description.substring(0, 300);
             }
@@ -398,6 +400,7 @@ public class DefaultVehicleService implements VehicleService {
 
     /**
      * Method is used to sent notification when new vehicle ad added
+     *
      * @param vehicle vehicle to be informed about
      */
     private void informOfVehicle(Vehicle vehicle) throws ServiceException {
