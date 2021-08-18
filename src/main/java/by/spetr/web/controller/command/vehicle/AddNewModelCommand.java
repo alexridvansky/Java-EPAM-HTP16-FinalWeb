@@ -2,7 +2,7 @@ package by.spetr.web.controller.command.vehicle;
 
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
-import by.spetr.web.model.entity.VehicleMake;
+import by.spetr.web.model.entity.type.VehicleMake;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.VehicleShortForm;
@@ -30,7 +30,7 @@ public class AddNewModelCommand implements Command {
             vehicleService.addModel(form);
 
             List<VehicleMake> makes = vehicleService.getMakeList();
-            request.setAttribute(VEHICLE_MAKE_LIST, makes);
+            request.setAttribute(VEHICLE_MAKE_LIST_PARAM, makes);
             request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
             request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
             request.setAttribute(VEHICLE_LAST_MAKE_ID, form.getMakeId());
@@ -39,13 +39,13 @@ public class AddNewModelCommand implements Command {
 
         } catch (ServiceException e) {
             logger.error("Error adding new entry of Vehicle.model", e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
 
         } catch (IllegalArgumentException e) {
             logger.error(e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
         }
