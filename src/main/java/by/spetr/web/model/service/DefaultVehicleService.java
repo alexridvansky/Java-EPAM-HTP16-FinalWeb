@@ -459,7 +459,7 @@ public class DefaultVehicleService implements VehicleService {
                 return false;
             } else {
                 try {
-                    String imgPath = cloudinary.store(filename);
+                    String imgPath = cloudinary.storePhoto(filename);
 
                     if (imgPath != null && !imgPath.isBlank()) {
                         cloudinaryPublicIds.add(imgPath);

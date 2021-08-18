@@ -37,7 +37,7 @@ public class CloudinaryMediaService implements MediaService {
         return instance;
     }
 
-    public String store(String filename) throws ServiceException {
+    public String storePhoto(String filename) throws ServiceException {
         try {
             Map<String, String> upload = cloudinary.uploader().upload(
                     filename,
