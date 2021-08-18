@@ -1,6 +1,6 @@
 package by.spetr.web.validator;
 
-import by.spetr.web.util.RegexpPropertyUtil;
+import by.spetr.web.util.PropertyUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,31 +14,31 @@ public class UserValidator {
     private static final String REGEXP_EMAIL = "regexp.email";
     private static final String REGEXP_PHONE = "regexp.phone";
 
-    private static final RegexpPropertyUtil regexpPropertyUtil = RegexpPropertyUtil.getInstance();
+    private static final PropertyUtil PROPERTY_UTIL = PropertyUtil.getInstance();
 
     private UserValidator() {}
 
     public static boolean validateUsername(String login) {
         logger.debug("login given: {}", login);
 
-        return match(login, regexpPropertyUtil.getProperty(REGEXP_USERNAME));
+        return match(login, PROPERTY_UTIL.getRegexpProperty(REGEXP_USERNAME));
     }
 
     public static boolean validatePassword(String password) {
 
-        return match(password, regexpPropertyUtil.getProperty(REGEXP_PASSWORD));
+        return match(password, PROPERTY_UTIL.getRegexpProperty(REGEXP_PASSWORD));
     }
 
     public static boolean validateEmail(String email) {
         logger.debug("email given: {}", email);
 
-        return match(email, regexpPropertyUtil.getProperty(REGEXP_EMAIL));
+        return match(email, PROPERTY_UTIL.getRegexpProperty(REGEXP_EMAIL));
     }
 
     public static boolean validatePhoneNumber(String phone) {
         logger.debug("phone given: {}", phone);
 
-        return match(phone, regexpPropertyUtil.getProperty(REGEXP_PHONE));
+        return match(phone, PROPERTY_UTIL.getRegexpProperty(REGEXP_PHONE));
     }
 
     private static boolean match(String data, String regexp) {
