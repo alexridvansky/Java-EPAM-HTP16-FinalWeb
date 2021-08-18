@@ -19,22 +19,27 @@
 <link rel="stylesheet" href="${abs}/css/alert.css">
 
 <main>
-    <section class="py-5 mt-2 text-center text-white container">
+    <section class="py-5 mt-2 text-center text-white container centered">
+
         <div class="col-lg-8 col-md-8 mx-auto">
-            <h2 class="fw-light py-3 text-white">${color_title}</h2>
+            <h2 class="fw-light py-3 text-white">${make_title}</h2>
             <form class="needs-validation row g-3" action="${abs}/controller" method="post" novalidate>
-                <input type="hidden" name="command" value="add_new_color">
+                <input type="hidden" name="command" value="add_new_make">
 
-                <div class="col-12 mt-4">
-                    <p class="lead text-muted">${enter_new_color}</p>
+                <div class="col-12">
+                    <p class="lead text-muted mb-1">${enter_new_make}</p>
+                </div>
 
-                    <div class="input-group has-validation">
-                        <input type="text" class="form-control" id="color" name="color"
-                               placeholder="${color}" required>
-                        <div class="invalid-feedback">
-                            ${color_sel_req}
-                        </div>
+                <div class="col-12 input-group has-validation">
+                    <input type="text" class="form-control" id="make" name="make"
+                           placeholder="${vehicle_make}" required>
+                    <div class="invalid-feedback">
+                        ${make_req}
                     </div>
+                </div>
+
+                <div class="col-12">
+                    <hr class="col-12 text-white">
                 </div>
 
                 <div class="col-12">
@@ -42,26 +47,6 @@
                             type="submit">${create}</button>
                 </div>
             </form>
-
-            <div class="col-12">
-                <hr class="col-12 text-white">
-            </div>
-
-            <div class="col-12">
-                <p class="lead text-muted">${new_color_check}</p>
-                <select name="" class="form-control secondList selectFilter mt-3">
-                    <option value="" selected disabled>${select_color}</option>
-                    <%--@elvariable id="colors" type="java.util.List"--%>
-                    <%--@elvariable id="color_entry" type="by.spetr.web.model.entity.type.VehicleColor"--%>
-                    <c:forEach items="${colors}" var="color_entry">
-                        <option value="${color_entry.colorId}">${color_entry.value}</option>
-                    </c:forEach>
-                </select>
-
-                <div class="invalid-feedback">
-                    ${color_sel_req}
-                </div>
-            </div>
 
 <%--            <c:if test="${feedback_msg != null}">--%>
 <%--                <c:choose>--%>
@@ -75,7 +60,6 @@
 <%--                    </c:otherwise>--%>
 <%--                </c:choose>--%>
 <%--            </c:if>--%>
-
         </div>
 
     </section>
