@@ -6,7 +6,6 @@ import by.spetr.web.model.dto.UserDto;
 import by.spetr.web.model.form.LoginForm;
 import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.UserRegForm;
-import by.spetr.web.model.form.UserRegistrationForm;
 import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.entity.type.UserStateType;
@@ -26,14 +25,17 @@ import static by.spetr.web.model.service.ServiceMessageList.*;
 
 public class DefaultUserService implements UserService {
     private static final Logger logger = LogManager.getLogger();
-    private static final DefaultUserService instance = new DefaultUserService();
     private static final AccessControlService accessControlService = AccessControlService.getInstance();
     private static final UserDao userDao = new DefaultUserDao();
+    private static DefaultUserService instance;
 
     private DefaultUserService() {
     }
 
     public static DefaultUserService getInstance() {
+        if (instance == null) {
+            instance = new DefaultUserService();
+        }
         return instance;
     }
 

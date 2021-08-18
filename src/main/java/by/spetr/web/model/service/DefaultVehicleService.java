@@ -22,17 +22,20 @@ import java.util.*;
 
 public class DefaultVehicleService implements VehicleService {
     private static final Logger logger = LogManager.getLogger();
-    private static final DefaultVehicleService instance = new DefaultVehicleService();
     private static final UserService userService = DefaultUserService.getInstance();
     private static final CloudinaryService cloudinary = CloudinaryService.getCloudinary();
     private static final VehicleDao vehicleDao = new DefaultVehicleDao();
     private static final AccessControlService accessControlService = AccessControlService.getInstance();
     private static final BotInformerService botInformerService = BotInformerService.getInstance();
+    private static DefaultVehicleService instance;
 
     private DefaultVehicleService() {
     }
 
     public static DefaultVehicleService getInstance() {
+        if (instance == null) {
+            instance = new DefaultVehicleService();
+        }
         return instance;
     }
 
