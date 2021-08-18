@@ -1,9 +1,11 @@
 package by.spetr.web.model.service;
 
-import by.spetr.web.model.dto.RegistrationFormDto;
+import by.spetr.web.model.dto.UserDto;
+import by.spetr.web.model.form.LoginForm;
+import by.spetr.web.model.form.UserForm;
+import by.spetr.web.model.form.UserRegForm;
+import by.spetr.web.model.form.UserRegistrationForm;
 import by.spetr.web.model.entity.User;
-import by.spetr.web.model.entity.type.UserRoleType;
-import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.ServiceException;
 
 import java.util.List;
@@ -17,11 +19,11 @@ public interface UserService {
     /**
      * is used to interact with UsedDao layer and create new {@code User}
      *
-     * @param registrationFormDto - class containing registration form parameters
+     * @param form - UserRegForm containing user registration parameters
      * @return - {@code true} if registration parameters were valid and new user been created
      * @throws ServiceException if no data been received from DAO layer or in case when data can't be validated
      */
-    public boolean registerUser(RegistrationFormDto registrationFormDto) throws ServiceException;
+    public Optional<UserDto> registerUser(UserRegForm form) throws ServiceException;
 
     /**
      * is used to check whether username is already taken
@@ -53,12 +55,11 @@ public interface UserService {
     /**
      * Is used for Authentication user through matching login with password hash
      *
-     * @param login - {@code User} login
-     * @param password - {@code User} password
+     * @param form - LoginForm containing login and password values
      * @return {@code User} if so been found matching login and password hash
      * @throws ServiceException if no data been received from DAO layer
      */
-    Optional<User> logIn(String login, String password) throws ServiceException;
+    Optional<UserDto> logIn(LoginForm form) throws ServiceException;
 
     /**
      * Returns list of all users or empty List<User> if there's no users in the database
@@ -69,31 +70,33 @@ public interface UserService {
     List<User> getUserList() throws ServiceException;
 
     /**
-     *  Returns user's phone number
+     *  Returns User by UserId given
      *
-     * @param userName user Login
-     * @return Optional<User> or Optional.Empty if phone number hasn't been found
+     * @param userId user Id
+     * @return Optional<User> or Optional.Empty if such user hasn't been found
      * @throws ServiceException  if no data been received from DAO layer
      */
-    Optional<String> getUserPhone(String userName) throws ServiceException;
+    Optional<User> getUserById(long userId) throws ServiceException;
 
     /**
      * is used for updating user status by username
      *
-     * @param userName username or login
-     * @param userState new user state to be changed to
+     * @param form UserForm contains User and new userStatus to be changed to
      * @return true if status been changed successfully
      * @throws ServiceException when error occurred on DAO layer
      */
-    boolean updateUserState(String userName, UserStateType userState) throws ServiceException;
+    boolean updateUserState(UserForm form) throws ServiceException;
 
     /**
      * is used for updating user status by username
      *
-     * @param userName username or login
-     * @param userRole new user role to be changed to
+     * @param form UserForm contains User and new userRole to be changed to
      * @return true if status been changed successfully
      * @throws ServiceException when error occurred on DAO layer
      */
-    boolean updateUserRole(String userName, UserRoleType userRole) throws ServiceException;
+    boolean updateUserRole(UserForm form) throws ServiceException;
+
+    static UserService getInstance() {
+        return DefaultUserService.getInstance();
+    }
 }
