@@ -10,10 +10,10 @@
 <form class="dropdown-menu px-3 py-3" action="${pageContext.request.contextPath}/controller" method="post">
     <input type="hidden" name="command" value="sign_in">
     <div class="mb-3">
-        <input type="text" class="form-control" name="login" id="exampleDropdownFormEmail2" placeholder="username">
+        <input type="text" class="form-control" name="username" id="username_id" placeholder="username">
     </div>
     <div class="mb-3">
-        <input type="password" class="form-control" name="pass" id="exampleDropdownFormPassword2" placeholder="password">
+        <input type="password" class="form-control" name="password" id="password_id" placeholder="password">
     </div>
     <div class="mb-3">
         <div class="form-check">
