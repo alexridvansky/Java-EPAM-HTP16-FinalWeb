@@ -4,6 +4,8 @@ import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.dto.UserDto;
 import by.spetr.web.model.exception.ServiceException;
+import by.spetr.web.model.form.DefaultForm;
+import by.spetr.web.model.form.LoginForm;
 import by.spetr.web.model.service.DefaultUserService;
 import by.spetr.web.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,26 +26,42 @@ public class SignInCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) {
-        String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
-
-        String login = request.getParameter("login");
-        String pass = request.getParameter("pass");
-
         try {
-            Optional<UserDto> optionalUser = userService.logIn(login, pass);
+            LoginForm form = (LoginForm) doForm(request);
+            Optional<UserDto> optionalUser = userService.logIn(form);
 
             if (optionalUser.isPresent()) {
                 request.getSession().setAttribute(USER_PARAM, optionalUser.get());
-            } else {
-                request.setAttribute(AUTHENTICATION_ERROR, "Login error");
+                form.setSuccess(true);
             }
-            return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE), REDIRECT);
 
-        } catch (ServiceException e) {
+            String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
+            request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
+
+            return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
+
+        } catch (ServiceException | IllegalArgumentException e) {
             logger.error(e);
-            request.setAttribute(EXCEPTION_MESSAGE, e.getMessage());
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public DefaultForm doForm(HttpServletRequest request) {
+        LoginForm form = new LoginForm();
+        String login = request.getParameter("login");
+        String pass = request.getParameter("pass");
+
+        if (login == null || pass == null) {
+            throw new IllegalArgumentException("Illegal parameters error");
+        }
+
+        form.setLogin(login);
+        form.setPass(pass);
+
+        return form;
     }
 }
