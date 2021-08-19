@@ -4,7 +4,7 @@ import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.CommandProvider;
 import by.spetr.web.controller.command.RequestParameter;
 import by.spetr.web.controller.command.Router;
-import by.spetr.web.telegrambot.TelegramBotService;
+import by.spetr.web.telegrambot.TelegramInformerService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,8 +32,8 @@ public class MainController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         logger.debug("Servlet Bot starter");
-        TelegramBotService telegramBotService = new TelegramBotService();
-        telegramBotService.registerBot();
+        TelegramInformerService telegramInformerService = TelegramInformerService.getInstance();
+        telegramInformerService.registerBot();
     }
 
     /**

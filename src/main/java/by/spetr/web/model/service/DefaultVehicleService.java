@@ -29,7 +29,7 @@ public class DefaultVehicleService implements VehicleService {
     private static final MediaService cloudinary = MediaService.getInstance();
     private static final VehicleDao vehicleDao = new DefaultVehicleDao();
     private static final AccessControlService accessControlService = AccessControlService.getInstance();
-    private static final InformerService INFORMER_SERVICE = InformerService.getInstance();
+    private static final InformerService informerService = InformerService.getInstance();
     private static DefaultVehicleService instance;
 
     private DefaultVehicleService() {
@@ -414,7 +414,7 @@ public class DefaultVehicleService implements VehicleService {
         Optional<String> previewPath = getPreviewImageById(vehicle.getId());
         previewPath.ifPresent(s -> note.append("\n").append(s));
 
-        INFORMER_SERVICE.sendMessage(note.toString());
+        informerService.sendPublicMessage(note.toString());
     }
 
     @Override
