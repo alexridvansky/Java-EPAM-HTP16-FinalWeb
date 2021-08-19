@@ -18,10 +18,10 @@ public class VehicleFullForm extends DefaultForm {
     private int driveId;
     private int colorId;
     private Year modelYear;
-    private int displacement;
-    private int mileage;
-    private int power;
-    private int price;
+    private Integer displacement;
+    private Integer mileage;
+    private Integer power;
+    private Integer price;
     private List<Long> optionSet = new ArrayList<>();
     private String comment;
     private Set<String> photoSet;
@@ -106,35 +106,35 @@ public class VehicleFullForm extends DefaultForm {
         this.modelYear = modelYear;
     }
 
-    public int getDisplacement() {
+    public Integer getDisplacement() {
         return displacement;
     }
 
-    public void setDisplacement(int displacement) {
+    public void setDisplacement(Integer displacement) {
         this.displacement = displacement;
     }
 
-    public int getMileage() {
+    public Integer getMileage() {
         return mileage;
     }
 
-    public void setMileage(int mileage) {
+    public void setMileage(Integer mileage) {
         this.mileage = mileage;
     }
 
-    public int getPower() {
+    public Integer getPower() {
         return power;
     }
 
-    public void setPower(int power) {
+    public void setPower(Integer power) {
         this.power = power;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
