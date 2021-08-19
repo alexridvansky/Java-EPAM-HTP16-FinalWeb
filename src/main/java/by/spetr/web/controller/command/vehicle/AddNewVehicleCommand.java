@@ -15,9 +15,9 @@ import org.apache.logging.log4j.Logger;
 import java.time.Year;
 import java.util.Set;
 
-import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
-import static by.spetr.web.controller.command.PagePath.VEHICLE_LIST_PERSONAL;
+import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class AddNewVehicleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -27,15 +27,20 @@ public class AddNewVehicleCommand implements Command {
     public Router execute(HttpServletRequest request) {
         logger.debug("Create new vehicle command");
 
-        UserDto user = (UserDto) request.getSession().getAttribute(USER_PARAM);
         try {
             VehicleFullForm form = (VehicleFullForm) doForm(request);
             Vehicle vehicle = vehicleService.addVehicle(form);
             request.setAttribute(VEHICLE_PARAM, vehicle);
-            request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
-            request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
 
-            return new Router(VEHICLE_LIST_PERSONAL);
+            if (form.isSuccess()) {
+                return new Router(VEHICLE_LIST_PERSONAL, REDIRECT);
+            } else {
+                request.setAttribute(FORM_PARAM, form);
+                request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
+                request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
+                return new Router(ADD_VEHICLE_PAGE);
+            }
+
 
         } catch (IllegalArgumentException | ServiceException e) {
             logger.error(e);
