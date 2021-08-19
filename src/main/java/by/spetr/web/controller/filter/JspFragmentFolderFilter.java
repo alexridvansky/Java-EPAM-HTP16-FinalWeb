@@ -13,7 +13,7 @@ import java.io.IOException;
 @WebFilter(urlPatterns = {"/jsp/fragment/*"}, initParams = {
         @WebInitParam(name = "INDEX_PATH", value = "/index.jsp")
 })
-public class JspFragmentSecurityFilter implements Filter {
+public class JspFragmentFolderFilter implements Filter {
     private static final Logger logger = LogManager.getLogger();
     private String indexPath;
 
