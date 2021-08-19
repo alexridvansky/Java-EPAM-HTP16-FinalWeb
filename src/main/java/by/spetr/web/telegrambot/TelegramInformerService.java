@@ -6,11 +6,12 @@ import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-public class TelegramInformerService extends TelegramLongPollingBot implements InformerService{
+public final class TelegramInformerService extends TelegramLongPollingBot implements InformerService{
     private static final Logger logger = LogManager.getLogger();
     private static final String BOT_TOKEN_PROPERTY = "telegram.bot_token";
     private static final String BOT_NAME_PROPERTY = "telegram.bot_name";
@@ -71,11 +72,14 @@ public class TelegramInformerService extends TelegramLongPollingBot implements I
     @Override
     public void onUpdateReceived(Update update) {
         logger.debug("OnUpdateReceive");
-        if (update.getMessage() != null && update.getMessage().hasText()) {
+        Message message = update.getMessage();
+        if (message != null && message.hasText()) {
             long chatId = update.getMessage().getChatId();
+            logger.debug("chatId: {}", chatId);
+//            switch ()
 
             try {
-                execute(new SendMessage(String.valueOf(chatId), "echo: " + update.getMessage().getText()));
+                execute(new SendMessage(String.valueOf(chatId), "сам ты " + update.getMessage().getText()));
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
