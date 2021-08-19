@@ -1,5 +1,6 @@
 package by.spetr.web.model.service;
 
+import by.spetr.web.telegram_bot.TelegramInformerService;
 import by.spetr.web.model.exception.ServiceException;
 import org.testng.annotations.Test;
 

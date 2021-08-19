@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-public class BotService extends TelegramLongPollingBot {
+public class TelegramBotService extends TelegramLongPollingBot {
     private static Logger logger = LogManager.getLogger();
     private static final String BOT_TOKEN_PROPERTY = "telegram.bot_token";
     private static final String BOT_NAME_PROPERTY = "telegram.bot_name";
