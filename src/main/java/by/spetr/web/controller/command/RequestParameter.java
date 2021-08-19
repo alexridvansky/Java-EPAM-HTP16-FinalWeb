@@ -60,4 +60,5 @@ public final class RequestParameter {
     public static final String PREVIEW_PARAM = "preview";
     public static final String PAGE_PARAM = "page";
     public static final String PAGEABLE = "pageable";
+    public static final String FORM_PARAM = "form";
 }
