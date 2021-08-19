@@ -15,20 +15,14 @@
     <div class="mb-3">
         <input type="password" class="form-control" name="password" id="password_id" placeholder="password">
     </div>
-    <div class="mb-3">
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="dropdownCheck2">
-            <label class="form-check-label" for="dropdownCheck2">
-                Remember
-            </label>
-        </div>
-    </div>
+
     <button type="submit" class="btn btn-primary">
         <i class="fas fa-sign-in-alt"></i>
         ${sign_in}
     </button>
-    <p style="color:red;">${auth_error}</p>
+
     <div class="dropdown-divider"></div>
+
     <div class="pb-3">
         <a href="${pageContext.request.contextPath}/controller?command=go_to_sign_up_page" type="button"
            class="btn btn-primary">
