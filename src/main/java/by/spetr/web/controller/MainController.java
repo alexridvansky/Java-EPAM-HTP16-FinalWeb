@@ -4,6 +4,7 @@ import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.CommandProvider;
 import by.spetr.web.controller.command.RequestParameter;
 import by.spetr.web.controller.command.Router;
+import by.spetr.web.telegram_bot.BotService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -27,6 +28,13 @@ import static by.spetr.web.controller.command.RequestParameter.FEEDBACK_MESSAGE_
 @WebServlet(name = "controller", urlPatterns = {"/controller"})
 public class MainController extends HttpServlet {
     private static final Logger logger = LogManager.getLogger();
+
+    @Override
+    public void init() throws ServletException {
+        logger.debug("Servlet Bot starter");
+        BotService botService = new BotService();
+        botService.registerBot();
+    }
 
     /**
      * Redirects {@code doGet} requests toward {@code MainController Servlet}
