@@ -329,14 +329,19 @@ public class DefaultVehicleService implements VehicleService {
                 form.setFeedbackMsg("ColorId '" + form.getColorId() + "' doesn't exist");
             } else if (!VehicleValidator.validateModelYear(form.getModelYear().toString())) {
                 form.setFeedbackMsg("ModelYear '" + form.getModelYear() + "' isn't valid");
+                form.setModelYear(null);
             } else if (!VehicleValidator.validateDisplacement(form.getDisplacement())) {
                 form.setFeedbackMsg("Displacement '" + form.getDisplacement() + "' isn't valid");
+                form.setDisplacement(null);
             } else if (!VehicleValidator.validateMileage(form.getMileage())) {
                 form.setFeedbackMsg("Mileage '" + form.getMileage() + "' isn't valid");
+                form.setMileage(null);
             } else if (!VehicleValidator.validatePower(form.getPower())) {
                 form.setFeedbackMsg("Power '" + form.getPower() + "' isn't valid");
+                form.setPower(null);
             } else if (!VehicleValidator.validatePrice(form.getPrice())) {
                 form.setFeedbackMsg("Price '" + form.getPrice() + "' isn't valid");
+                form.setPrice(null);
             } else {
                 VehicleBuilder vehicleBuilder = VehicleBuilder.getInstance();
 
@@ -386,6 +391,7 @@ public class DefaultVehicleService implements VehicleService {
                 } else {
                     logger.error("photo(s) not uploaded");
                 }
+                form.setSuccess(true);
                 informOfVehicle(vehicle);
 
                 return vehicle;

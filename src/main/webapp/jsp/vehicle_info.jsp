@@ -158,7 +158,7 @@
                         <hr class="col-12 text-white">
                         <h4 class="fw-light text-white">${comments}</h4>
                         <hr class="col-12 text-white">
-                        <b class="fw-light text-white">${vehicle.comment}</b>
+                        <h6 class="fw-light text-white">${vehicle.comment}</h6>
                     </c:when>
                 </c:choose>
                 <hr class="col-12 text-white">
