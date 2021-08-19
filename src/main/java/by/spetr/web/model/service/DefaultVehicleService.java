@@ -448,6 +448,7 @@ public class DefaultVehicleService implements VehicleService {
                     case DISABLED -> form.setFeedbackMsg("Ad disabled");
                     case MODERATION -> form.setFeedbackMsg("Ad blocked");
                     case ARCHIVED -> form.setFeedbackMsg("Ad removed");
+                    default -> form.setFeedbackMsg("unknown action");
                 }
                 form.setSuccess(true);
                 return true;
