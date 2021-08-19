@@ -1,12 +1,11 @@
 package by.spetr.web.model.service;
 
 import by.spetr.web.model.dto.UserDto;
+import by.spetr.web.model.entity.User;
+import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.LoginForm;
 import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.UserRegForm;
-import by.spetr.web.model.form.UserRegistrationForm;
-import by.spetr.web.model.entity.User;
-import by.spetr.web.model.exception.ServiceException;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,7 @@ public interface UserService {
      * @return - {@code true} if registration parameters were valid and new user been created
      * @throws ServiceException if no data been received from DAO layer or in case when data can't be validated
      */
-    public Optional<UserDto> registerUser(UserRegForm form) throws ServiceException;
+    Optional<UserDto> registerUser(UserRegForm form) throws ServiceException;
 
     /**
      * is used to check whether username is already taken
@@ -70,11 +69,11 @@ public interface UserService {
     List<User> getUserList() throws ServiceException;
 
     /**
-     *  Returns User by UserId given
+     * Returns User by UserId given
      *
      * @param userId user Id
      * @return Optional<User> or Optional.Empty if such user hasn't been found
-     * @throws ServiceException  if no data been received from DAO layer
+     * @throws ServiceException if no data been received from DAO layer
      */
     Optional<User> getUserById(long userId) throws ServiceException;
 
