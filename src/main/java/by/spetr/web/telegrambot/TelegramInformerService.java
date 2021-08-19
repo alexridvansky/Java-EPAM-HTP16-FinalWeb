@@ -1,4 +1,4 @@
-package by.spetr.web.telegram_bot;
+package by.spetr.web.telegrambot;
 
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.pool.TelegramConnectionFactory;

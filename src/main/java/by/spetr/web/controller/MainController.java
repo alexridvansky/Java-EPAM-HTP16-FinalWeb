@@ -4,7 +4,7 @@ import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.CommandProvider;
 import by.spetr.web.controller.command.RequestParameter;
 import by.spetr.web.controller.command.Router;
-import by.spetr.web.telegram_bot.TelegramBotService;
+import by.spetr.web.telegrambot.TelegramBotService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

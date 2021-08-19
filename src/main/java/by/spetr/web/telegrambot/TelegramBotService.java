@@ -1,4 +1,4 @@
-package by.spetr.web.telegram_bot;
+package by.spetr.web.telegrambot;
 
 import by.spetr.web.util.PropertyUtil;
 import org.apache.logging.log4j.LogManager;

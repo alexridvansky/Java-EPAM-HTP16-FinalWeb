@@ -1,6 +1,6 @@
 package by.spetr.web.model.service;
 
-import by.spetr.web.telegram_bot.InformerService;
+import by.spetr.web.telegrambot.InformerService;
 import by.spetr.web.model.dao.DefaultVehicleDao;
 import by.spetr.web.model.dao.VehicleDao;
 import by.spetr.web.model.dto.VehicleFullDto;
