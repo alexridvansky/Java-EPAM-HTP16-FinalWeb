@@ -46,17 +46,31 @@ public final class TelegramInformerService extends TelegramLongPollingBot implem
     }
 
     @Override
-    public void sendMessage(String chatId, String message) {
+    public void sendMessage(String chatId, String text) {
         try {
-            execute(new SendMessage(BOT_CHAT_ID, message));
+            execute(new SendMessage(BOT_CHAT_ID, text));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void sendPublicMessage(String message) {
-        sendMessage(BOT_CHAT_ID, message);
+    public void sendMessage(Message message, String text) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.enableMarkdown(true);
+        sendMessage.setChatId(message.getChatId().toString());
+        sendMessage.setReplyToMessageId(message.getMessageId());
+        sendMessage.setText(text);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void sendPublicMessage(String text) {
+        sendMessage(BOT_CHAT_ID, text);
     }
 
     @Override
@@ -76,12 +90,9 @@ public final class TelegramInformerService extends TelegramLongPollingBot implem
         if (message != null && message.hasText()) {
             long chatId = update.getMessage().getChatId();
             logger.debug("chatId: {}", chatId);
-//            switch ()
-
-            try {
-                execute(new SendMessage(String.valueOf(chatId), "сам ты " + update.getMessage().getText()));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
+            switch (message.getText()) {
+                case "/help" -> sendMessage(message, "хера нада, а?");
+                case "/settings" -> sendMessage(message, "нету сеттингс");
             }
         }
     }

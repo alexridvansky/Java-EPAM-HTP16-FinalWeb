@@ -1,9 +1,13 @@
 package by.spetr.web.telegrambot;
 
-public interface InformerService {
-    void sendMessage(String chatId, String message);
+import org.telegram.telegrambots.meta.api.objects.Message;
 
-    void sendPublicMessage(String message);
+public interface InformerService {
+    void sendMessage(String chatId, String text);
+
+    void sendPublicMessage(String text);
+
+    public void sendMessage(Message message, String text);
 
     static InformerService getInstance() {
         return new TelegramInformerService();
