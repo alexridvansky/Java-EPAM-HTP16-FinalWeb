@@ -25,6 +25,7 @@ class ColumnName {
     public static final String VEHICLE_OPTION_ID = "vehicle_option_id";
     public static final String VEHICLE_POWERTRAIN_ID = "vehicle_powertrain_id";
     public static final String VEHICLE_COLOR_ID = "vehicle_color_id";
+    public static final String USER_ID = "user_id";
     public static final String USER_LOGIN = "login";
     public static final String USER_PASSHASH = "pass";
     public static final String USER_PHONE = "phone";
