@@ -18,7 +18,6 @@ import java.util.Optional;
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
-import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 public class SignInCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
