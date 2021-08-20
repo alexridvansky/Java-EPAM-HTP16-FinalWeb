@@ -2,14 +2,9 @@
 
 SecondHandCar - by a dream
 
-features:
-1. localized interface
-2. 
-3.
-
 Users and roles:
 1. ROOT - system account, has rights to change role and status for every user, has access to both administrative and user's pages.
-2. MODERATORS - a group which members can changer roles and statuses for users, but not for themselves. Users from this group have access to both administrative and users pages.
+2. MODERATORS - a group which members can block and unblock adverts.
 3. USERS - a group of users who, depending on their state, can see phone numbers at ads of others, can send them messages, can get messages, can place their own adverts.
 4. ANONYMOUS - every unauthorised user, has access to adverts, but can't see phone numbers, can't write messages.
 
