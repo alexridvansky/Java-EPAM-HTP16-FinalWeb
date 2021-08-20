@@ -1,4 +1,4 @@
-package by.spetr.web.controller.command.redirect;
+package by.spetr.web.controller.command.user;
 
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
