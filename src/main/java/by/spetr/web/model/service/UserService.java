@@ -7,7 +7,6 @@ import by.spetr.web.model.form.LoginForm;
 import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.UserRegForm;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -85,8 +84,7 @@ public interface UserService {
      * @param user of User.class
      * @return UserDto instance
      */
-    @RequiresNonNull("user")
-    UserDto convertToDto(User user);
+    UserDto convertToDto(@NonNull User user);
 
     /**
      * is used for updating user status by username
@@ -110,7 +108,7 @@ public interface UserService {
      * Method is used for user registration confirmation
      *
      * @param chatId telegram chatId
-     * @param code confirmation code to activate the account
+     * @param code   confirmation code to activate the account
      * @return boolean if confirmation went successful and user status changed
      */
     boolean confirm(Long chatId, String code) throws ServiceException;

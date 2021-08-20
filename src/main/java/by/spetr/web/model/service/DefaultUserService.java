@@ -3,21 +3,20 @@ package by.spetr.web.model.service;
 import by.spetr.web.model.dao.DefaultUserDao;
 import by.spetr.web.model.dao.UserDao;
 import by.spetr.web.model.dto.UserDto;
-import by.spetr.web.model.form.LoginForm;
-import by.spetr.web.model.form.UserForm;
-import by.spetr.web.model.form.UserRegForm;
 import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.DaoException;
 import by.spetr.web.model.exception.ServiceException;
+import by.spetr.web.model.form.LoginForm;
+import by.spetr.web.model.form.UserForm;
+import by.spetr.web.model.form.UserRegForm;
 import by.spetr.web.util.BCrypt;
 import by.spetr.web.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -163,16 +162,16 @@ public class DefaultUserService implements UserService {
                 return Optional.empty();
             }
 
-                userDto = new UserDto();
-                userDto.setLogin(optionalUser.get().getLogin());
-                userDto.setUserId(optionalUser.get().getUserId());
-                userDto.setRole(optionalUser.get().getRole());
-                userDto.setState(optionalUser.get().getState());
+            userDto = new UserDto();
+            userDto.setLogin(optionalUser.get().getLogin());
+            userDto.setUserId(optionalUser.get().getUserId());
+            userDto.setRole(optionalUser.get().getRole());
+            userDto.setState(optionalUser.get().getState());
 
-                form.setFeedbackMsg("User '" + form.getLogin() + "' has entered successfully");
-                form.setSuccess(true);
+            form.setFeedbackMsg("User '" + form.getLogin() + "' has entered successfully");
+            form.setSuccess(true);
 
-                return Optional.of(userDto);
+            return Optional.of(userDto);
 
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
@@ -200,9 +199,8 @@ public class DefaultUserService implements UserService {
         }
     }
 
-    @RequiresNonNull("user")
     @Override
-    public UserDto convertToDto(User user) {
+    public UserDto convertToDto(@NonNull User user) {
         UserDto userDto = new UserDto();
         userDto.setLogin(user.getLogin());
         userDto.setUserId(user.getUserId());
