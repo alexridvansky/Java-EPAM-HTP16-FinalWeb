@@ -1,5 +1,7 @@
 package by.spetr.web.telegrambot;
 
+import by.spetr.web.model.exception.ServiceException;
+import by.spetr.web.model.service.UserService;
 import by.spetr.web.util.PropertyUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +15,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 public final class TelegramInformerService extends TelegramLongPollingBot implements InformerService{
     private static final Logger logger = LogManager.getLogger();
+    private static final UserService userService = UserService.getInstance();
     private static final String BOT_TOKEN_PROPERTY = "telegram.bot_token";
     private static final String BOT_NAME_PROPERTY = "telegram.bot_name";
     private static final String BOT_CHAT_ID_PROPERTY = "telegram.chat_id";
@@ -87,13 +90,26 @@ public final class TelegramInformerService extends TelegramLongPollingBot implem
     public void onUpdateReceived(Update update) {
         logger.debug("OnUpdateReceive");
         Message message = update.getMessage();
+        logger.debug(message.getText());
         if (message != null && message.hasText()) {
             long chatId = update.getMessage().getChatId();
             logger.debug("chatId: {}", chatId);
             switch (message.getText()) {
-                case "/help" -> sendMessage(message, "хера нада, а?");
+                case "/help" -> sendMessage(message, "чё н-нада, а?");
                 case "/settings" -> sendMessage(message, "нету сеттингс");
+                case "/confirm" -> confirm(message);
+                default -> sendMessage(message, "сам ты " + message.getText());
             }
+        }
+    }
+
+    private void confirm(Message message) {
+        try {
+            if(userService.confirm(message.getChatId(), message.getText())) {
+                logger.debug("Confirmation accepted, gonna change user status ");
+            }
+        } catch (ServiceException e) {
+            logger.error("error user registration confirmation", e);
         }
     }
 
