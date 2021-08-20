@@ -7,7 +7,7 @@ public interface InformerService {
 
     void sendPublicMessage(String text);
 
-    public void sendMessage(Message message, String text);
+    void sendMessage(Message message, String text);
 
     static InformerService getInstance() {
         return new TelegramInformerService();
