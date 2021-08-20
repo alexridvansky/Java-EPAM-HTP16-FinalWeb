@@ -4,6 +4,7 @@ import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.DaoException;
+import by.spetr.web.model.exception.ServiceException;
 
 import java.util.List;
 import java.util.Optional;
@@ -105,6 +106,34 @@ public interface UserDao {
     boolean updateRole(long userId, UserRoleType userRole) throws DaoException;
 
     /**
+     * method is used to verify is chatId given already exists in the db
+     *
+     * @param chatId chatId to be checked
+     * @return true if chatId given is already present in the db
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    boolean isChatIdExist(long chatId) throws DaoException;
+
+    /**
+     * method is used to register any attempt of the user with chatId specific to pass the confirmation procedure
+     *
+     * @param chatId chatId of the user
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    public void createConfirmAttempt(long chatId) throws DaoException;
+
+    /**
+     * method is used to get number of confirmation attempts of the user
+     * expired attempts are automatically deleted
+     *
+     * @param chatId chatId of the user
+     * @param hour period of time in hours attempts will be included and counted
+     * @return number of confirmation attempts
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    int findConfirmAttemptCount(long chatId, int hour) throws DaoException;
+
+    /**
      * is used for updating role of given user
      *
      * @param userName {@code User} name
@@ -114,7 +143,7 @@ public interface UserDao {
      */
     boolean updateRole(String userName, UserRoleType userRole) throws DaoException;
 
-    boolean confirm(Long chatId, String code) throws DaoException;
+    boolean confirm(long chatId, String code) throws DaoException;
 
     User update(User entity);
 }

@@ -6,13 +6,16 @@ import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.ConnectionPoolException;
 import by.spetr.web.model.exception.DaoException;
 import by.spetr.web.model.pool.ConnectionPool;
+import com.mysql.cj.conf.DatabaseUrlContainer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,10 +72,24 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             = "UPDATE user SET role_id = ? WHERE user_id = ?;";
     private static final String SQL_UPDATE_ROLE_BY_LOGIN
             = "UPDATE user SET role_id = ? WHERE login = ?;";
+    private static final String SQL_FIND_CHAT_ID
+            = "SELECT COUNT(*) " +
+            "FROM user_chat_id " +
+            "WHERE chat_id = ?";
+    private final static String SQL_CONFIRMATION_ATTEMPT_INSERT
+            = "INSERT INTO user_confirmation_attempt (chat_id) " +
+            "VALUES (?)";
     private static final String SQL_FIND_CONFIRMATION
             = "SELECT * " +
             "FROM user_confirmation " +
             "WHERE confirmation = ?";
+    private static final String SQL_REMOVE_EXPIRED_ATTEMPT
+            = "DELETE FROM user_confirmation_attempt " +
+            "WHERE attempt_date < ADDDATE(NOW(), INTERVAL -? HOUR)";
+    private static final String SQL_FIND_CONFIRMATION_COUNT
+            = "SELECT COUNT(*) " +
+            "FROM user_confirmation_attempt " +
+            "WHERE chat_id = ?";
     private static final String SQL_REG_CONFIRM_DELETE
             = "DELETE FROM user_confirmation " +
             "WHERE confirmation = ?";
@@ -421,7 +438,75 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public boolean confirm(Long chatId, String code) throws DaoException {
+    public boolean isChatIdExist(long chatId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_FIND_CHAT_ID)) {
+
+            statement.setLong(1, chatId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            } else {
+                return false;
+            }
+
+        } catch (SQLException e) {
+            logger.error(DATABASE_ERROR, e);
+            throw new DaoException(DATABASE_ERROR, e);
+        } catch (ConnectionPoolException e) {
+            logger.error(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+        }
+    }
+
+    @Override
+    public int findConfirmAttemptCount(long chatId, int hour) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement deleteStatement = connection.prepareStatement(SQL_REMOVE_EXPIRED_ATTEMPT);
+             PreparedStatement countStatement = connection.prepareStatement(SQL_FIND_CONFIRMATION_COUNT)) {
+
+            deleteStatement.setInt(1, hour);
+            int deleteResult = deleteStatement.executeUpdate();
+                logger.debug("{} expired confirmation attempt record(s) deleted", deleteResult);
+
+        countStatement.setLong(1, chatId);
+            ResultSet countResultSet = countStatement.executeQuery();
+
+            if (countResultSet.next()) {
+                return countResultSet.getInt(1);
+            } else {
+                logger.error(DATABASE_ERROR);
+                throw new DaoException(DATABASE_ERROR);
+            }
+
+        } catch (SQLException e) {
+            logger.error(DATABASE_ERROR, e);
+            throw new DaoException(DATABASE_ERROR, e);
+        } catch (ConnectionPoolException e) {
+            logger.error(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+        }
+    }
+
+    public void createConfirmAttempt(long chatId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SQL_CONFIRMATION_ATTEMPT_INSERT)) {
+            statement.setLong(1, chatId);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            logger.error(DATABASE_ERROR, e);
+            throw new DaoException(DATABASE_ERROR, e);
+        } catch (ConnectionPoolException e) {
+            logger.error(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+        }
+    }
+
+    @Override
+    public boolean confirm(long chatId, String code) throws DaoException {
         Connection connection = null;
         long userId = 0;
         int deleted = 0;
@@ -448,12 +533,18 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
                             updateStatement.setInt(1, 2);
                             updateStatement.setLong(2, userId);
                             updated = updateStatement.executeUpdate();
+                            connection.commit();
                         }
                     }
                 }
                 return userId > 0 && deleted > 0 && inserted > 0 && updated > 0;
 
             } catch (SQLException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException throwables) {
+                    logger.error(DATABASE_ERROR, throwables);
+                }
                 logger.error(DATABASE_ERROR, e);
                 throw new DaoException(DATABASE_ERROR, e);
             }
@@ -465,12 +556,14 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             }
             logger.error(DATABASE_ERROR, e);
             throw new DaoException(DATABASE_ERROR, e);
+
         } catch (ConnectionPoolException e) {
             logger.error(CONNECTION_GETTING_ERROR, e);
             throw new DaoException(CONNECTION_GETTING_ERROR, e);
+
         } finally {
             try {
-                if (connection != null){
+                if (connection != null) {
                     connection.setAutoCommit(true);
                     connection.close();
                 }
@@ -479,6 +572,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             }
         }
     }
+
 
     @Override
     public User update(User entity) {
