@@ -1,11 +1,11 @@
 package by.spetr.web.model.dao;
 
-import by.spetr.web.model.pool.ConnectionPool;
 import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.ConnectionPoolException;
 import by.spetr.web.model.exception.DaoException;
+import by.spetr.web.model.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormattedMessage;
@@ -69,6 +69,17 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             = "UPDATE user SET role_id = ? WHERE user_id = ?;";
     private static final String SQL_UPDATE_ROLE_BY_LOGIN
             = "UPDATE user SET role_id = ? WHERE login = ?;";
+    private static final String SQL_FIND_CONFIRMATION
+            = "SELECT * " +
+            "FROM user_confirmation " +
+            "WHERE confirmation = ?";
+    private static final String SQL_REG_CONFIRM_DELETE
+            = "DELETE FROM user_confirmation " +
+            "WHERE confirmation = ?";
+    private static final String SQL_CHAT_ID_INSERT
+            = "INSERT INTO user_chat_id (chat_id, user_id) " +
+            "VALUES (?, ?)";
+
 
     @Override
     public List<User> findAll() throws DaoException {
@@ -103,7 +114,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_ID)) {
 
-            statement.setLong(1,id);
+            statement.setLong(1, id);
 
             ResultSet resultSet = statement.executeQuery();
             User user = null;
@@ -130,9 +141,9 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         logger.info("findUserByLogin() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_LOGIN)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_LOGIN)) {
 
-            statement.setString(1,login);
+            statement.setString(1, login);
 
             ResultSet resultSet = statement.executeQuery();
             User user = null;
@@ -161,7 +172,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_EMAIL)) {
 
-            statement.setString(1,email);
+            statement.setString(1, email);
 
             ResultSet resultSet = statement.executeQuery();
             User user = null;
@@ -190,7 +201,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_PHONE)) {
 
-            statement.setString(1,phone);
+            statement.setString(1, phone);
 
             ResultSet resultSet = statement.executeQuery();
             User user = null;
@@ -237,7 +248,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         logger.info("findUserPassword() method been called with {}", login);
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_PASSWORD_FINDER)){
+             PreparedStatement statement = connection.prepareStatement(SQL_PASSWORD_FINDER)) {
 
             statement.setString(1, login);
 
@@ -306,7 +317,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         logger.info("Update user_state by user_id method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_ID)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_ID)) {
 
             // check if such user exists, if not - exit
             Optional<User> optionalUser = findById(userId);
@@ -410,22 +421,69 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
+    public boolean confirm(Long chatId, String code) throws DaoException {
+        Connection connection = null;
+        long userId = 0;
+        int deleted = 0;
+        int inserted = 0;
+        int updated = 0;
+        try {
+            connection = ConnectionPool.getInstance().getConnection();
+            connection.setAutoCommit(false);
+            try (PreparedStatement readStatement = connection.prepareStatement(SQL_FIND_CONFIRMATION);
+                 PreparedStatement deleteStatement = connection.prepareStatement(SQL_REG_CONFIRM_DELETE);
+                 PreparedStatement insertStatement = connection.prepareStatement(SQL_CHAT_ID_INSERT);
+                 PreparedStatement updateStatement = connection.prepareStatement(SQL_UPDATE_STATE_BY_ID)) {
+                readStatement.setString(1, code);
+                ResultSet resultSet = readStatement.executeQuery();
+                if (resultSet.next()) {
+                    userId = resultSet.getLong(USER_ID);
+                    deleteStatement.setString(1, code);
+                    deleted = deleteStatement.executeUpdate();
+                    if (deleted > 0) {
+                        insertStatement.setLong(1, chatId);
+                        insertStatement.setLong(2, userId);
+                        inserted = insertStatement.executeUpdate();
+                        if (inserted > 0) {
+                            updateStatement.setInt(1, 2);
+                            updateStatement.setLong(2, userId);
+                            updated = updateStatement.executeUpdate();
+                        }
+                    }
+                }
+                return userId > 0 && deleted > 0 && inserted > 0 && updated > 0;
+
+            } catch (SQLException e) {
+                logger.error(DATABASE_ERROR, e);
+                throw new DaoException(DATABASE_ERROR, e);
+            }
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException throwables) {
+                logger.error(DATABASE_ERROR, throwables);
+            }
+            logger.error(DATABASE_ERROR, e);
+            throw new DaoException(DATABASE_ERROR, e);
+        } catch (ConnectionPoolException e) {
+            logger.error(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+        } finally {
+            try {
+                if (connection != null){
+                    connection.setAutoCommit(true);
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                logger.error(DATABASE_ERROR, e);
+            }
+        }
+    }
+
+    @Override
     public User update(User entity) {
 
 
         return null;  // todo:
-    }
-
-    @Override
-    public boolean delete(User entity) {
-
-
-        return false;  // todo:
-    }
-
-    @Override
-    public boolean delete(long id) {
-
-        return false;  // todo:
     }
 }

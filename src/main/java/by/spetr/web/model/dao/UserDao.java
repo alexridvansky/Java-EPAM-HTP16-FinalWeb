@@ -114,9 +114,7 @@ public interface UserDao {
      */
     boolean updateRole(String userName, UserRoleType userRole) throws DaoException;
 
-    boolean delete(User entity);
-
-    boolean delete(long id);
+    boolean confirm(Long chatId, String code) throws DaoException;
 
     User update(User entity);
 }
