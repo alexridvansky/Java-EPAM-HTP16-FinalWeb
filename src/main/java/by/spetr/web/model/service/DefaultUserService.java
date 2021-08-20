@@ -16,6 +16,8 @@ import by.spetr.web.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -198,6 +200,18 @@ public class DefaultUserService implements UserService {
         }
     }
 
+    @RequiresNonNull("user")
+    @Override
+    public UserDto convertToDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setLogin(user.getLogin());
+        userDto.setUserId(user.getUserId());
+        userDto.setRole(user.getRole());
+        userDto.setState(user.getState());
+
+        return userDto;
+    }
+
     @Override
     public boolean updateUserState(UserForm form) throws ServiceException {
         if (!accessControlService.updateUserState(form)) {
@@ -240,6 +254,16 @@ public class DefaultUserService implements UserService {
                 form.setFeedbackMsg("Role changing error");
                 return false;
             }
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
+    public boolean confirm(Long chatId, String code) throws ServiceException {
+        try {
+            return userDao.confirm(chatId, code);
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
