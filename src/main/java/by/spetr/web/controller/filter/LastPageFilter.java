@@ -17,9 +17,10 @@ import static by.spetr.web.controller.command.RequestParameter.LAST_PAGE_PARAM;
  * Filter is used to store the last page visited into session
  * There's an ignore-list below
  */
-@WebFilter(filterName = "LastPageFilter", urlPatterns = {"*.jsp"}, dispatcherTypes = {DispatcherType.FORWARD}
-        , initParams = {@WebInitParam(name = "PAGES_ROOT_DIRECTORY", value = "/jsp", description = "Pages Param")
-        , @WebInitParam(name = "INDEX_PAGE", value = "/index.jsp", description = "Pages Param")})
+@WebFilter(filterName = "LastPageFilter", urlPatterns = {"*.jsp"},
+        dispatcherTypes = {DispatcherType.FORWARD, DispatcherType.REQUEST},
+        initParams = {@WebInitParam(name = "PAGES_ROOT_DIRECTORY", value = "/jsp", description = "Pages Param"),
+                @WebInitParam(name = "INDEX_PAGE", value = "/index.jsp", description = "Pages Param")})
 public class LastPageFilter implements Filter {
     private static final Logger logger = LogManager.getLogger();
     private static final List<String> ignoreList = new ArrayList<>();
@@ -38,7 +39,6 @@ public class LastPageFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        logger.debug("Last page filter");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String requestURI = httpRequest.getRequestURI();
         String lastPage = indexPage;
@@ -49,6 +49,7 @@ public class LastPageFilter implements Filter {
         if (!ignoreList.contains(lastPage)) {
             httpRequest.getSession().setAttribute(LAST_PAGE_PARAM, lastPage);
         }
+        logger.debug("Last page: {}", lastPage);
         chain.doFilter(request, response);
     }
 }

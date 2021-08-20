@@ -46,7 +46,6 @@ public class MainController extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("MainController: doGet is being called, redirecting...");
         processRequest(request, response);
     }
 
@@ -60,7 +59,6 @@ public class MainController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("MainController: doPost is being called, redirecting...");
         processRequest(request, response);
     }
 
