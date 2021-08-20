@@ -105,6 +105,24 @@ public interface UserService {
     boolean updateUserRole(UserForm form) throws ServiceException;
 
     /**
+     * method is used to verify is chatId given already exists in the db
+     *
+     * @param chatId chatId to be checked
+     * @return true if chatId given is already present in the db
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    boolean isChatIdExist(long chatId) throws ServiceException;
+
+    /**
+     * method is used to get number of confirmation attempts of the user
+     *
+     * @param chatId chatId of the user
+     * @return number of confirmation attempts
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    int getConfirmAttemptCount(long chatId) throws ServiceException;
+
+    /**
      * Method is used for user registration confirmation
      *
      * @param chatId telegram chatId

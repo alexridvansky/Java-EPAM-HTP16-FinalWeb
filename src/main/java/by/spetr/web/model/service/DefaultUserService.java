@@ -259,8 +259,29 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    public boolean isChatIdExist(long chatId) throws ServiceException {
+        try {
+            return userDao.isChatIdExist(chatId);
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
+    public int getConfirmAttemptCount(long chatId) throws ServiceException {
+        try {
+            return userDao.findConfirmAttemptCount(chatId, 2);  // todo: replace by property variable
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
     public boolean confirm(Long chatId, String code) throws ServiceException {
         try {
+            userDao.createConfirmAttempt(chatId);
             return userDao.confirm(chatId, code);
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
