@@ -26,13 +26,22 @@ public interface VehicleService {
     List<VehicleFullDto> getFullDtoVehicleList() throws ServiceException;
 
     /**
-     * Returns list of all vehicles with preview image paths or empty List<Vehicle> if there's no ads in the database.
+     * Returns Public list of all vehicles or empty List<Vehicle> if there's no ads in the database.
      * @param pageSize number of entries on each page
      * @param pageNumber number of a page
      * @return {@code List<VehiclePreviewDto>}
      * @throws ServiceException if no data been received from DAO layer
      */
     List<VehiclePreviewDto> getPublicVehicleList(int pageSize, int pageNumber) throws ServiceException;
+
+    /**
+     * Returns Moderators' list of all vehicles or empty List<Vehicle> if there's no ads in the database.
+     * @param pageSize number of entries on each page
+     * @param pageNumber number of a page
+     * @return {@code List<VehiclePreviewDto>}
+     * @throws ServiceException if no data been received from DAO layer
+     */
+    List<VehiclePreviewDto> getModeratorVehicleList(int pageSize, int pageNumber) throws ServiceException;
 
     /**
      * Returns number of all vehicles to be publicly shown (active ads within active users)
@@ -42,6 +51,15 @@ public interface VehicleService {
      * @throws ServiceException if no data been received from DAO layer
      */
     int getPublicVehicleListSize() throws ServiceException;
+
+    /**
+     * Returns number of all vehicles to be shown at moderators' page
+     * (is used mostly for pagination)
+     *
+     * @return number of public ads
+     * @throws ServiceException if no data been received from DAO layer
+     */
+    int getModeratorVehicleListSize() throws ServiceException;
 
     /**
      * Returns list of all vehicles belong to particular user by userId given or

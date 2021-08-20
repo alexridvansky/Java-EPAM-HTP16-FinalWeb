@@ -63,7 +63,26 @@ public class DefaultVehicleService implements VehicleService {
     @Override
     public List<VehiclePreviewDto> getPublicVehicleList(int pageSize, int pageNumber) throws ServiceException {
         try {
-            List<Vehicle> vehicleList = vehicleDao.findAllPublic(pageSize, pageNumber);
+            List<Vehicle> vehicleList = vehicleDao.findAllPublicVehicles(pageSize, pageNumber);
+            List<VehiclePreviewDto> vehiclePreviewDtoList = new ArrayList<>();
+
+            for (Vehicle vehicle : vehicleList) {
+                VehiclePreviewDto vehiclePreviewDto = convertToPreviewDto(vehicle);
+                vehiclePreviewDtoList.add(vehiclePreviewDto);
+            }
+
+            return vehiclePreviewDtoList;
+
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<VehiclePreviewDto> getModeratorVehicleList(int pageSize, int pageNumber) throws ServiceException {
+        try {
+            List<Vehicle> vehicleList = vehicleDao.findAllModeratorVehicles(pageSize, pageNumber);
             List<VehiclePreviewDto> vehiclePreviewDtoList = new ArrayList<>();
 
             for (Vehicle vehicle : vehicleList) {
@@ -83,6 +102,16 @@ public class DefaultVehicleService implements VehicleService {
     public int getPublicVehicleListSize() throws ServiceException {
         try {
             return vehicleDao.findPublicVehicleListSize();
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int getModeratorVehicleListSize() throws ServiceException {
+        try {
+            return vehicleDao.findModeratorVehicleListSize();
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
             throw new ServiceException(e.getMessage(), e);

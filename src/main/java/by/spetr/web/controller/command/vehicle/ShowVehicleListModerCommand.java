@@ -28,7 +28,7 @@ public class ShowVehicleListModerCommand implements Command {
             List<VehiclePreviewDto> vehicles = new ArrayList<>(adCount);
             int pageToDisplay = getPage(request);
             if (adCount > 0) {
-                vehicles = vehicleService.getPublicVehicleList(Page.PAGE_SIZE, pageToDisplay);
+                vehicles = vehicleService.getModeratorVehicleList(Page.PAGE_SIZE, pageToDisplay);
             }
 
             request.setAttribute(PAGEABLE, new Page(adCount, pageToDisplay, Page.PAGE_SIZE));

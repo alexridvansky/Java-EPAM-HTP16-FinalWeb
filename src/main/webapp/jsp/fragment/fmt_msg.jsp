@@ -70,6 +70,7 @@
 <fmt:message key="user.role" var="role"/>
 <fmt:message key="user.state" var="state"/>
 <fmt:message key="user.ads" var="ads"/>
+<fmt:message key="menu.show_vehicle_list_moder" var="ads_mod"/>
 <fmt:message key="user.ads_full" var="ads_full"/>
 <fmt:message key="user.sms" var="sms"/>
 <fmt:message key="user.email" var="email"/>

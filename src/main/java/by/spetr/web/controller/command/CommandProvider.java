@@ -29,6 +29,7 @@ public class CommandProvider {
         commands.put(SHOW_USER_LIST_ADMIN, new ShowUserListAdminCommand());
         commands.put(SHOW_VEHICLE_INFO, new ShowVehicleInfoCommand());
         commands.put(SHOW_VEHICLE_LIST_ADMIN, new ShowVehicleListAdmCommand());
+        commands.put(SHOW_VEHICLE_LIST_MODER, new ShowVehicleListModerCommand());
         commands.put(SHOW_VEHICLE_LIST_PERSONAL, new ShowVehicleListPersonalCommand());
         commands.put(SHOW_VEHICLE_LIST_PUBLIC, new ShowVehicleListPublicCommand());
         commands.put(SHOW_VEHICLE_CREATION_PAGE, new ShowVehicleCreationPageCommand());

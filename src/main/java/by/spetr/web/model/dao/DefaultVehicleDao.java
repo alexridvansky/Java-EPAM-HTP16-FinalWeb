@@ -28,31 +28,11 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "INNER JOIN vehicle_color ON color_id = vehicle_color_id " +
             "INNER JOIN vehicle_powertrain ON powertrain_id = vehicle_powertrain_id " +
             "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
-            "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
-            "ORDER BY vehicle_id;";
-    private static final String SQL_SELECT_ALL_PUBLIC_VEHICLES
-            = "SELECT vehicle_id, state, owner_id, vehicle_model_id, model, vehicle_make_id, make, modelyear, " +
-            "mileage, vehicle_color_id, color, price, powertrain, transmission, drive, displacement, power, comment, " +
-            "creation_date " +
-            "FROM vehicle " +
-            "INNER JOIN vehicle_state ON state_id = vehicle_state_id " +
-            "INNER JOIN vehicle_model ON model_id = vehicle_model_id " +
-            "INNER JOIN vehicle_make ON vehicle_model.make_id = vehicle_make_id " +
-            "INNER JOIN vehicle_color ON color_id = vehicle_color_id " +
-            "INNER JOIN vehicle_powertrain ON powertrain_id = vehicle_powertrain_id " +
-            "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
-            "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
-            "INNER JOIN user ON vehicle.owner_id = user.user_id " +
-            "WHERE state = 'ENABLED' " +
-            "AND user.state_id = 2 " +
-            "ORDER BY vehicle_id ";
-    private static final String SQL_FIND_PUBLIC_VEHICLES_COUNT
+            "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id ";
+    private static final String SQL_FIND_VEHICLES_COUNT
             = "SELECT COUNT(*) " +
             "FROM vehicle " +
-            "INNER JOIN vehicle_state ON state_id = vehicle_state_id " +
-            "INNER JOIN user ON vehicle.owner_id = user.user_id " +
-            "WHERE state = 'ENABLED' " +
-            "AND user.state_id = 2;";
+            "INNER JOIN vehicle_state ON state_id = vehicle_state_id ";
     private static final String SQL_SELECT_VEHICLES_BY_USER_ID
             = "SELECT vehicle_id, state, owner_id, vehicle_model_id, model, vehicle_make_id, make, modelyear, " +
             "mileage, vehicle_color_id, color, price, powertrain, transmission, drive, displacement, power, comment, " +
@@ -177,14 +157,28 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     private static final String SQL_INSERT_OPTION
             = "INSERT INTO vehicle_option_map (vehicle_id, option_id) " +
             "VALUES (?, ?);";
+    private static final String PUBLIC_AD_CONDITION
+            = "INNER JOIN user ON vehicle.owner_id = user.user_id " +
+            "WHERE state = 'ENABLED' " +
+            "AND user.state_id = 2 ";
+    private static final String MODERATOR_AD_CONDITION
+            = "INNER JOIN user ON vehicle.owner_id = user.user_id " +
+            "WHERE state IN ('ENABLED','DISABLED', 'MODERATION') " +
+            "AND user.state_id = 2 ";
+    private static final String ORDER_BY_VEHICLE_ID
+            = "ORDER BY vehicle_id ";
+    private static final String SQL_SELECT_ALL_PUBLIC_VEHICLES
+            = SQL_SELECT_ALL_VEHICLES + PUBLIC_AD_CONDITION + ORDER_BY_VEHICLE_ID;
+    private static final String SQL_SELECT_ALL_MODERATOR_VEHICLES
+            = SQL_SELECT_ALL_VEHICLES + MODERATOR_AD_CONDITION + ORDER_BY_VEHICLE_ID;
 
     @Override
     public List<Vehicle> findAll() throws DaoException {
-        logger.info("findAll() method called");
+        logger.debug("findAll() method called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_VEHICLES)) {
+             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_VEHICLES + ORDER_BY_VEHICLE_ID)) {
 
             List<Vehicle> vehicles = new ArrayList<>();
 
@@ -205,13 +199,13 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     }
 
     @Override
-    public List<Vehicle> findAllPublic(int pageSize, int pageNumber) throws DaoException {
-        logger.info("findAll() method called");
+    public List<Vehicle> findAllPublicVehicles(int pageSize, int pageNumber) throws DaoException {
+        logger.debug("findAll() method called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet =
-                     statement.executeQuery(buildPageableQuery(SQL_SELECT_ALL_PUBLIC_VEHICLES, pageSize, pageNumber))) {
+             ResultSet resultSet = statement.executeQuery
+                     (buildPageableQuery(SQL_SELECT_ALL_PUBLIC_VEHICLES, pageSize, pageNumber))) {
 
             List<Vehicle> vehicles = new ArrayList<>();
 
@@ -230,12 +224,38 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
+
+    @Override
+    public List<Vehicle> findAllModeratorVehicles(int pageSize, int pageNumber) throws DaoException {
+        logger.debug("findAll() method called");
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery
+                     (buildPageableQuery(SQL_SELECT_ALL_MODERATOR_VEHICLES, pageSize, pageNumber))) {
+
+            List<Vehicle> vehicles = new ArrayList<>();
+
+            while (resultSet.next()) {
+                Vehicle vehicle = extractVehicleFromResultSet(resultSet);
+                vehicles.add(vehicle);
+            }
+
+            return vehicles;
+
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }    }
 
     @Override
     public int findPublicVehicleListSize() throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_FIND_PUBLIC_VEHICLES_COUNT)) {
+             ResultSet resultSet = statement.executeQuery(SQL_FIND_VEHICLES_COUNT + PUBLIC_AD_CONDITION)) {
 
             int count = 0;
             if (resultSet.next()) {
@@ -254,8 +274,29 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     }
 
     @Override
+    public int findModeratorVehicleListSize() throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(SQL_FIND_VEHICLES_COUNT + MODERATOR_AD_CONDITION)) {
+
+            int count = 0;
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+
+            return count;
+
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error(e.getMessage(), e);
+            throw new DaoException(e.getMessage(), e);
+        }    }
+
+    @Override
     public List<Vehicle> findByUserId(long userId) throws DaoException {
-        logger.info("findAllVehiclesByUserId() method called");
+        logger.debug("findAllVehiclesByUserId() method called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_VEHICLES_BY_USER_ID)) {
@@ -309,7 +350,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public Optional<Vehicle> findById(long id) throws DaoException {
-        logger.info("findVehicleById() method called");
+        logger.debug("findVehicleById() method called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_VEHICLE_BY_ID)) {
@@ -765,7 +806,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public boolean updateState(long vehicleId, VehicleStateType vehicleState) throws DaoException {
-        logger.info("changeRole() method called");
+        logger.debug("changeRole() method called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_VEHICLE_BY_ID)) {
@@ -790,7 +831,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public boolean createPhoto(long vehicleId, Set<String> cloudinaryPublicIdSet) throws DaoException {
-        logger.info("changeRole() method called");
+        logger.debug("changeRole() method called");
         cloudinaryPublicIdSet.forEach(logger::debug);
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -816,7 +857,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public Optional<String> findPreviewById(long vehicleId) throws DaoException {
-        logger.info("findPreviewById() method called");
+        logger.debug("findPreviewById() method called");
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_PREVIEW_PHOTO_BY_VEHICLE_ID)) {
 
@@ -842,7 +883,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public List<String> findAllPhotoById(long vehicleId) throws DaoException {
-        logger.info("findAllPhotoById() method called");
+        logger.debug("findAllPhotoById() method called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_PHOTO_BY_VEHICLE_ID)) {
@@ -897,7 +938,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public List<VehicleOption> findOptionByVehicleId(long vehicleId) throws DaoException {
-        logger.info("findOptionsById() method called");
+        logger.debug("findOptionsById() method called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_OPTIONS_BY_VEHICLE_ID)) {

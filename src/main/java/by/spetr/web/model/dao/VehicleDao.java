@@ -37,7 +37,17 @@ public interface VehicleDao {
      * @return {@code List<Vehicle>}
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    List<Vehicle> findAllPublic(int pageSize, int pageNumber) throws DaoException;
+    List<Vehicle> findAllPublicVehicles(int pageSize, int pageNumber) throws DaoException;
+
+    /**
+     * Returns list of all moderators' vehicles, ordered by vehicleId.
+     *
+     * @param pageSize number of entries on each page
+     * @param pageNumber number of a page
+     * @return {@code List<Vehicle>}
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    List<Vehicle> findAllModeratorVehicles(int pageSize, int pageNumber) throws DaoException;
 
     /**
      * Returns number of all vehicles to be publicly shown (active ads within active users)
@@ -47,6 +57,15 @@ public interface VehicleDao {
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     int findPublicVehicleListSize() throws DaoException;
+
+    /**
+     * Returns number of all vehicles to be shown at moderators' page
+     * (is used mostly for pagination)
+     *
+     * @return number of public ads
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    int findModeratorVehicleListSize() throws DaoException;
 
     /**
      * Returns list of all vehicles, belong to user given ordered by vehicleId.
