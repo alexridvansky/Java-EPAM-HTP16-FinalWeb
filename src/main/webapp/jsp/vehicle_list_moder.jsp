@@ -36,17 +36,12 @@
                 <%--@elvariable id="vehicle" type="by.spetr.web.model.dto.VehiclePreviewDto"--%>
                 <c:forEach items="${vehicles}" var="vehicle">
                     <div class="col">
-                        <div class="card shadow-sm"
-                             onclick="location.href='${abs}/controller?command=show_vehicle_info&vehicle_id=${vehicle.id}';"
-                             style="cursor: pointer;">
+                        <div class="card shadow-sm">
                             <c:choose>
                                 <c:when test="${vehicle.previewImagePath != null}">
-                                    <style>
-                                        img {
-                                            border-radius: 0.25rem;
-                                        }
-                                    </style>
-                                    <img src="${vehicle.previewImagePath}"/>
+                                    <img src="${vehicle.previewImagePath}"
+                                         onclick="location.href='${abs}/controller?command=show_vehicle_info&vehicle_id=${vehicle.id}';"
+                                         style="cursor: pointer; border-radius: 0.25rem;"/>
                                 </c:when>
                                 <c:otherwise>
                                     <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
@@ -74,7 +69,21 @@
 
                             <!-- card body -->
 
-                            <div class="card-body">
+                            <div class="card-body
+                            <c:choose>
+                                <c:when test="${vehicle.state == 'DISABLED'}">
+                                    bg-secondary
+                                </c:when>
+                                <c:when test="${vehicle.state == 'ENABLED'}">
+
+                                </c:when>
+                                <c:when test="${vehicle.state == 'MODERATION'}">
+                                    bg-danger
+                                </c:when>
+                                <c:otherwise>
+                                    bg-secondary
+                                </c:otherwise>
+                            </c:choose>">
                                 <p class="card-text">
                                     <strong>
                                         <c:choose>
@@ -96,9 +105,14 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
                                         <c:choose>
-                                            <c:when test="${sessionScope.user.role == 'MODERATOR' || sessionScope.user.role == 'ROOT'}">
+                                            <c:when test="${vehicle.state == 'ENABLED' || vehicle.state == 'DISABLED'}">
                                                 <a href="${abs}/controller?command=change_vehicle_state&vehicle_id=${vehicle.id}&vehicle_state=MODERATION"
                                                    type="button" class="btn btn-sm btn-danger">${block}
+                                                </a>
+                                            </c:when>
+                                            <c:when test="${vehicle.state == 'MODERATION'}">
+                                                <a href="${abs}/controller?command=change_vehicle_state&vehicle_id=${vehicle.id}&vehicle_state=ENABLED"
+                                                   type="button" class="btn btn-sm btn-success">${enable}
                                                 </a>
                                             </c:when>
                                         </c:choose>
@@ -119,7 +133,7 @@
                     <li class="page-item ${pageable.firstPage ? 'disabled' : ''}">
                         <%--@elvariable id="pageable" type="by.spetr.web.controller.command.Page"--%>
                         <a class="page-link"
-                           href="${abs}/controller?command=show_vehicle_list_public&page=${pageable.currentPage - 1}"
+                           href="${abs}/controller?command=show_vehicle_list_moder&page=${pageable.currentPage - 1}"
                            aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
@@ -127,13 +141,14 @@
 
                     <c:forEach var="i" begin="1" end="${pageable.pageCount()}">
                         <li class="page-item ${pageable.currentPage == i ? 'active': ''}">
-                            <a class="page-link" href="${abs}/controller?command=show_vehicle_list_public&page=${i}">${i}</a>
+                            <a class="page-link"
+                               href="${abs}/controller?command=show_vehicle_list_moder&page=${i}">${i}</a>
                         </li>
                     </c:forEach>
 
                     <li class="page-item ${pageable.lastPage ? 'disabled' : ''}">
                         <a class="page-link"
-                           href="${abs}/controller?command=show_vehicle_list_public&page=${pageable.currentPage + 1}"
+                           href="${abs}/controller?command=show_vehicle_list_moder&page=${pageable.currentPage + 1}"
                            aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>

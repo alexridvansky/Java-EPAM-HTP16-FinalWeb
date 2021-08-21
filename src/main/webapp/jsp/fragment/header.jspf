@@ -6,16 +6,16 @@
     <link rel="stylesheet" href="${abs}/css/sticky-footer-navbar.css">
     <link rel="stylesheet" href="${abs}/css/alert.css">
 
-    <!-- Modal -->
+    <!-- About modal -->
     <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true" data-backdrop="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="aboutModalLabel">${close_title}</h5>
+                    <h5 class="modal-title" id="aboutModalLabel">${about_title}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    ${close_body}
+                    ${about_body}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${close}</button>
@@ -66,14 +66,12 @@
             </div>
             <%--            <div class="collapse navbar-collapse" id="navbarCollapse2">--%>
             <div class="collapse d-inline-flex mt-md-0 ms-md-auto" id="navbarCollapse2">
-                <!--  Language bar below  -->
-                <li class="nav-item dropdown">
-                    <%@include file="lng_bar.jspf" %>
-                    <%--                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">--%>
-                    <%--                    <button class="btn btn-outline-success" type="submit">Search</button>--%>
-                </li>
+<%--                <!--  Language bar below  -->--%>
+<%--                <li class="nav-item dropdown">--%>
+<%--                    <%@include file="lng_bar.jspf" %>--%>
+<%--                </li>--%>
                 <!-- Login Dropdown menu below -->
-                <li class="nav-item dropdown">
+<%--                <li class="nav-item dropdown">--%>
                     <c:choose>
                         <c:when test="${sessionScope.user.role != 'GUEST'}">
                             <%@include file="/jsp/fragment/user_tool.jsp" %>
@@ -82,15 +80,15 @@
                             <%@include file="/jsp/fragment/sign_in.jsp" %>
                         </c:otherwise>
                     </c:choose>
-                </li>
+<%--                </li>--%>
 
-                <!-- Info menu button -->
-                <li class="nav-item">
-                    <button class="btn btn-dark me-2" type="button" data-bs-toggle="modal" data-bs-target="#aboutModal">
-                        <i class="fas fa-info-circle"></i>
-                        ${about}
-                    </button>
-                </li>
+<%--                <!-- Info menu button -->--%>
+<%--                <li class="nav-item">--%>
+<%--                    <button class="btn btn-dark me-2" type="button" data-bs-toggle="modal" data-bs-target="#aboutModal">--%>
+<%--                        <i class="fas fa-info-circle"></i>--%>
+<%--                        ${about}--%>
+<%--                    </button>--%>
+<%--                </li>--%>
 
             </div>
         </div>

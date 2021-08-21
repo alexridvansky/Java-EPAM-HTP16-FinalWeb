@@ -30,7 +30,7 @@
 
                     <div class="input-group has-validation">
                         <input type="text" class="form-control" id="color" name="color"
-                               placeholder="${color}" required>
+                               placeholder="${color}" required pattern="${color_regexp}">
                         <div class="invalid-feedback">
                             ${color_sel_req}
                         </div>
@@ -62,19 +62,6 @@
                     ${color_sel_req}
                 </div>
             </div>
-
-<%--            <c:if test="${feedback_msg != null}">--%>
-<%--                <c:choose>--%>
-<%--                    <c:when test="${success == true}">--%>
-<%--                        <br/>--%>
-<%--                        <div class="alert alert-success" id="message"><b>${feedback_msg}</b></div>--%>
-<%--                    </c:when>--%>
-<%--                    <c:otherwise>--%>
-<%--                        <br/>--%>
-<%--                        <div class="alert alert-danger" id="message"><b>${feedback_msg}</b></div>--%>
-<%--                    </c:otherwise>--%>
-<%--                </c:choose>--%>
-<%--            </c:if>--%>
 
         </div>
 

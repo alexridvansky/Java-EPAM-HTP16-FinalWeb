@@ -17,8 +17,6 @@
 
 <%@include file="fragment/header.jspf" %>
 
-<link rel="stylesheet" href="${abs}/css/album_style.css">
-
 <main>
     <section class="py-5 text-center container">
         <div class="row py-lg-5">
@@ -37,7 +35,8 @@
                             <label for="reg_username" class="form-label">${login}</label>
                             <div class="input-group has-validation">
                                 <input type="text" class="form-control" id="reg_username" name="reg_username"
-                                       value="${reg_data.login}" placeholder="${login}" required autocomplete="off">
+                                       value="${reg_data.login}" placeholder="${login}" autocomplete="off"
+                                       pattern="^[a-zA-Z0-9_]{4,16}$">
                                 <div class="invalid-feedback">
                                     ${username_req}
                                 </div>
@@ -47,7 +46,7 @@
                         <div class="col-sm-6">
                             <label for="reg_password" class="form-label">${pass}</label>
                             <input type="password" class="form-control" id="reg_password" name="password"
-                                   placeholder="${pass}" value="" required autocomplete="off">
+                                   placeholder="${pass}" value="" required autocomplete="off" pattern="^.{5,18}$">
                             <div class="invalid-feedback">
                                 ${pass_req}
                             </div>
@@ -56,7 +55,7 @@
                         <div class="col-sm-6">
                             <label for="reg_password_again" class="form-label">${pass_rep}</label>
                             <input type="password" class="form-control" id="reg_password_again" name="password_again"
-                                   placeholder="${pass_rep}" value="" required autocomplete="off">
+                                   placeholder="${pass_rep}" value="" required autocomplete="off" pattern="^.{5,18}$">
                             <div class="invalid-feedback">
                                 ${passrep_req}
                             </div>
@@ -64,7 +63,9 @@
 
                         <div class="col-12">
                             <label for="email" class="form-label">${email}</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" value="${reg_data.email}" required="">
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="you@example.com" value="${reg_data.email}" required=""
+                                   pattern="^(?=.{3,30}$)[^\\s]+@[^\\s]+\\.[^\\s]+$">
                             <div class="invalid-feedback">
                                 ${email_req}
                             </div>
@@ -72,7 +73,8 @@
 
                         <div class="col-12">
                             <label for="phone" class="form-label">${phone}</label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="${reg_data.phone}" placeholder="+375xxxxxxxxx" required="">
+                            <input type="text" class="form-control" id="phone" name="phone" value="${reg_data.phone}"
+                                   placeholder="+375xxxxxxxxx" required="" pattern="^\\+\\d{10,14}$">
                             <div class="invalid-feedback">
                                 ${phone_req}
                             </div>
@@ -100,31 +102,10 @@
         </div>
 
     </section>
-<%--    <p style="color:red;">${reg_data.comment}</p>--%>
-<%--    <br/>--%>
+
 </main>
 
 <script>
-    // // Example starter JavaScript for disabling form submissions if there are invalid fields
-    // (function () {
-    //     'use strict'
-    //
-    //     // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    //     var forms = document.querySelectorAll('.needs-validation')
-    //
-    //     // Loop over them and prevent submission
-    //     Array.prototype.slice.call(forms)
-    //         .forEach(function (form) {
-    //             form.addEventListener('submit', function (event) {
-    //                 if (!form.checkValidity()) {
-    //                     event.preventDefault()
-    //                     event.stopPropagation()
-    //                 }
-    //
-    //                 form.classList.add('was-validated')
-    //             }, false)
-    //         })
-    // })()
 
 </script>
 

@@ -28,7 +28,7 @@
 
                     <div class="input-group has-validation">
                         <input type="text" class="form-control" id="username" name="username"
-                               placeholder="${login}" required pattern="^[a-zA-Z0-9_]{4,16}$">
+                               placeholder="${login}" required pattern="${regexp_username}">
                         <div class="invalid-feedback">
                             ${username_req}
                         </div>

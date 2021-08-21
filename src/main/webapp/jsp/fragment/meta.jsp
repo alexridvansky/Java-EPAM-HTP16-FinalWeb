@@ -19,4 +19,5 @@
 
 
 <fmt:setLocale value="${sessionScope.locale}"/>
-<fmt:setBundle basename="localization/locale"/>
+<fmt:setBundle basename="localization/locale" var="localization"/>
+<fmt:setBundle basename="regexp" var="regexp"/>

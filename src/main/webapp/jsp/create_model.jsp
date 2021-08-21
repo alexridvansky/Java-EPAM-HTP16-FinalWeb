@@ -51,7 +51,7 @@
                 <div class="col-12 mt-4">
                     <div class="input-group has-validation">
                         <input type="text" class="form-control" id="model" name="model"
-                               placeholder="${vehicle_make}" required>
+                               placeholder="${vehicle_make}" required pattern="${model_regexp}">
                         <div class="invalid-feedback">
                             ${model_req}
                         </div>

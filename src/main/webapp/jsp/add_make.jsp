@@ -32,7 +32,7 @@
 
                 <div class="col-12 input-group has-validation">
                     <input type="text" class="form-control" id="make" name="make"
-                           placeholder="${vehicle_make}" required>
+                           placeholder="${vehicle_make}" required pattern="${make_regexp}">
                     <div class="invalid-feedback">
                         ${make_req}
                     </div>
