@@ -5,6 +5,7 @@ public class PagePath {
     public static final String ADD_VEHICLE_PHOTO_PAGE = "/jsp/add_vehicle_photo.jsp";
     public static final String ADD_PHOTO_PAGE = "/jsp/add_vehicle_photo.jsp";
     public static final String SIGN_UP_PAGE = "/jsp/sign_up.jsp";
+    public static final String PASSWORD_RECOVERY_PAGE = "jsp/password_recovery.jsp";
     public static final String SHOW_USER_LIST_ADM = "/jsp/user_list_adm.jsp";
     public static final String VEHICLE_LIST_ADM = "/jsp/vehicle_list_adm.jsp";
     public static final String VEHICLE_LIST_PERSONAL = "/jsp/vehicle_list_personal.jsp";

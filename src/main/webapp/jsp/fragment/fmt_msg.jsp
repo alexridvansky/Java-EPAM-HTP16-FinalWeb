@@ -1,7 +1,23 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 
-<fmt:message key="main.title" var="main_title" bundle="${localization}"/>
+#user regexp properties
+<fmt:message key="regexp.user.phone" var="phone_regexp" bundle="${regexp}"/>
+<fmt:message key="regexp.user.username" var="username_regexp" bundle="${regexp}"/>
+<fmt:message key="regexp.user.email" var="email_regexp" bundle="${regexp}"/>
+<fmt:message key="regexp.user.password" var="password_regexp" bundle="${regexp}"/>
+
+#vehicle regexp properties
+<fmt:message key="regexp.vehicle_color" var="color_regexp" bundle="${regexp}"/>
+<fmt:message key="regexp.vehicle_make" var="make_regexp" bundle="${regexp}"/>
+<fmt:message key="regexp.vehicle_model" var="model_regexp" bundle="${regexp}"/>
+<fmt:message key="regexp.vehicle_model_year" var="model_year_regexp" bundle="${regexp}"/>
+<fmt:message key="regexp.vehicle_displacement" var="displacement_regexp" bundle="${regexp}"/>
+<fmt:message key="regexp.vehicle_mileage" var="mileage_regexp" bundle="${regexp}"/>
+<fmt:message key="regexp.vehicle_power" var="power_regexp" bundle="${regexp}"/>
+<fmt:message key="regexp.vehicle_price" var="price_regexp" bundle="${regexp}"/>
+
+<fmt:message key="page.main.title" var="main_title" bundle="${localization}"/>
 <fmt:message key="page.main" var="home" bundle="${localization}"/>
 <fmt:message key="page.main.greeting" var="main_greeting" bundle="${localization}"/>
 <fmt:message key="page.main.promotion" var="main_promotion" bundle="${localization}"/>
@@ -142,16 +158,4 @@
 <fmt:message key="user.phone" var="phone" bundle="${localization}"/>
 <fmt:message key="user.create" var="create" bundle="${localization}"/>
 <fmt:message key="error.error_title" var="error" bundle="${localization}"/>
-<fmt:message key="regexp.phone" var="regexp_phone" bundle="${regexp}"/>
-<fmt:message key="regexp.username" var="regexp_username" bundle="${regexp}"/>
-<fmt:message key="regexp.email" var="regexp_email" bundle="${regexp}"/>
-<fmt:message key="regexp.email" var="email_regexp" bundle="${regexp}"/>
-<fmt:message key="regexp.password" var="password_regexp" bundle="${regexp}"/>
-<fmt:message key="regexp.vehicle_color" var="color_regexp" bundle="${regexp}"/>
-<fmt:message key="regexp.vehicle_make" var="make_regexp" bundle="${regexp}"/>
-<fmt:message key="regexp.vehicle_model" var="model_regexp" bundle="${regexp}"/>
-<fmt:message key="regexp.vehicle_model_year" var="model_year_regexp" bundle="${regexp}"/>
-<fmt:message key="regexp.vehicle_displacement" var="displacement_regexp" bundle="${regexp}"/>
-<fmt:message key="regexp.vehicle_mileage" var="mileage_regexp" bundle="${regexp}"/>
-<fmt:message key="regexp.vehicle_power" var="power_regexp" bundle="${regexp}"/>
-<fmt:message key="regexp.vehicle_price" var="price_regexp" bundle="${regexp}"/>
+

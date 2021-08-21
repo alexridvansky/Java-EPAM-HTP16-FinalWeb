@@ -20,6 +20,7 @@ public enum CommandType {
     UPLOAD_VEHICLE_PHOTO,
     GO_TO_MAIN_PAGE,
     GO_TO_SIGN_UP_PAGE,
+    GO_TO_RECOVERY_PASSWORD_PAGE,
     CREATE_USER,
     SIGN_IN,
     LOG_OUT,

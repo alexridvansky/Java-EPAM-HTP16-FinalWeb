@@ -269,9 +269,9 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public int getConfirmAttemptCount(long chatId) throws ServiceException {
+    public int getConfirmAttemptCount(long chatId, int hourPeriod) throws ServiceException {
         try {
-            return userDao.findConfirmAttemptCount(chatId, 2);  // todo: replace by property variable
+            return userDao.findConfirmAttemptCount(chatId, hourPeriod);  // todo: replace by property variable
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);

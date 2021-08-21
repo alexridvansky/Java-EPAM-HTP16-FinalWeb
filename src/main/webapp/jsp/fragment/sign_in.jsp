@@ -14,7 +14,7 @@
             </div>
             <div class="col col-md-auto px-0">
                 <input type="text" class="form-control" name="username" id="username_id" placeholder="username"
-                       pattern="${regexp_username}" required>
+                       pattern="${username_regexp}" required>
             </div>
             <div class="col col-md-auto px-0">
                 <input type="password" class="form-control" name="password" id="password_id" placeholder="password"

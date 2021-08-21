@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 
 public class UserValidator {
     private static final Logger logger = LogManager.getLogger();
-    private static final String REGEXP_USERNAME = "regexp.username";
-    private static final String REGEXP_PASSWORD = "regexp.password";
-    private static final String REGEXP_EMAIL = "regexp.email";
-    private static final String REGEXP_PHONE = "regexp.phone";
+    private static final String REGEXP_USERNAME = "regexp.user.username";
+    private static final String REGEXP_PASSWORD = "regexp.user.password";
+    private static final String REGEXP_EMAIL = "regexp.user.email";
+    private static final String REGEXP_PHONE = "regexp.user.phone";
 
     private static final PropertyUtil PROPERTY_UTIL = PropertyUtil.getInstance();
 

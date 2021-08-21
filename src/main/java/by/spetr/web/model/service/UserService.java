@@ -117,10 +117,11 @@ public interface UserService {
      * method is used to get number of confirmation attempts of the user
      *
      * @param chatId chatId of the user
+     * @param hourPeriod period of time in hours attempts will be counted and expired will be deleted
      * @return number of confirmation attempts
      * @throws ServiceException when error occurred on DAO layer
      */
-    int getConfirmAttemptCount(long chatId) throws ServiceException;
+    int getConfirmAttemptCount(long chatId, int hourPeriod) throws ServiceException;
 
     /**
      * Method is used for user registration confirmation

@@ -2,7 +2,7 @@ package by.spetr.web.controller.command;
 
 import by.spetr.web.controller.command.redirect.DefaultCommand;
 import by.spetr.web.controller.command.redirect.GoToMainPageCommand;
-import by.spetr.web.controller.command.redirect.GoToSignUpPageCommand;
+import by.spetr.web.controller.command.user.GoToSignUpPageCommand;
 import by.spetr.web.controller.command.vehicle.ShowVehicleCreationPageCommand;
 import by.spetr.web.controller.command.user.*;
 import by.spetr.web.controller.command.vehicle.*;
@@ -26,6 +26,7 @@ public class CommandProvider {
         commands.put(ADD_NEW_VEHICLE, new AddNewVehicleCommand());
         commands.put(GO_TO_SIGN_UP_PAGE, new GoToSignUpPageCommand());
         commands.put(GO_TO_MAIN_PAGE, new GoToMainPageCommand());
+        commands.put(GO_TO_RECOVERY_PASSWORD_PAGE, new GoToRecoveryPasswordPageCommand());
         commands.put(SHOW_USER_LIST_ADMIN, new ShowUserListAdminCommand());
         commands.put(SHOW_VEHICLE_INFO, new ShowVehicleInfoCommand());
         commands.put(SHOW_VEHICLE_LIST_ADMIN, new ShowVehicleListAdmCommand());
