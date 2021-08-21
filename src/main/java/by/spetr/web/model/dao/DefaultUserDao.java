@@ -101,7 +101,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public List<User> findAll() throws DaoException {
-        logger.info("findAll() method been called");
+        logger.debug("findAll() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_USERS)) {
@@ -127,7 +127,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> findById(long id) throws DaoException {
-        logger.info("findById() method been called");
+        logger.debug("findById() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_ID)) {
@@ -140,7 +140,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info("No data matching the request. Null-User, wrapped in Optional, is to be sent");
+                logger.debug("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
@@ -156,7 +156,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> findByLogin(String login) throws DaoException {
-        logger.info("findUserByLogin() method been called");
+        logger.debug("findUserByLogin() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_LOGIN)) {
@@ -169,7 +169,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info("No data matching the request. Null-User, wrapped in Optional, is to be sent");
+                logger.debug("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
@@ -185,7 +185,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> findByEmail(String email) throws DaoException {
-        logger.info("findUserByEmail() method been called");
+        logger.debug("findUserByEmail() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_EMAIL)) {
@@ -198,7 +198,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info("No data matching the request. Null-User, wrapped in Optional, is to be sent");
+                logger.debug("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
@@ -214,7 +214,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> findByPhone(String phone) throws DaoException {
-        logger.info("findUserByPhone() method been called");
+        logger.debug("findUserByPhone() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_PHONE)) {
@@ -227,7 +227,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info("No data matching the request. Null-User, wrapped in Optional, is to be sent");
+                logger.debug("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
@@ -263,7 +263,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<String> findUserPassword(String login) throws DaoException {
-        logger.info("findUserPassword() method been called with {}", login);
+        logger.debug("findUserPassword() method been called with {}", login);
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_PASSWORD_FINDER)) {
@@ -276,7 +276,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 password = resultSet.getString(USER_PASSHASH);
             } else {
-                logger.info("no such user in the database");
+                logger.debug("no such user in the database");
             }
 
             return Optional.ofNullable(password);
@@ -292,20 +292,12 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public User createUser(User user, String hashedPassword, String confirmationCode) throws DaoException {
-        logger.info("create() method been called");
+        logger.debug("createUser() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement confirmationStatement = connection.prepareStatement(SQL_CREATE_CONFIRM_STATEMENT);
              PreparedStatement userStatement = connection.prepareStatement(SQL_CREATE_NEW_USER,
                      Statement.RETURN_GENERATED_KEYS)) {
-
-            confirmationStatement.setString(1, confirmationCode);
-            confirmationStatement.setLong(2, user.getUserId());
-
-            int confirmationInsertionResult = confirmationStatement.executeUpdate();
-            if (confirmationInsertionResult == 0) {
-                throw new DaoException("database access error occurred while inserting confirm code");
-            }
 
             userStatement.setString(1, user.getLogin());
             userStatement.setString(2, hashedPassword);
@@ -314,13 +306,22 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             userStatement.setDate(5, Date.valueOf(LocalDate.now()));
 
             int userInsertionResult = userStatement.executeUpdate();
-
-            logger.debug("fields updated: {}", userInsertionResult);
+            if (userInsertionResult == 0) {
+                throw new DaoException("database access error occurred while inserting new user");
+            }
 
             ResultSet resultSet = userStatement.getGeneratedKeys();
             long userId = 0;
             if (resultSet.next()) {
                 userId = resultSet.getLong(1);
+            }
+
+            confirmationStatement.setString(1, confirmationCode);
+            confirmationStatement.setLong(2, userId);
+
+            int confirmationInsertionResult = confirmationStatement.executeUpdate();
+            if (confirmationInsertionResult == 0) {
+                throw new DaoException("database access error occurred while inserting confirm code");
             }
 
             Optional<User> optionalUser = findById(userId);
@@ -331,17 +332,15 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             }
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
     public boolean updateState(long userId, UserStateType userState) throws DaoException {
-        logger.info("Update user_state by user_id method been called");
+        logger.debug("Update user_state by user_id method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_ID)) {
@@ -374,7 +373,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public boolean updateState(String userName, UserStateType userState) throws DaoException {
-        logger.info("Update user_state by user_id method been called");
+        logger.debug("Update user_state by user_id method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_LOGIN)) {
@@ -399,7 +398,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public boolean updateRole(long userId, UserRoleType userRole) throws DaoException {
-        logger.info("Update user_role by user_id method been called");
+        logger.debug("Update user_role by user_id method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ROLE_BY_ID)) {
@@ -424,7 +423,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public boolean updateRole(String userName, UserRoleType userRole) throws DaoException {
-        logger.info("Update user_role by user_name method been called");
+        logger.debug("Update user_role by user_name method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ROLE_BY_LOGIN)) {

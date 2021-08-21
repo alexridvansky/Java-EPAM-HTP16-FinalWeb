@@ -36,7 +36,7 @@
                             <div class="input-group has-validation">
                                 <input type="text" class="form-control" id="reg_username" name="reg_username"
                                        value="${reg_data.login}" placeholder="${login}" autocomplete="off"
-                                       pattern="^[a-zA-Z0-9_]{4,16}$">
+                                       pattern="${username_regexp}">
                                 <div class="invalid-feedback">
                                     ${username_req}
                                 </div>
@@ -46,7 +46,7 @@
                         <div class="col-sm-6">
                             <label for="reg_password" class="form-label">${pass}</label>
                             <input type="password" class="form-control" id="reg_password" name="password"
-                                   placeholder="${pass}" value="" required autocomplete="off" pattern="^.{5,18}$">
+                                   placeholder="${pass}" value="" required autocomplete="off" pattern="${password_regexp}">
                             <div class="invalid-feedback">
                                 ${pass_req}
                             </div>
@@ -55,7 +55,7 @@
                         <div class="col-sm-6">
                             <label for="reg_password_again" class="form-label">${pass_rep}</label>
                             <input type="password" class="form-control" id="reg_password_again" name="password_again"
-                                   placeholder="${pass_rep}" value="" required autocomplete="off" pattern="^.{5,18}$">
+                                   placeholder="${pass_rep}" value="" required autocomplete="off" pattern="${password_regexp}">
                             <div class="invalid-feedback">
                                 ${passrep_req}
                             </div>
@@ -65,7 +65,7 @@
                             <label for="email" class="form-label">${email}</label>
                             <input type="email" class="form-control" id="email" name="email"
                                    placeholder="you@example.com" value="${reg_data.email}" required=""
-                                   pattern="^(?=.{3,30}$)[^\\s]+@[^\\s]+\\.[^\\s]+$">
+                                   pattern="${email_regexp}">
                             <div class="invalid-feedback">
                                 ${email_req}
                             </div>
@@ -74,7 +74,7 @@
                         <div class="col-12">
                             <label for="phone" class="form-label">${phone}</label>
                             <input type="text" class="form-control" id="phone" name="phone" value="${reg_data.phone}"
-                                   placeholder="+375xxxxxxxxx" required="" pattern="^\\+\\d{10,14}$">
+                                   placeholder="+375xxxxxxxxx" required="" pattern="${phone_regexp}">
                             <div class="invalid-feedback">
                                 ${phone_req}
                             </div>
