@@ -20,9 +20,6 @@ import static by.spetr.web.model.dao.ColumnName.*;
 
 public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     private static final Logger logger = LogManager.getLogger();
-    private static final String DATABASE_ERROR = "database access error occurred or error parsing resultSet";
-    private static final String CONNECTION_GETTING_ERROR = "error of getting connection from ConnectionPool";
-    private static final String NO_DATA_MESSAGE = "No data matching the request. Null-User, wrapped in Optional, is to be sent";
 
     private static final String SQL_SELECT_ALL_USERS
             = "SELECT user_id, role, state, login, email, phone, registration_date " +
@@ -61,6 +58,9 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     private static final String SQL_CREATE_NEW_USER
             = "INSERT INTO user (login, pass, role_id, state_id, email, phone, registration_date) " +
             "VALUES (?, ?, 3, 1, ?, ?, ?);";
+    private static final String SQL_CREATE_CONFIRM_STATEMENT
+            = "INSERT INTO user_confirmation (confirmation, user_id) " +
+            "VALUES (?, ?) ";
     private static final String SQL_UPDATE_STATE_BY_ID
             = "UPDATE user SET state_id = ? WHERE user_id = ?;";
     private static final String SQL_UPDATE_STATE_BY_LOGIN
@@ -117,11 +117,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return users;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -140,17 +140,17 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info(NO_DATA_MESSAGE);
+                logger.info("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -169,17 +169,17 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info(NO_DATA_MESSAGE);
+                logger.info("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -198,17 +198,17 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info(NO_DATA_MESSAGE);
+                logger.info("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -227,17 +227,17 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info(NO_DATA_MESSAGE);
+                logger.info("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -282,33 +282,42 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return Optional.ofNullable(password);
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
-    public User createUser(User entity, String pass) throws DaoException {
+    public User createUser(User user, String hashedPassword, String confirmationCode) throws DaoException {
         logger.info("create() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_CREATE_NEW_USER,
+             PreparedStatement confirmationStatement = connection.prepareStatement(SQL_CREATE_CONFIRM_STATEMENT);
+             PreparedStatement userStatement = connection.prepareStatement(SQL_CREATE_NEW_USER,
                      Statement.RETURN_GENERATED_KEYS)) {
 
-            statement.setString(1, entity.getLogin());
-            statement.setString(2, pass);
-            statement.setString(3, entity.getEmail());
-            statement.setString(4, entity.getPhone());
-            statement.setDate(5, Date.valueOf(LocalDate.now()));
+            confirmationStatement.setString(1, confirmationCode);
+            confirmationStatement.setLong(2, user.getUserId());
 
-            int result = statement.executeUpdate();
+            int confirmationInsertionResult = confirmationStatement.executeUpdate();
+            if (confirmationInsertionResult == 0) {
+                throw new DaoException("database access error occurred while inserting confirm code");
+            }
 
-            logger.debug("fields updated: {}", result);
+            userStatement.setString(1, user.getLogin());
+            userStatement.setString(2, hashedPassword);
+            userStatement.setString(3, user.getEmail());
+            userStatement.setString(4, user.getPhone());
+            userStatement.setDate(5, Date.valueOf(LocalDate.now()));
 
-            ResultSet resultSet = statement.getGeneratedKeys();
+            int userInsertionResult = userStatement.executeUpdate();
+
+            logger.debug("fields updated: {}", userInsertionResult);
+
+            ResultSet resultSet = userStatement.getGeneratedKeys();
             long userId = 0;
             if (resultSet.next()) {
                 userId = resultSet.getLong(1);
@@ -322,11 +331,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             }
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -355,11 +364,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -380,11 +389,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -405,11 +414,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -430,11 +439,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -454,11 +463,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             }
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -478,16 +487,16 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (countResultSet.next()) {
                 return countResultSet.getInt(1);
             } else {
-                logger.error(DATABASE_ERROR);
-                throw new DaoException(DATABASE_ERROR);
+                logger.error("database access error occurred or error parsing resultSet");
+                throw new DaoException("database access error occurred or error parsing resultSet");
             }
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -498,11 +507,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -544,23 +553,23 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
                 try {
                     connection.rollback();
                 } catch (SQLException throwables) {
-                    logger.error(DATABASE_ERROR, throwables);
+                    logger.error("database access error occurred or error parsing resultSet", throwables);
                 }
-                logger.error(DATABASE_ERROR, e);
-                throw new DaoException(DATABASE_ERROR, e);
+                logger.error("database access error occurred or error parsing resultSet", e);
+                throw new DaoException("database access error occurred or error parsing resultSet", e);
             }
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException throwables) {
-                logger.error(DATABASE_ERROR, throwables);
+                logger.error("database access error occurred or error parsing resultSet", throwables);
             }
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
 
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
 
         } finally {
             try {
@@ -569,7 +578,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
                     connection.close();
                 }
             } catch (SQLException e) {
-                logger.error(DATABASE_ERROR, e);
+                logger.error("database access error occurred or error parsing resultSet", e);
             }
         }
     }
@@ -589,11 +598,11 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return chatId;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 

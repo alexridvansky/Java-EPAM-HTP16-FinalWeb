@@ -68,11 +68,23 @@ public interface UserDao {
     /**
      * is used to create a new user with user.Role = user and user.State = confirmation.
      *
-     * @param entity {@code User} class
+     * @param user {@code User} class
+     * @param hashedPassword hashed password to the user account
+     * @param confirmationCode generated confirmation code to activate the account
      * @return true if user has been created successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    User createUser(User entity, String pass) throws DaoException;
+    User createUser(User user, String hashedPassword, String confirmationCode) throws DaoException;
+//
+//    /**
+//     * method stores confirmation code to the db
+//     *
+//     * @param code secret code to be stored
+//     * @param userId id of the user secret code assigned to
+//     * @return true in case of success
+//     * @throws DaoException
+//     */
+//    boolean createConfirmCode(String code, long userId) throws DaoException;
 
     /**
      * is used for updating status of given user

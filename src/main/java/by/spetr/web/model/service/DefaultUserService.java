@@ -12,6 +12,7 @@ import by.spetr.web.model.form.LoginForm;
 import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.UserRegForm;
 import by.spetr.web.util.BCrypt;
+import by.spetr.web.util.RandomGenerator;
 import by.spetr.web.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,19 +70,21 @@ public class DefaultUserService implements UserService {
             form.setPhone("");
             form.setFeedbackMsg(PHONE_TAKEN);
         } else {
-            User user = new User(
-                    form.getLogin(),
-                    UserRoleType.USER,
-                    UserStateType.CONFIRM,
-                    form.getEmail(),
-                    form.getPhone(),
-                    LocalDate.now()
-            );
-
-            String hashedPassword = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt());
 
             try {
-                user = userDao.createUser(user, hashedPassword);
+                User user = new User(
+                        form.getLogin(),
+                        UserRoleType.USER,
+                        UserStateType.CONFIRM,
+                        form.getEmail(),
+                        form.getPhone(),
+                        LocalDate.now()
+                );
+
+                String hashedPassword = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt());
+                String confirmationCode = RandomGenerator.generateConfirmCode();
+
+                user = userDao.createUser(user, hashedPassword, confirmationCode);
                 UserDto userDto = new UserDto();
                 userDto.setUserId(user.getUserId());
                 userDto.setLogin(user.getLogin());
@@ -305,7 +308,6 @@ public class DefaultUserService implements UserService {
                 return;
             }
 
-            
 
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
