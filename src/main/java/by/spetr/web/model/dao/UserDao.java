@@ -4,7 +4,6 @@ import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.DaoException;
-import by.spetr.web.model.exception.ServiceException;
 
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +77,7 @@ public interface UserDao {
     /**
      * is used for updating status of given user
      *
-     * @param userId userId
+     * @param userId    userId
      * @param userState new {@code UserStateType}
      * @return true if user status has been changed successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
@@ -88,7 +87,7 @@ public interface UserDao {
     /**
      * is used for updating status of given user
      *
-     * @param userName {@code User} name
+     * @param userName  {@code User} name
      * @param userState new {@code UserStateType}
      * @return true if user status has been changed successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
@@ -98,7 +97,7 @@ public interface UserDao {
     /**
      * is used for updating role of given user
      *
-     * @param userId userId
+     * @param userId   userId
      * @param userRole new {@code UserRoleType}
      * @return true if user status has been changed successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
@@ -127,7 +126,7 @@ public interface UserDao {
      * expired attempts are automatically deleted
      *
      * @param chatId chatId of the user
-     * @param hour period of time in hours attempts will be included and counted
+     * @param hour   period of time in hours attempts will be included and counted
      * @return number of confirmation attempts
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
@@ -143,7 +142,31 @@ public interface UserDao {
      */
     boolean updateRole(String userName, UserRoleType userRole) throws DaoException;
 
+    /**
+     * is used for registration confirmation by matching secret code with stored in the database
+     *
+     * @param chatId user's telegram chatId
+     * @param code user's secret confirmation code
+     * @return true if confirmation code matches with stored one
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
     boolean confirm(long chatId, String code) throws DaoException;
 
-    User update(User entity);
+    /**
+     * is user for getting userid by telegram chatId
+     *
+     * @param chatId telegram chatId
+     * @return userId or 0 in case when no user found
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    long findChatIdByUserId(long chatId) throws DaoException;
+
+    /**
+     *
+     *
+     * @param entity
+     * @return
+     * @throws DaoException
+     */
+    User update(User entity) throws DaoException;
 }

@@ -129,8 +129,17 @@ public interface UserService {
      * @param chatId telegram chatId
      * @param code   confirmation code to activate the account
      * @return boolean if confirmation went successful and user status changed
+     * @throws ServiceException when error occurred on DAO layer
      */
     boolean confirm(Long chatId, String code) throws ServiceException;
+
+    /**
+     * this method is used to generate a new password and sent it to the user via telegram bot
+     *
+     * @param form UserForm contains username (login)
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    void passwordRecover(UserForm form) throws ServiceException;
 
     static UserService getInstance() {
         return DefaultUserService.getInstance();

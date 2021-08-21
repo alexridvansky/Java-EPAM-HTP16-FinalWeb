@@ -6,16 +6,13 @@ import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.ConnectionPoolException;
 import by.spetr.web.model.exception.DaoException;
 import by.spetr.web.model.pool.ConnectionPool;
-import com.mysql.cj.conf.DatabaseUrlContainer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,10 +69,14 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             = "UPDATE user SET role_id = ? WHERE user_id = ?;";
     private static final String SQL_UPDATE_ROLE_BY_LOGIN
             = "UPDATE user SET role_id = ? WHERE login = ?;";
-    private static final String SQL_FIND_CHAT_ID
+    private static final String SQL_COUNT_CHAT_ID
             = "SELECT COUNT(*) " +
             "FROM user_chat_id " +
             "WHERE chat_id = ?";
+    private static final String SQL_FIND_CHAT_ID_BY_USER_ID
+            = "SELECT * " +
+            "FROM user_chat_id " +
+            "WHERE user_id = ?";
     private final static String SQL_CONFIRMATION_ATTEMPT_INSERT
             = "INSERT INTO user_confirmation_attempt (chat_id) " +
             "VALUES (?)";
@@ -440,7 +441,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     @Override
     public boolean isChatIdExist(long chatId) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_FIND_CHAT_ID)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_COUNT_CHAT_ID)) {
 
             statement.setLong(1, chatId);
 
@@ -573,6 +574,28 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         }
     }
 
+    @Override
+    public long findChatIdByUserId(long userId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SQL_FIND_CHAT_ID_BY_USER_ID)) {
+            statement.setLong(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            long chatId = 0;
+            if (resultSet.next()) {
+                chatId = resultSet.getLong(1);
+            }
+
+            return chatId;
+
+        } catch (SQLException e) {
+            logger.error(DATABASE_ERROR, e);
+            throw new DaoException(DATABASE_ERROR, e);
+        } catch (ConnectionPoolException e) {
+            logger.error(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+        }
+    }
 
     @Override
     public User update(User entity) {

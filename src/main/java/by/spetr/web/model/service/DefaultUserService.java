@@ -288,4 +288,29 @@ public class DefaultUserService implements UserService {
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
+
+    @Override
+    public void passwordRecover(UserForm form) throws ServiceException {
+
+        try {
+            Optional<User> optionalUser = userDao.findByLogin(form.getUserName());
+            if (optionalUser.isEmpty()) {
+                logger.warn("Password recovery was requested for not existing user");
+                return;
+            }
+
+            long chatId = userDao.findChatIdByUserId(optionalUser.get().getUserId());
+            if (chatId == 0) {
+                logger.warn("No chatId stored in the db for given user, that's strange...");
+                return;
+            }
+
+            
+
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+
+    }
 }

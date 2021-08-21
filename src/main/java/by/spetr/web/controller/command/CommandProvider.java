@@ -42,6 +42,7 @@ public class CommandProvider {
         commands.put(CREATE_USER, new CreateUserCommand());
         commands.put(SIGN_IN, new SignInCommand());
         commands.put(LOG_OUT, new LogOutCommand());
+        commands.put(PASSWORD_RESET, new PasswordResetCommand());
         commands.put(CHANGE_LOCALE, new ChangeLocaleCommand());
         commands.put(CHANGE_USER_STATE, new ChangeUserStateCommand());
         commands.put(CHANGE_USER_ROLE, new ChangeUserRoleCommand());

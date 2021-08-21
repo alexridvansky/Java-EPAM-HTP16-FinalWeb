@@ -24,6 +24,7 @@ public enum CommandType {
     CREATE_USER,
     SIGN_IN,
     LOG_OUT,
+    PASSWORD_RESET,
     CHANGE_LOCALE,
     CHANGE_USER_STATE,
     CHANGE_USER_ROLE,
