@@ -12,7 +12,7 @@ import by.spetr.web.model.form.LoginForm;
 import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.UserRegForm;
 import by.spetr.web.util.BCrypt;
-import by.spetr.web.util.RandomGenerator;
+import by.spetr.web.util.ConfirmationCodeGenerator;
 import by.spetr.web.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -82,7 +82,7 @@ public class DefaultUserService implements UserService {
                 );
 
                 String hashedPassword = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt());
-                String confirmationCode = RandomGenerator.generateConfirmCode();
+                String confirmationCode = ConfirmationCodeGenerator.generateConfirmCode();
 
                 user = userDao.createUser(user, hashedPassword, confirmationCode);
                 UserDto userDto = new UserDto();
