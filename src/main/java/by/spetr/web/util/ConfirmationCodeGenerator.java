@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class ConfirmationCodeGenerator {
     private static final Random random = new Random();
+
     private ConfirmationCodeGenerator() {}
 
     public static String generateConfirmCode() {

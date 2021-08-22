@@ -45,7 +45,6 @@ public final class TelegramInformerService extends TelegramLongPollingBot implem
         ATT_EXPIRES_TIME = Integer.parseInt(PropertyUtil.getInstance().getBotProperty(ATT_EXPIRES_TIME_PROPERTY));
     }
 
-
     public static TelegramInformerService getInstance() {
         if (instance == null) {
             instance = new TelegramInformerService();

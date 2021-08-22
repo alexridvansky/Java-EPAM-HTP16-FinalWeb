@@ -5,8 +5,9 @@ import java.util.ResourceBundle;
 
 public class PropertyUtil {
     private static final PropertyUtil instance = new PropertyUtil();
-    private final ResourceBundle regexpResourceBundle = ResourceBundle.getBundle("regexp", Locale.getDefault());
-    private final ResourceBundle botResourceBundle = ResourceBundle.getBundle("bot", Locale.getDefault());
+    private static final ResourceBundle REGEXP = ResourceBundle.getBundle("regexp", Locale.getDefault());
+    private static final ResourceBundle BOT = ResourceBundle.getBundle("bot", Locale.getDefault());
+    public static final ResourceBundle SITE = ResourceBundle.getBundle("site", Locale.getDefault());
 
     private PropertyUtil() {}
 
@@ -15,10 +16,14 @@ public class PropertyUtil {
     }
 
     public String getRegexpProperty(String propertyName) {
-        return regexpResourceBundle.getString(propertyName);
+        return REGEXP.getString(propertyName);
     }
 
     public String getBotProperty(String propertyName) {
-        return botResourceBundle.getString(propertyName);
+        return BOT.getString(propertyName);
+    }
+
+    public String getSiteProperty(String propertyName) {
+        return SITE.getString(propertyName);
     }
 }
