@@ -15,6 +15,7 @@ public final class RequestParameter {
     public static final String USER_EMAIL_PARAM = "email";
     public static final String USER_PHONE_PARAM = "phone";
     public static final String USER_REGISTRATION_DATA_PARAM = "reg_data";
+    public static final String USER_CONFIRMATION_CODE = "conf_code";
     
     // Vehicle params
     public static final String VEHICLE_LIST_PARAM = "vehicles";

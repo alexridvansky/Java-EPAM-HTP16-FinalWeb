@@ -150,7 +150,7 @@ public final class TelegramInformerService extends TelegramLongPollingBot implem
             else {
                 if (userService.confirm(message.getChatId(), message.getText())) {
                     logger.debug("Confirmation accepted, gonna change user status. ChatId {}", message.getChatId());
-                    sendMessage(message, "Confirmation accepted, just refresh the page pressing F5");
+                    sendMessage(message, "Confirmation accepted, since now you can use all features on the service");
 
                 } else {
                     logger.debug("Confirmation code rejected. ChatId {}", message.getChatId());

@@ -3,6 +3,7 @@ package by.spetr.web.controller.command.user;
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.dto.UserDto;
+import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.LoginForm;
@@ -15,9 +16,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.Objects;
 import java.util.Optional;
 
-import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
-import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
+import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.model.entity.type.UserStateType.CONFIRM;
 
 public class SignInCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -32,7 +33,18 @@ public class SignInCommand implements Command {
             if (optionalUser.isPresent()) {
                 request.getSession().setAttribute(USER_PARAM, optionalUser.get());
                 form.setSuccess(true);
+                if (optionalUser.get().getState() == CONFIRM) {
+                    Optional<String> optionalCode = userService.getConfirmCode(optionalUser.get().getUserId());
+                    if (optionalCode.isPresent()) {
+                        request.setAttribute(USER_CONFIRMATION_CODE, optionalCode.get());
+                        return new Router(CONFIRMATION_PAGE);
+                    } else {
+                        request.setAttribute(FEEDBACK_MESSAGE_PARAM, "There's no confirmation code for this user");
+                        return new Router(ERROR_PAGE);
+                    }
+                }
             }
+
 
             String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
             request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
