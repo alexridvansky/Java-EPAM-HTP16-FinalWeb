@@ -124,6 +124,15 @@ public interface UserService {
     int getConfirmAttemptCount(long chatId, int hourPeriod) throws ServiceException;
 
     /**
+     * Returns confirmation secret key
+     *
+     * @param userId userId
+     * @return confirmation code
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    Optional<String> getConfirmCode(long userId) throws ServiceException;
+
+    /**
      * Method is used for user registration confirmation
      *
      * @param chatId telegram chatId

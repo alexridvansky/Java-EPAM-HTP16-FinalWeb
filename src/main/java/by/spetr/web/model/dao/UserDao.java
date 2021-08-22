@@ -75,16 +75,6 @@ public interface UserDao {
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     User createUser(User user, String hashedPassword, String confirmationCode) throws DaoException;
-//
-//    /**
-//     * method stores confirmation code to the db
-//     *
-//     * @param code secret code to be stored
-//     * @param userId id of the user secret code assigned to
-//     * @return true in case of success
-//     * @throws DaoException
-//     */
-//    boolean createConfirmCode(String code, long userId) throws DaoException;
 
     /**
      * is used for updating status of given user
@@ -153,6 +143,15 @@ public interface UserDao {
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean updateRole(String userName, UserRoleType userRole) throws DaoException;
+
+    /**
+     * Returns confirmation secret key
+     *
+     * @param userId userId
+     * @return confirmation code
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    Optional<String> getConfirmCode(long userId) throws DaoException;
 
     /**
      * is used for registration confirmation by matching secret code with stored in the database

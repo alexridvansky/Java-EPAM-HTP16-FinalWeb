@@ -282,6 +282,16 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    public Optional<String> getConfirmCode(long userId) throws ServiceException {
+        try {
+            return userDao.getConfirmCode(userId);
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
     public boolean confirm(Long chatId, String code) throws ServiceException {
         try {
             userDao.createConfirmAttempt(chatId);

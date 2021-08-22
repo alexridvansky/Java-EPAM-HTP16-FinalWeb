@@ -84,6 +84,10 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             = "SELECT * " +
             "FROM user_confirmation " +
             "WHERE confirmation = ?";
+    private static final String SQL_FIND_CONFIRMATION_BY_USER_ID
+            = "SELECT * " +
+            "FROM user_confirmation " +
+            "WHERE user_id = ?";
     private static final String SQL_REMOVE_EXPIRED_ATTEMPT
             = "DELETE FROM user_confirmation_attempt " +
             "WHERE attempt_date < ADDDATE(NOW(), INTERVAL -? HOUR)";
@@ -505,6 +509,28 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             statement.setLong(1, chatId);
             statement.executeUpdate();
 
+        } catch (SQLException e) {
+            logger.error("database access error occurred or error parsing resultSet", e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public Optional<String> getConfirmCode(long userId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SQL_FIND_CONFIRMATION_BY_USER_ID)) {
+            statement.setLong(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            String confirmationCode = null;
+            if (resultSet.next()) {
+                confirmationCode = resultSet.getString(CONFIRMATION);
+            }
+
+            return Optional.ofNullable(confirmationCode);
         } catch (SQLException e) {
             logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
