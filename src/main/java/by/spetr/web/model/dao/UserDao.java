@@ -68,16 +68,18 @@ public interface UserDao {
     /**
      * is used to create a new user with user.Role = user and user.State = confirmation.
      *
-     * @param entity {@code User} class
+     * @param user             {@code User} class
+     * @param hashedPassword   hashed password to the user account
+     * @param confirmationCode generated confirmation code to activate the account
      * @return true if user has been created successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    User createUser(User entity, String pass) throws DaoException;
+    User createUser(User user, String hashedPassword, String confirmationCode) throws DaoException;
 
     /**
      * is used for updating status of given user
      *
-     * @param userId userId
+     * @param userId    userId
      * @param userState new {@code UserStateType}
      * @return true if user status has been changed successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
@@ -87,7 +89,7 @@ public interface UserDao {
     /**
      * is used for updating status of given user
      *
-     * @param userName {@code User} name
+     * @param userName  {@code User} name
      * @param userState new {@code UserStateType}
      * @return true if user status has been changed successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
@@ -97,12 +99,40 @@ public interface UserDao {
     /**
      * is used for updating role of given user
      *
-     * @param userId userId
+     * @param userId   userId
      * @param userRole new {@code UserRoleType}
      * @return true if user status has been changed successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean updateRole(long userId, UserRoleType userRole) throws DaoException;
+
+    /**
+     * method is used to verify is chatId given already exists in the db
+     *
+     * @param chatId chatId to be checked
+     * @return true if chatId given is already present in the db
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    boolean isChatIdExist(long chatId) throws DaoException;
+
+    /**
+     * method is used to register any attempt of the user with chatId specific to pass the confirmation procedure
+     *
+     * @param chatId chatId of the user
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    public void createConfirmAttempt(long chatId) throws DaoException;
+
+    /**
+     * method is used to get number of confirmation attempts of the user
+     * expired attempts are automatically deleted
+     *
+     * @param chatId chatId of the user
+     * @param hour   period of time in hours attempts will be included and counted
+     * @return number of confirmation attempts
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    int findConfirmAttemptCount(long chatId, int hour) throws DaoException;
 
     /**
      * is used for updating role of given user
@@ -114,7 +144,41 @@ public interface UserDao {
      */
     boolean updateRole(String userName, UserRoleType userRole) throws DaoException;
 
-    boolean confirm(Long chatId, String code) throws DaoException;
+    /**
+     * method stores a new password to the db
+     *
+     * @param login          username of the user
+     * @param hashedPassword a new password to be set up
+     * @return true if password changing went successfully
+     * @throws DaoException when error occurred on DAO layer
+     */
+    boolean updateUserPassword(String login, String hashedPassword) throws DaoException;
 
-    User update(User entity);
+    /**
+     * Returns confirmation secret key
+     *
+     * @param userId userId
+     * @return confirmation code
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    Optional<String> getConfirmCode(long userId) throws DaoException;
+
+    /**
+     * is used for registration confirmation by matching secret code with stored in the database
+     *
+     * @param chatId user's telegram chatId
+     * @param code   user's secret confirmation code
+     * @return true if confirmation code matches with stored one
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    boolean confirm(long chatId, String code) throws DaoException;
+
+    /**
+     * is user for getting userid by telegram chatId
+     *
+     * @param chatId telegram chatId
+     * @return userId or 0 in case when no user found
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    long findChatIdByUserId(long chatId) throws DaoException;
 }

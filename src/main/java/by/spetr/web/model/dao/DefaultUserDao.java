@@ -20,9 +20,6 @@ import static by.spetr.web.model.dao.ColumnName.*;
 
 public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     private static final Logger logger = LogManager.getLogger();
-    private static final String DATABASE_ERROR = "database access error occurred or error parsing resultSet";
-    private static final String CONNECTION_GETTING_ERROR = "error of getting connection from ConnectionPool";
-    private static final String NO_DATA_MESSAGE = "No data matching the request. Null-User, wrapped in Optional, is to be sent";
 
     private static final String SQL_SELECT_ALL_USERS
             = "SELECT user_id, role, state, login, email, phone, registration_date " +
@@ -61,6 +58,9 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     private static final String SQL_CREATE_NEW_USER
             = "INSERT INTO user (login, pass, role_id, state_id, email, phone, registration_date) " +
             "VALUES (?, ?, 3, 1, ?, ?, ?);";
+    private static final String SQL_CREATE_CONFIRM_STATEMENT
+            = "INSERT INTO user_confirmation (confirmation, user_id) " +
+            "VALUES (?, ?) ";
     private static final String SQL_UPDATE_STATE_BY_ID
             = "UPDATE user SET state_id = ? WHERE user_id = ?;";
     private static final String SQL_UPDATE_STATE_BY_LOGIN
@@ -69,10 +69,34 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             = "UPDATE user SET role_id = ? WHERE user_id = ?;";
     private static final String SQL_UPDATE_ROLE_BY_LOGIN
             = "UPDATE user SET role_id = ? WHERE login = ?;";
+    private static final String SQL_UPDATE_PASSWORD_BY_LOGIN
+            = "UPDATE user SET pass = ? WHERE carsales2.user.login = ?";
+    private static final String SQL_COUNT_CHAT_ID
+            = "SELECT COUNT(*) " +
+            "FROM user_chat_id " +
+            "WHERE chat_id = ?";
+    private static final String SQL_FIND_CHAT_ID_BY_USER_ID
+            = "SELECT * " +
+            "FROM user_chat_id " +
+            "WHERE user_id = ?";
+    private final static String SQL_CONFIRMATION_ATTEMPT_INSERT
+            = "INSERT INTO user_confirmation_attempt (chat_id) " +
+            "VALUES (?)";
     private static final String SQL_FIND_CONFIRMATION
             = "SELECT * " +
             "FROM user_confirmation " +
             "WHERE confirmation = ?";
+    private static final String SQL_FIND_CONFIRMATION_BY_USER_ID
+            = "SELECT * " +
+            "FROM user_confirmation " +
+            "WHERE user_id = ?";
+    private static final String SQL_REMOVE_EXPIRED_ATTEMPT
+            = "DELETE FROM user_confirmation_attempt " +
+            "WHERE attempt_date < ADDDATE(NOW(), INTERVAL -? HOUR)";
+    private static final String SQL_FIND_CONFIRMATION_COUNT
+            = "SELECT COUNT(*) " +
+            "FROM user_confirmation_attempt " +
+            "WHERE chat_id = ?";
     private static final String SQL_REG_CONFIRM_DELETE
             = "DELETE FROM user_confirmation " +
             "WHERE confirmation = ?";
@@ -83,7 +107,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public List<User> findAll() throws DaoException {
-        logger.info("findAll() method been called");
+        logger.debug("findAll() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_USERS)) {
@@ -99,17 +123,15 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return users;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
     public Optional<User> findById(long id) throws DaoException {
-        logger.info("findById() method been called");
+        logger.debug("findById() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_ID)) {
@@ -122,23 +144,21 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info(NO_DATA_MESSAGE);
+                logger.debug("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
     public Optional<User> findByLogin(String login) throws DaoException {
-        logger.info("findUserByLogin() method been called");
+        logger.debug("findUserByLogin() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_LOGIN)) {
@@ -151,23 +171,21 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info(NO_DATA_MESSAGE);
+                logger.debug("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
     public Optional<User> findByEmail(String email) throws DaoException {
-        logger.info("findUserByEmail() method been called");
+        logger.debug("findUserByEmail() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_EMAIL)) {
@@ -180,23 +198,21 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info(NO_DATA_MESSAGE);
+                logger.debug("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
     public Optional<User> findByPhone(String phone) throws DaoException {
-        logger.info("findUserByPhone() method been called");
+        logger.debug("findUserByPhone() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_PHONE)) {
@@ -209,17 +225,15 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 user = extractUserFromResultSet(resultSet);
             } else {
-                logger.info(NO_DATA_MESSAGE);
+                logger.debug("No data matching the request. Null-User, wrapped in Optional, is to be sent");
             }
 
             return Optional.ofNullable(user);
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -245,7 +259,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<String> findUserPassword(String login) throws DaoException {
-        logger.info("findUserPassword() method been called with {}", login);
+        logger.debug("findUserPassword() method been called with {}", login);
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_PASSWORD_FINDER)) {
@@ -258,42 +272,50 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             if (resultSet.next()) {
                 password = resultSet.getString(USER_PASSHASH);
             } else {
-                logger.info("no such user in the database");
+                logger.debug("no such user in the database");
             }
 
             return Optional.ofNullable(password);
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
-    public User createUser(User entity, String pass) throws DaoException {
-        logger.info("create() method been called");
+    public User createUser(User user, String hashedPassword, String confirmationCode) throws DaoException {
+        logger.debug("createUser() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_CREATE_NEW_USER,
+             PreparedStatement confirmationStatement = connection.prepareStatement(SQL_CREATE_CONFIRM_STATEMENT);
+             PreparedStatement userStatement = connection.prepareStatement(SQL_CREATE_NEW_USER,
                      Statement.RETURN_GENERATED_KEYS)) {
 
-            statement.setString(1, entity.getLogin());
-            statement.setString(2, pass);
-            statement.setString(3, entity.getEmail());
-            statement.setString(4, entity.getPhone());
-            statement.setDate(5, Date.valueOf(LocalDate.now()));
+            userStatement.setString(1, user.getLogin());
+            userStatement.setString(2, hashedPassword);
+            userStatement.setString(3, user.getEmail());
+            userStatement.setString(4, user.getPhone());
+            userStatement.setDate(5, Date.valueOf(LocalDate.now()));
 
-            int result = statement.executeUpdate();
+            int userInsertionResult = userStatement.executeUpdate();
+            if (userInsertionResult == 0) {
+                throw new DaoException("database access error occurred while inserting new user");
+            }
 
-            logger.debug("fields updated: {}", result);
-
-            ResultSet resultSet = statement.getGeneratedKeys();
+            ResultSet resultSet = userStatement.getGeneratedKeys();
             long userId = 0;
             if (resultSet.next()) {
                 userId = resultSet.getLong(1);
+            }
+
+            confirmationStatement.setString(1, confirmationCode);
+            confirmationStatement.setLong(2, userId);
+
+            int confirmationInsertionResult = confirmationStatement.executeUpdate();
+            if (confirmationInsertionResult == 0) {
+                throw new DaoException("database access error occurred while inserting confirm code");
             }
 
             Optional<User> optionalUser = findById(userId);
@@ -304,17 +326,15 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             }
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
     public boolean updateState(long userId, UserStateType userState) throws DaoException {
-        logger.info("Update user_state by user_id method been called");
+        logger.debug("Update user_state by user_id method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_ID)) {
@@ -337,17 +357,15 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
     public boolean updateState(String userName, UserStateType userState) throws DaoException {
-        logger.info("Update user_state by user_id method been called");
+        logger.debug("Update user_state by user_id method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_LOGIN)) {
@@ -362,17 +380,15 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
     public boolean updateRole(long userId, UserRoleType userRole) throws DaoException {
-        logger.info("Update user_role by user_id method been called");
+        logger.debug("Update user_role by user_id method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ROLE_BY_ID)) {
@@ -387,17 +403,15 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
     public boolean updateRole(String userName, UserRoleType userRole) throws DaoException {
-        logger.info("Update user_role by user_name method been called");
+        logger.debug("Update user_role by user_name method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ROLE_BY_LOGIN)) {
@@ -412,16 +426,114 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
     @Override
-    public boolean confirm(Long chatId, String code) throws DaoException {
+    public boolean updateUserPassword(String login, String hashedPassword) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_PASSWORD_BY_LOGIN)) {
+            statement.setString(1, hashedPassword);
+            statement.setString(2, login);
+
+            int result = statement.executeUpdate();
+
+            return result == 1;
+
+        } catch (SQLException e) {
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public boolean isChatIdExist(long chatId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_COUNT_CHAT_ID)) {
+
+            statement.setLong(1, chatId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            } else {
+                return false;
+            }
+
+        } catch (SQLException e) {
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public int findConfirmAttemptCount(long chatId, int hour) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement deleteStatement = connection.prepareStatement(SQL_REMOVE_EXPIRED_ATTEMPT);
+             PreparedStatement countStatement = connection.prepareStatement(SQL_FIND_CONFIRMATION_COUNT)) {
+
+            deleteStatement.setInt(1, hour);
+            int deleteResult = deleteStatement.executeUpdate();
+                logger.debug("{} expired confirmation attempt record(s) deleted", deleteResult);
+
+        countStatement.setLong(1, chatId);
+            ResultSet countResultSet = countStatement.executeQuery();
+
+            if (countResultSet.next()) {
+                return countResultSet.getInt(1);
+            } else {
+                logger.error("database access error occurred or error parsing resultSet");
+                throw new DaoException("database access error occurred or error parsing resultSet");
+            }
+
+        } catch (SQLException e) {
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    public void createConfirmAttempt(long chatId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SQL_CONFIRMATION_ATTEMPT_INSERT)) {
+            statement.setLong(1, chatId);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public Optional<String> getConfirmCode(long userId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SQL_FIND_CONFIRMATION_BY_USER_ID)) {
+            statement.setLong(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            String confirmationCode = null;
+            if (resultSet.next()) {
+                confirmationCode = resultSet.getString(CONFIRMATION);
+            }
+
+            return Optional.ofNullable(confirmationCode);
+        } catch (SQLException e) {
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public boolean confirm(long chatId, String code) throws DaoException {
         Connection connection = null;
         long userId = 0;
         int deleted = 0;
@@ -448,42 +560,61 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
                             updateStatement.setInt(1, 2);
                             updateStatement.setLong(2, userId);
                             updated = updateStatement.executeUpdate();
+                            connection.commit();
                         }
                     }
                 }
                 return userId > 0 && deleted > 0 && inserted > 0 && updated > 0;
 
             } catch (SQLException e) {
-                logger.error(DATABASE_ERROR, e);
-                throw new DaoException(DATABASE_ERROR, e);
+                try {
+                    connection.rollback();
+                } catch (SQLException throwables) {
+                    logger.error("database access error occurred or error parsing resultSet", throwables);
+                }
+                throw new DaoException("database access error occurred or error parsing resultSet", e);
             }
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException throwables) {
-                logger.error(DATABASE_ERROR, throwables);
+                logger.error("database access error occurred or error parsing resultSet", throwables);
             }
-            logger.error(DATABASE_ERROR, e);
-            throw new DaoException(DATABASE_ERROR, e);
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+
         } catch (ConnectionPoolException e) {
-            logger.error(CONNECTION_GETTING_ERROR, e);
-            throw new DaoException(CONNECTION_GETTING_ERROR, e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+
         } finally {
             try {
-                if (connection != null){
+                if (connection != null) {
                     connection.setAutoCommit(true);
                     connection.close();
                 }
             } catch (SQLException e) {
-                logger.error(DATABASE_ERROR, e);
+                logger.error("database access error occurred or error parsing resultSet", e);
             }
         }
     }
 
     @Override
-    public User update(User entity) {
+    public long findChatIdByUserId(long userId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SQL_FIND_CHAT_ID_BY_USER_ID)) {
+            statement.setLong(1, userId);
+            ResultSet resultSet = statement.executeQuery();
 
+            long chatId = 0;
+            if (resultSet.next()) {
+                chatId = resultSet.getLong(1);
+            }
 
-        return null;  // todo:
+            return chatId;
+
+        } catch (SQLException e) {
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
     }
 }
