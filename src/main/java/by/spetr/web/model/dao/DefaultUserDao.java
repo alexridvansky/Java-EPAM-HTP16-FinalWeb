@@ -21,12 +21,12 @@ import static by.spetr.web.model.dao.ColumnName.*;
 public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String SQL_SELECT_ALL_USERS
+    private static final String SQL_SELECT_ALL
             = "SELECT user_id, role, state, login, email, phone, registration_date " +
             "FROM user " +
             "INNER JOIN user_role ON role_id = user_role_id " +
             "INNER JOIN user_state ON state_id = user_state_id " +
-            "ORDER BY user_id;";
+            "ORDER BY user_id ";
     private static final String SQL_SELECT_USER_BY_ID
             = "SELECT user_id, role, state, login, email, phone, registration_date " +
             "FROM user " +
@@ -110,7 +110,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         logger.debug("findAll() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_USERS)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL)) {
 
             ResultSet resultSet = statement.executeQuery();
             List<User> users = new ArrayList<>();
