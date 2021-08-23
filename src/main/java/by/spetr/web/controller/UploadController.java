@@ -47,7 +47,6 @@ public class UploadController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("UploadController: doPost is being called, redirecting...");
         processRequest(request, response);
     }
 
