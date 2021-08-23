@@ -51,19 +51,19 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             = "INSERT INTO user_confirmation (confirmation, user_id) " +
             "VALUES (?, ?) ";
     private static final String SQL_UPDATE_STATE_BY_ID
-            = "UPDATE user SET state_id = ? WHERE user_id = ?;";
+            = "UPDATE user SET state_id = ? WHERE user_id = ? ";
     private static final String SQL_UPDATE_STATE_BY_LOGIN
-            = "UPDATE user SET state_id = ? WHERE login = ?;";
+            = "UPDATE user SET state_id = ? WHERE login = ? ";
     private static final String SQL_UPDATE_ROLE_BY_ID
-            = "UPDATE user SET role_id = ? WHERE user_id = ?;";
+            = "UPDATE user SET role_id = ? WHERE user_id = ? ";
     private static final String SQL_UPDATE_ROLE_BY_LOGIN
-            = "UPDATE user SET role_id = ? WHERE login = ?;";
+            = "UPDATE user SET role_id = ? WHERE login = ? ";
     private static final String SQL_UPDATE_PASSWORD_BY_LOGIN
             = "UPDATE user SET pass = ? WHERE carsales2.user.login = ?";
     private static final String SQL_COUNT_CHAT_ID
             = "SELECT COUNT(*) " +
             "FROM user_chat_id " +
-            "WHERE chat_id = ?";
+            "WHERE chat_id = ? ";
     private static final String SQL_FIND_CHAT_ID_BY_USER_ID
             = "SELECT * " +
             "FROM user_chat_id " +
