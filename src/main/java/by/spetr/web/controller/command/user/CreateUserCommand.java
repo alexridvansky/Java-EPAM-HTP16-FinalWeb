@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
+import static by.spetr.web.model.entity.type.UserStateType.CONFIRM;
 
 public class CreateUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -37,7 +38,21 @@ public class CreateUserCommand implements Command {
 
                 return new Router(SIGN_UP_PAGE);
             } else {
-                request.getSession().setAttribute(USER_PARAM, optionalUserDto.get());
+                UserDto userDto = optionalUserDto.get();
+                request.getSession().setAttribute(USER_PARAM, userDto);
+
+                if (userDto.getState() == CONFIRM) {
+                    Optional<String> optionalCode = userService.getConfirmCode(userDto.getUserId());
+                    if (optionalCode.isPresent()) {
+                        request.setAttribute(USER_CONFIRMATION_CODE, optionalCode.get());
+
+                        return new Router(CONFIRMATION_PAGE);
+                    } else {
+                        request.setAttribute(FEEDBACK_MESSAGE_PARAM, "There's no confirmation code for this user");
+
+                        return new Router(ERROR_PAGE);
+                    }
+                }
 
                 return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
             }

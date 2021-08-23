@@ -33,7 +33,6 @@ public class SignInCommand implements Command {
 
             if (optionalUser.isPresent()) {
                 request.getSession().setAttribute(USER_PARAM, optionalUser.get());
-                form.setSuccess(true);
                 if (optionalUser.get().getState() == CONFIRM) {
                     Optional<String> optionalCode = userService.getConfirmCode(optionalUser.get().getUserId());
                     if (optionalCode.isPresent()) {
