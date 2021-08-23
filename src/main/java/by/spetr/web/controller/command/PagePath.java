@@ -3,7 +3,6 @@ package by.spetr.web.controller.command;
 public class PagePath {
     public static final String ADD_VEHICLE_PAGE = "/jsp/add_vehicle.jsp";
     public static final String ADD_VEHICLE_PHOTO_PAGE = "/jsp/add_vehicle_photo.jsp";
-    public static final String ADD_PHOTO_PAGE = "/jsp/add_vehicle_photo.jsp";
     public static final String SIGN_UP_PAGE = "/jsp/sign_up.jsp";
     public static final String PASSWORD_RECOVERY_PAGE = "jsp/password_recovery.jsp";
     public static final String PASSWORD_CHANGE_PAGE = "jsp/password_change.jsp";
