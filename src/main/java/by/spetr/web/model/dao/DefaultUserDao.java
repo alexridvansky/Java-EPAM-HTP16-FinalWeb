@@ -21,35 +21,24 @@ import static by.spetr.web.model.dao.ColumnName.*;
 public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String SQL_SELECT_ALL_USERS
+    private static final String SQL_SELECT_ALL
             = "SELECT user_id, role, state, login, email, phone, registration_date " +
             "FROM user " +
             "INNER JOIN user_role ON role_id = user_role_id " +
-            "INNER JOIN user_state ON state_id = user_state_id " +
-            "ORDER BY user_id;";
+            "INNER JOIN user_state ON state_id = user_state_id ";
+    private static final String SQL_ORDER_BY_USER_ID
+            = "ORDER BY user_id ";
     private static final String SQL_SELECT_USER_BY_ID
-            = "SELECT user_id, role, state, login, email, phone, registration_date " +
-            "FROM user " +
-            "INNER JOIN user_role ON role_id = user_role_id " +
-            "INNER JOIN user_state ON state_id = user_state_id " +
-            "WHERE user_id = ?;";
+            = SQL_SELECT_ALL +
+            "WHERE user_id = ? ";
     private static final String SQL_SELECT_USER_BY_LOGIN
-            = "SELECT user_id, role, state, login, email, phone, registration_date " +
-            "FROM user " +
-            "INNER JOIN user_role ON role_id = user_role_id " +
-            "INNER JOIN user_state ON state_id = user_state_id " +
+            = SQL_SELECT_ALL +
             "WHERE login = ?;";
     private static final String SQL_SELECT_USER_BY_EMAIL
-            = "SELECT user_id, role, state, login, email, phone, registration_date " +
-            "FROM user " +
-            "INNER JOIN user_role ON role_id = user_role_id " +
-            "INNER JOIN user_state ON state_id = user_state_id " +
+            = SQL_SELECT_ALL +
             "WHERE email = ?;";
     private static final String SQL_SELECT_USER_BY_PHONE
-            = "SELECT user_id, role, state, login, email, phone, registration_date " +
-            "FROM user " +
-            "INNER JOIN user_role ON role_id = user_role_id " +
-            "INNER JOIN user_state ON state_id = user_state_id " +
+            = SQL_SELECT_ALL +
             "WHERE phone = ?;";
     private static final String SQL_PASSWORD_FINDER
             = "SELECT pass " +
@@ -110,7 +99,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         logger.debug("findAll() method been called");
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_USERS)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL + SQL_ORDER_BY_USER_ID)) {
 
             ResultSet resultSet = statement.executeQuery();
             List<User> users = new ArrayList<>();
@@ -525,6 +514,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             }
 
             return Optional.ofNullable(confirmationCode);
+
         } catch (SQLException e) {
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
