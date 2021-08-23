@@ -37,6 +37,7 @@ public class CommandProvider {
         commands.put(SHOW_COLOR_CREATION_PAGE, new ShowColorCreationPageCommand());
         commands.put(SHOW_MAKE_CREATION_PAGE, new ShowMakeCreationPageCommand());
         commands.put(SHOW_MODEL_CREATION_PAGE, new ShowModelCreationPageCommand());
+        commands.put(SHOW_CHANGE_PASSWORD_PAGE, new ShowChangePasswordPageCommand());
         commands.put(UPDATE_VEHICLE_ADS, new UpdateVehicleAdsCommand());
         commands.put(UPLOAD_VEHICLE_PHOTO, new UploadVehiclePhotoCommand());
         commands.put(CREATE_USER, new CreateUserCommand());

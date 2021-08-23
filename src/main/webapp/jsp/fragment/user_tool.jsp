@@ -38,6 +38,15 @@
                 </li>
             </c:when>
         </c:choose>
+        <c:choose>
+            <c:when test="${sessionScope.user.role == 'USER' || sessionScope.user.role == 'MODERATOR'}">
+                <li>
+                    <a href="${abs}/controller?command=show_change_password_page" class="dropdown-item text-dark">
+                            change password
+                    </a>
+                </li>
+            </c:when>
+        </c:choose>
         <li>
             <hr class="dropdown-divider">
         </li>
