@@ -152,6 +152,15 @@ public interface UserService {
     boolean recoverUserPassword(UserForm form) throws ServiceException;
 
     /**
+     * is user to change current user password to a new one
+     *
+     * @param form UserRegForm contains old and new passwords
+     * @return true if changing was allowed and went successfully
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    boolean changeUserPassword(UserRegForm form) throws ServiceException;
+
+    /**
      * method sets up a new password for user by username
      *
      * @param login username of the user

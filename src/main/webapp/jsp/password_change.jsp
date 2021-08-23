@@ -35,7 +35,7 @@
                             <div class="input-group has-validation">
                                 <input type="password" class="form-control" id="old_pass" name="old_pass"
                                        placeholder="${old_pass}" autocomplete="off"
-                                       pattern="${password_regexp}">
+                                       pattern="${password_regexp}" required>
                                 <div class="invalid-feedback">
                                     ${old_pass_req}
                                 </div>

@@ -1,6 +1,6 @@
 package by.spetr.web.validator;
 
-import by.spetr.web.util.PropertyUtil;
+import by.spetr.web.util.PropertyReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +14,7 @@ public class UserValidator {
     private static final String REGEXP_EMAIL = "regexp.user.email";
     private static final String REGEXP_PHONE = "regexp.user.phone";
 
-    private static final PropertyUtil PROPERTY_UTIL = PropertyUtil.getInstance();
+    private static final PropertyReader PROPERTY_UTIL = PropertyReader.getInstance();
 
     private UserValidator() {}
 

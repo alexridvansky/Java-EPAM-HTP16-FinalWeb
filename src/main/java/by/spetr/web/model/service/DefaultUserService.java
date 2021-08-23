@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static by.spetr.web.model.entity.type.UserRoleType.GUEST;
 import static by.spetr.web.model.entity.type.UserRoleType.ROOT;
 import static by.spetr.web.model.entity.type.UserStateType.DISABLED;
 import static by.spetr.web.model.service.ServiceMessageList.*;
@@ -344,6 +345,57 @@ public class DefaultUserService implements UserService {
 
         } catch (DaoException e) {
             throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
+    public boolean changeUserPassword(UserRegForm form) throws ServiceException {
+        try {
+            Optional<User> optionalUser = userDao.findByLogin(form.getLogin());
+            if (optionalUser.isEmpty()) {
+                throw new ServiceException("User not found");
+            }
+
+            User user = optionalUser.get();
+            if (user.getRole() == ROOT || user.getRole() == GUEST) {
+                form.setFeedbackMsg("It's forbidden for such user to change their password");
+                return false;
+            } else if (user.getState() == DISABLED) {
+                form.setFeedbackMsg("Disabled user's can't logIn and change password as well");
+                return false;
+            }
+
+            if (!form.getPassword().equals(form.getPasswordRepeat())) {
+                form.setFeedbackMsg("Entered new password and new password repeat are different");
+                return false;
+            } else if (!UserValidator.validatePassword(form.getPassword())) {
+                form.setFeedbackMsg("Entered password doesn't match requirements");
+            }
+
+            Optional<String> optionalOldHashedPassFromDB = userDao.findUserPassword(user.getLogin());
+            if (optionalOldHashedPassFromDB.isEmpty()) {
+                throw new ServiceException("Couldn't verify user's password");
+            }
+
+            if (!UserValidator.validatePassword(form.getOldPassword())) {
+                form.setFeedbackMsg("Old password doesn't match requirements");
+            }
+
+            String oldHashedPasswordFromDB = optionalOldHashedPassFromDB.get();
+            if (BCrypt.checkpw(form.getPassword(), oldHashedPasswordFromDB)) {
+                form.setFeedbackMsg("Entered old password is incorrect");
+                return false;
+            }
+
+            boolean result = updateUserPassword(form.getLogin(), form.getPassword());
+
+            if (result) {
+                form.setSuccess(true);
+            }
+            return result;
+
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 

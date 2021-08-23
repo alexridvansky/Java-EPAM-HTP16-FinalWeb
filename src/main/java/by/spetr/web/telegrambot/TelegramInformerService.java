@@ -2,7 +2,7 @@ package by.spetr.web.telegrambot;
 
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.UserService;
-import by.spetr.web.util.PropertyUtil;
+import by.spetr.web.util.PropertyReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -38,11 +38,11 @@ public final class TelegramInformerService extends TelegramLongPollingBot implem
     private static TelegramInformerService instance;
 
     static {
-        BOT_TOKEN = PropertyUtil.getInstance().getBotProperty(BOT_TOKEN_PROPERTY);
-        BOT_NAME = PropertyUtil.getInstance().getBotProperty(BOT_NAME_PROPERTY);
-        BOT_CHAT_ID = PropertyUtil.getInstance().getBotProperty(BOT_CHAT_ID_PROPERTY);
-        MAX_ATT_COUNT = Integer.parseInt(PropertyUtil.getInstance().getBotProperty(MAX_ATT_COUNT_PROPERTY));
-        ATT_EXPIRES_TIME = Integer.parseInt(PropertyUtil.getInstance().getBotProperty(ATT_EXPIRES_TIME_PROPERTY));
+        BOT_TOKEN = PropertyReader.getInstance().getBotProperty(BOT_TOKEN_PROPERTY);
+        BOT_NAME = PropertyReader.getInstance().getBotProperty(BOT_NAME_PROPERTY);
+        BOT_CHAT_ID = PropertyReader.getInstance().getBotProperty(BOT_CHAT_ID_PROPERTY);
+        MAX_ATT_COUNT = Integer.parseInt(PropertyReader.getInstance().getBotProperty(MAX_ATT_COUNT_PROPERTY));
+        ATT_EXPIRES_TIME = Integer.parseInt(PropertyReader.getInstance().getBotProperty(ATT_EXPIRES_TIME_PROPERTY));
     }
 
     public static TelegramInformerService getInstance() {

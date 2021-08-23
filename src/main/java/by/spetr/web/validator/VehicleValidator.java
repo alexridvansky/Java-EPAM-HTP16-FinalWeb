@@ -1,12 +1,12 @@
 package by.spetr.web.validator;
 
-import by.spetr.web.util.PropertyUtil;
+import by.spetr.web.util.PropertyReader;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VehicleValidator {
-    private static final PropertyUtil PROPERTY_UTIL = PropertyUtil.getInstance();
+    private static final PropertyReader PROPERTY_UTIL = PropertyReader.getInstance();
     private static final String REGEXP_MAKE = "regexp.vehicle_make";
     private static final String REGEXP_MODEL = "regexp.vehicle_model";
     private static final String REGEXP_MODEL_YEAR = "regexp.vehicle_model_year";

@@ -10,8 +10,8 @@ public class PasswordGenerator {
     private static final int PASS_LENGTH;
 
     static {
-        CHAR_SET = PropertyUtil.getInstance().getSiteProperty(PASS_CHARSET_PROPERTY);
-        PASS_LENGTH = Integer.parseInt(PropertyUtil.getInstance().getSiteProperty(PASS_LENGTH_PROPERTY));
+        CHAR_SET = PropertyReader.getInstance().getSiteProperty(PASS_CHARSET_PROPERTY);
+        PASS_LENGTH = Integer.parseInt(PropertyReader.getInstance().getSiteProperty(PASS_LENGTH_PROPERTY));
     }
 
     private PasswordGenerator() {}

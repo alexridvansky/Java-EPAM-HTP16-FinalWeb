@@ -12,9 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Objects;
-import java.util.Optional;
-
 import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
 
@@ -25,38 +22,57 @@ public class PasswordChangeCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
         logger.debug("PasswordChangeCommand called");
-        String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
 
-        UserRegForm form = (UserRegForm) doForm(request);
+        UserRegForm form = null;
 
         try {
-            Optional<UserDto> optionalUserDto = userService.registerUser(form);
-            if (optionalUserDto.isEmpty()) {
-                request.setAttribute(USER_REGISTRATION_DATA_PARAM, form);
-                request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
+            form = (UserRegForm) doForm(request);
 
-                return new Router(SIGN_UP_PAGE);
+            boolean result = userService.changeUserPassword(form);
+
+            request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
+
+            if (result) {
+                return new Router(MAIN_PAGE, Router.RouterType.REDIRECT);
             } else {
-                request.getSession().setAttribute(USER_PARAM, optionalUserDto.get());
-
-                return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
+                return new Router(PASSWORD_CHANGE_PAGE);
             }
+
         } catch (ServiceException e) {
-            logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
+            logger.error(e);
 
             return new Router(ERROR_PAGE);
+
+        } catch (IllegalArgumentException e) {
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, e.getMessage());
+            logger.error(e);
+
+            return new Router(PASSWORD_CHANGE_PAGE);
         }
     }
 
     @Override
     public DefaultForm doForm(HttpServletRequest request) {
         UserRegForm form = new UserRegForm();
-        form.setLogin(request.getParameter(REG_USER_NAME_PARAM));
-        form.setPassword(request.getParameter(USER_PASSWORD_PARAM));
-        form.setPasswordRepeat(request.getParameter(USER_PASSWORD_AGAIN_PARAM));
-        form.setEmail(request.getParameter(USER_EMAIL_PARAM));
-        form.setPhone(request.getParameter(USER_PHONE_PARAM));
+
+        UserDto user = (UserDto) request.getSession().getAttribute(USER_PARAM);
+        String oldPassword = request.getParameter(USER_OLD_PASSWORD);
+        String newPassword = request.getParameter(USER_NEW_PASSWORD);
+        String newPasswordRepeat = request.getParameter(USER_NEW_PASSWORD_REPEAT);
+
+        if (oldPassword == null || newPassword == null || newPasswordRepeat == null
+                || oldPassword.isBlank() || newPassword.isBlank() || newPasswordRepeat.isBlank()
+                || user == null || user.getLogin() == null) {
+
+            throw new IllegalArgumentException("Arguments doesn't match requirements");
+        }
+
+        form.setLogin(user.getLogin());
+        form.setOldPassword(oldPassword);
+        form.setPassword(newPassword);
+        form.setPasswordRepeat(newPasswordRepeat);
 
         return form;
     }

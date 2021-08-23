@@ -7,7 +7,6 @@ import by.spetr.web.model.dto.VehiclePreviewDto;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
-import by.spetr.web.util.PropertyUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

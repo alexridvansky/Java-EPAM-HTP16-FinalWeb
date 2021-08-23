@@ -3,15 +3,15 @@ package by.spetr.web.util;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class PropertyUtil {
-    private static final PropertyUtil instance = new PropertyUtil();
+public class PropertyReader {
+    private static final PropertyReader instance = new PropertyReader();
     private static final ResourceBundle REGEXP = ResourceBundle.getBundle("regexp", Locale.getDefault());
     private static final ResourceBundle BOT = ResourceBundle.getBundle("bot", Locale.getDefault());
     public static final ResourceBundle SITE = ResourceBundle.getBundle("site", Locale.getDefault());
 
-    private PropertyUtil() {}
+    private PropertyReader() {}
 
-    public static PropertyUtil getInstance() {
+    public static PropertyReader getInstance() {
         return instance;
     }
 
