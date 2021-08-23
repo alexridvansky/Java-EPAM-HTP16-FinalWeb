@@ -77,7 +77,8 @@ public class CommandFilter implements Filter {
                 requestedCommand = CommandType.valueOf(command.toUpperCase());
 
                 if (!accessControlService.commandPermission(user.getRole(), requestedCommand)) {
-                    logger.error("Access forbidden. Redirect to index");
+                    logger.error("Access for {} to the {} is forbidden. Redirect to index",
+                            user.getRole(), requestedCommand);
                     httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + indexPath);
                     return;
                 }
