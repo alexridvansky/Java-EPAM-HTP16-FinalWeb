@@ -9,6 +9,7 @@ public class ConfirmationCodeGenerator {
 
     public static String generateConfirmCode() {
         int random = 100000 + ConfirmationCodeGenerator.random.nextInt(900000);
+
         return String.valueOf(random);
     }
 }
