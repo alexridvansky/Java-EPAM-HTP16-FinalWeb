@@ -108,7 +108,6 @@ public class AddNewVehicleCommand implements Command {
             return form;
 
         } catch (NumberFormatException | NullPointerException e) {
-            logger.error("Wrong parameters' types, parsing error");
             throw new IllegalArgumentException("Wrong parameters' types, parsing error");
         }
     }
