@@ -41,7 +41,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             = SQL_SELECT_ALL +
             "WHERE owner_id = ? " +
             "AND state IN ('ENABLED', 'DISABLED', 'MODERATION') " +
-            "ORDER BY vehicle_id;";
+            "ORDER BY vehicle_id ";
     private static final String SQL_FIND_VEHICLE_COUNT_BY_USER_ID
             = "SELECT COUNT(*) " +
             "FROM vehicle " +
@@ -154,9 +154,9 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     private static final String SQL_SELECT_ALL_VEHICLES
             = SQL_SELECT_ALL + ORDER_BY_VEHICLE_ID;
     private static final String SQL_SELECT_ALL_PUBLIC_VEHICLES
-            = SQL_SELECT_ALL_VEHICLES + PUBLIC_AD_CONDITION + ORDER_BY_VEHICLE_ID;
+            = SQL_SELECT_ALL + PUBLIC_AD_CONDITION + ORDER_BY_VEHICLE_ID;
     private static final String SQL_SELECT_ALL_MODERATOR_VEHICLES
-            = SQL_SELECT_ALL_VEHICLES + MODERATOR_AD_CONDITION + ORDER_BY_VEHICLE_ID;
+            = SQL_SELECT_ALL + MODERATOR_AD_CONDITION + ORDER_BY_VEHICLE_ID;
 
     @Override
     public List<Vehicle> findAll() throws DaoException {
