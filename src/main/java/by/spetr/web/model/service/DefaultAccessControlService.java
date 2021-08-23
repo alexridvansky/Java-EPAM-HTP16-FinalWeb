@@ -47,6 +47,7 @@ public class DefaultAccessControlService implements AccessControlService {
         commandPermission.put(SHOW_MAKE_CREATION_PAGE, new ArrayList<>(List.of(ROOT)));
         commandPermission.put(SHOW_MODEL_CREATION_PAGE, new ArrayList<>(List.of(ROOT)));
         commandPermission.put(SHOW_COLOR_CREATION_PAGE, new ArrayList<>(List.of(ROOT)));
+        commandPermission.put(SHOW_PASSWORD_CHANGE_PAGE, new ArrayList<>(List.of(USER, MODERATOR)));
         commandPermission.put(UPDATE_VEHICLE_ADS, new ArrayList<>(List.of(USER)));
         commandPermission.put(UPLOAD_VEHICLE_PHOTO, new ArrayList<>(List.of(USER)));
         commandPermission.put(GO_TO_MAIN_PAGE, new ArrayList<>(List.of(ROOT, MODERATOR, USER, GUEST)));
@@ -56,6 +57,7 @@ public class DefaultAccessControlService implements AccessControlService {
         commandPermission.put(SIGN_IN, new ArrayList<>(List.of(GUEST)));
         commandPermission.put(LOG_OUT, new ArrayList<>(List.of(ROOT, MODERATOR, USER)));
         commandPermission.put(PASSWORD_RESET, new ArrayList<>(List.of(GUEST)));
+        commandPermission.put(PASSWORD_CHANGE, new ArrayList<>(List.of(USER, MODERATOR)));
         commandPermission.put(CHANGE_LOCALE, new ArrayList<>(List.of(ROOT, MODERATOR, USER, GUEST)));
         commandPermission.put(CHANGE_USER_STATE, new ArrayList<>(List.of(ROOT, MODERATOR)));
         commandPermission.put(CHANGE_USER_ROLE, new ArrayList<>(List.of(ROOT, MODERATOR)));

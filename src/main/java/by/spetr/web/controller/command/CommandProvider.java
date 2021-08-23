@@ -2,7 +2,7 @@ package by.spetr.web.controller.command;
 
 import by.spetr.web.controller.command.redirect.DefaultCommand;
 import by.spetr.web.controller.command.redirect.GoToMainPageCommand;
-import by.spetr.web.controller.command.user.GoToSignUpPageCommand;
+import by.spetr.web.controller.command.user.ShowSignUpPageCommand;
 import by.spetr.web.controller.command.vehicle.ShowVehicleCreationPageCommand;
 import by.spetr.web.controller.command.user.*;
 import by.spetr.web.controller.command.vehicle.*;
@@ -24,9 +24,9 @@ public class CommandProvider {
         commands.put(ADD_NEW_MAKE, new AddNewMakeCommand());
         commands.put(ADD_NEW_MODEL, new AddNewModelCommand());
         commands.put(ADD_NEW_VEHICLE, new AddNewVehicleCommand());
-        commands.put(GO_TO_SIGN_UP_PAGE, new GoToSignUpPageCommand());
+        commands.put(GO_TO_SIGN_UP_PAGE, new ShowSignUpPageCommand());
         commands.put(GO_TO_MAIN_PAGE, new GoToMainPageCommand());
-        commands.put(GO_TO_RECOVERY_PASSWORD_PAGE, new GoToRecoveryPasswordPageCommand());
+        commands.put(GO_TO_RECOVERY_PASSWORD_PAGE, new ShowRecoveryPasswordPageCommand());
         commands.put(SHOW_USER_LIST_ADMIN, new ShowUserListAdminCommand());
         commands.put(SHOW_VEHICLE_INFO, new ShowVehicleInfoCommand());
         commands.put(SHOW_VEHICLE_LIST_ADMIN, new ShowVehicleListAdmCommand());
@@ -43,6 +43,7 @@ public class CommandProvider {
         commands.put(SIGN_IN, new SignInCommand());
         commands.put(LOG_OUT, new LogOutCommand());
         commands.put(PASSWORD_RESET, new PasswordResetCommand());
+        commands.put(PASSWORD_CHANGE, new PasswordChangeCommand());
         commands.put(CHANGE_LOCALE, new ChangeLocaleCommand());
         commands.put(CHANGE_USER_STATE, new ChangeUserStateCommand());
         commands.put(CHANGE_USER_ROLE, new ChangeUserRoleCommand());

@@ -2,6 +2,7 @@ package by.spetr.web.model.form;
 
 public class UserRegForm extends DefaultForm {
     private String login;
+    private String oldPassword;
     private String password;
     private String passwordRepeat;
     private String email;
@@ -13,6 +14,14 @@ public class UserRegForm extends DefaultForm {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
     }
 
     public String getPassword() {
