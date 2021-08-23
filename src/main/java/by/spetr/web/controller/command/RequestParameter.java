@@ -12,9 +12,13 @@ public final class RequestParameter {
     public static final String USER_ROLE_PARAM = "new_role";
     public static final String USER_PASSWORD_PARAM = "password";
     public static final String USER_PASSWORD_AGAIN_PARAM = "password_again";
+    public static final String USER_OLD_PASSWORD = "old_pass";
+    public static final String USER_NEW_PASSWORD = "new_pass";
+    public static final String USER_NEW_PASSWORD_REPEAT = "new_pass_repeat";
     public static final String USER_EMAIL_PARAM = "email";
     public static final String USER_PHONE_PARAM = "phone";
     public static final String USER_REGISTRATION_DATA_PARAM = "reg_data";
+    public static final String USER_CONFIRMATION_CODE = "conf_code";
     
     // Vehicle params
     public static final String VEHICLE_LIST_PARAM = "vehicles";
