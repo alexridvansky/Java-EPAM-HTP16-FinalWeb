@@ -17,14 +17,14 @@ import static by.spetr.web.model.dao.ColumnName.*;
 public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDao {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String SQL_SELECT_ALL_VEHICLES
+    private static final String SQL_SELECT_ALL
             = "SELECT vehicle_id, state, owner_id, vehicle_model_id, model, vehicle_make_id, make, modelyear, " +
             "mileage, vehicle_color_id, color, price, powertrain, transmission, drive, displacement, power, comment, " +
             "creation_date " +
             "FROM vehicle " +
             "INNER JOIN vehicle_state ON state_id = vehicle_state_id " +
             "INNER JOIN vehicle_model ON model_id = vehicle_model_id " +
-            "INNER JOIN vehicle_make ON vehicle_model.make_id = vehicle_make_id " +
+            "INNER JOIN vehicle_make ON make_id = vehicle_make_id " +
             "INNER JOIN vehicle_color ON color_id = vehicle_color_id " +
             "INNER JOIN vehicle_powertrain ON powertrain_id = vehicle_powertrain_id " +
             "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
@@ -34,17 +34,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "FROM vehicle " +
             "INNER JOIN vehicle_state ON state_id = vehicle_state_id ";
     private static final String SQL_SELECT_VEHICLES_BY_USER_ID
-            = "SELECT vehicle_id, state, owner_id, vehicle_model_id, model, vehicle_make_id, make, modelyear, " +
-            "mileage, vehicle_color_id, color, price, powertrain, transmission, drive, displacement, power, comment, " +
-            "creation_date " +
-            "FROM vehicle " +
-            "INNER JOIN vehicle_state ON state_id = vehicle_state_id " +
-            "INNER JOIN vehicle_model ON model_id = vehicle_model_id " +
-            "INNER JOIN vehicle_make ON make_id = vehicle_make_id " +
-            "INNER JOIN vehicle_color ON color_id = vehicle_color_id " +
-            "INNER JOIN vehicle_powertrain ON powertrain_id = vehicle_powertrain_id " +
-            "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
-            "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
+            = SQL_SELECT_ALL +
             "WHERE owner_id = ? " +
             "AND state IN ('ENABLED', 'DISABLED', 'MODERATION') " +
             "ORDER BY vehicle_id;";
@@ -53,17 +43,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "FROM vehicle " +
             "WHERE owner_id = ?;";
     private static final String SQL_SELECT_VEHICLE_BY_ID
-            = "SELECT vehicle_id, state, owner_id, vehicle_model_id, model, vehicle_make_id, make, modelyear, " +
-            "mileage, vehicle_color_id, color, price, powertrain, transmission, drive, displacement, power, comment, " +
-            "creation_date " +
-            "FROM vehicle " +
-            "INNER JOIN vehicle_state ON state_id = vehicle_state_id " +
-            "INNER JOIN vehicle_model ON model_id = vehicle_model_id " +
-            "INNER JOIN vehicle_make ON make_id = vehicle_make_id " +
-            "INNER JOIN vehicle_color ON color_id = vehicle_color_id " +
-            "INNER JOIN vehicle_powertrain ON powertrain_id = vehicle_powertrain_id " +
-            "INNER JOIN vehicle_transmission ON transmission_id = vehicle_transmission_id " +
-            "INNER JOIN vehicle_drive ON drive_id = vehicle_drive_id " +
+            = SQL_SELECT_ALL +
             "WHERE vehicle_id = ?;";
     private static final String SQL_IS_MAKE_EXIST_BY_NAME
             = "SELECT EXISTS" +
@@ -167,6 +147,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "AND user.state_id = 2 ";
     private static final String ORDER_BY_VEHICLE_ID
             = "ORDER BY vehicle_id ";
+    private static final String SQL_SELECT_ALL_VEHICLES
+            = SQL_SELECT_ALL + ORDER_BY_VEHICLE_ID;
     private static final String SQL_SELECT_ALL_PUBLIC_VEHICLES
             = SQL_SELECT_ALL_VEHICLES + PUBLIC_AD_CONDITION + ORDER_BY_VEHICLE_ID;
     private static final String SQL_SELECT_ALL_MODERATOR_VEHICLES
@@ -190,10 +172,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return vehicles;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -217,10 +197,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return vehicles;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -244,12 +222,11 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return vehicles;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
-        }    }
+        }
+    }
 
     @Override
     public int findPublicVehicleListSize() throws DaoException {
@@ -265,11 +242,9 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return count;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(e.getMessage(), e);
-            throw new DaoException(e.getMessage(), e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
 
@@ -287,12 +262,11 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return count;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error(e.getMessage(), e);
-            throw new DaoException(e.getMessage(), e);
-        }    }
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
 
     @Override
     public List<Vehicle> findByUserId(long userId) throws DaoException {
@@ -314,10 +288,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return vehicles;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -339,10 +311,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return count;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
 
@@ -369,10 +339,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return Optional.ofNullable(vehicle);
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -434,10 +402,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -452,10 +418,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return resultSet.next();
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -481,10 +445,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return makes;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -499,10 +461,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return (preparedStatement.executeUpdate() == 1);
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -536,10 +496,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return models;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -554,10 +512,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return resultSet.next();
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -572,10 +528,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return resultSet.next();
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -590,10 +544,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return resultSet.next();
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -608,10 +560,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return resultSet.next();
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -626,10 +576,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return resultSet.next();
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -644,10 +592,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return resultSet.next();
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -662,10 +608,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return resultSet.next();
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -689,10 +633,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             }
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -720,15 +662,12 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             if (optionalVehicleColor.isPresent()) {
                 return optionalVehicleColor.get();
             } else {
-                logger.error("New color entry can't be created or re-read afterward");
                 throw new DaoException("New color entry can't be created or re-read afterward");
             }
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -744,10 +683,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return (preparedStatement.executeUpdate() == 1);
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -795,10 +732,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             }
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -821,10 +756,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return result > 0;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -845,10 +778,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             statement.executeBatch();
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
 
@@ -873,10 +804,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return Optional.ofNullable(imgPath);
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -900,10 +829,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return imagePaths;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -928,10 +855,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return optionList;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -959,26 +884,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return optionList;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
-            throw new DaoException("error of getting connection from ConnectionPool", e);
-        }
-    }
-
-    @Override
-    public List<VehicleOption> reSetOptionList(long vehicleId) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement optionsCreateStatement = connection.prepareStatement(SQL_INSERT_OPTION)) {
-
-            return null; // todo:
-
-        } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
-            throw new DaoException("database access error occurred or error parsing resultSet", e);
-        } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
@@ -1005,10 +912,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             return colorList;
 
         } catch (SQLException e) {
-            logger.error("database access error occurred or error parsing resultSet", e);
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
-            logger.error("error of getting connection from ConnectionPool", e);
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }
