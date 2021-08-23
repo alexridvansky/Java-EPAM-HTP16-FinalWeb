@@ -181,11 +181,4 @@ public interface UserDao {
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     long findChatIdByUserId(long chatId) throws DaoException;
-
-    /**
-     * @param entity
-     * @return
-     * @throws DaoException
-     */
-    User update(User entity) throws DaoException;
 }
