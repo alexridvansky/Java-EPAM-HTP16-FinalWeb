@@ -38,15 +38,15 @@ public class AddNewVehicleCommand implements Command {
                 request.setAttribute(FORM_PARAM, form);
                 request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
                 request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
+
                 return new Router(ADD_VEHICLE_PAGE);
             }
-
-
         } catch (ServiceException e) {
             logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
+
         } catch (IllegalArgumentException e) {
             logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
