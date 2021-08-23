@@ -23,9 +23,9 @@ public class BCryptTest {
 
     @Test
     public void testGeneratingUserPass() {
-        String hashed_pass_once = BCrypt.hashpw(PASSWORD_USER_TO_BE_HASHED,BCrypt.gensalt());
-        String hashed_pass_twice = BCrypt.hashpw(PASSWORD_USER_TO_BE_HASHED,BCrypt.gensalt());
-        Assert.assertNotEquals(hashed_pass_once, hashed_pass_twice);
+        String hashed_pass_one = BCrypt.hashpw(PASSWORD_USER_TO_BE_HASHED,BCrypt.gensalt());
+        String hashed_pass_two = BCrypt.hashpw(PASSWORD_USER_TO_BE_HASHED,BCrypt.gensalt());
+        Assert.assertNotEquals(hashed_pass_one, hashed_pass_two);
     }
 
     @Test
