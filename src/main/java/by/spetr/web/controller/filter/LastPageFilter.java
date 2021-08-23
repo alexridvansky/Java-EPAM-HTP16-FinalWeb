@@ -35,6 +35,8 @@ public class LastPageFilter implements Filter {
         // pages, listed below, won't be stored as a last visited page
         ignoreList.add("/jsp/vehicle_info.jsp");
         ignoreList.add("/jsp/sign_up.jsp");
+        ignoreList.add("/jsp/password_change.jsp");
+        ignoreList.add("/jsp/password_recovery.jsp");
     }
 
     @Override
