@@ -1,6 +1,7 @@
 package by.spetr.web.model.dao;
 
-import by.spetr.web.model.entity.*;
+import by.spetr.web.model.entity.Vehicle;
+import by.spetr.web.model.entity.VehicleBuilder;
 import by.spetr.web.model.entity.type.*;
 import by.spetr.web.model.exception.ConnectionPoolException;
 import by.spetr.web.model.exception.DaoException;
@@ -10,7 +11,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.time.Year;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static by.spetr.web.model.dao.ColumnName.*;
 
