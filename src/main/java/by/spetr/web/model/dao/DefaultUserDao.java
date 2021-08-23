@@ -69,6 +69,8 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             = "UPDATE user SET role_id = ? WHERE user_id = ?;";
     private static final String SQL_UPDATE_ROLE_BY_LOGIN
             = "UPDATE user SET role_id = ? WHERE login = ?;";
+    private static final String SQL_UPDATE_PASSWORD_BY_LOGIN
+            = "UPDATE user SET pass = ? WHERE carsales2.user.login = ?";
     private static final String SQL_COUNT_CHAT_ID
             = "SELECT COUNT(*) " +
             "FROM user_chat_id " +
@@ -446,6 +448,23 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             throw new DaoException("database access error occurred or error parsing resultSet", e);
         } catch (ConnectionPoolException e) {
             logger.error("error of getting connection from ConnectionPool", e);
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public boolean updateUserPassword(String login, String hashedPassword) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_PASSWORD_BY_LOGIN)) {
+            statement.setString(1, hashedPassword);
+            statement.setString(2, login);
+
+            int result = statement.executeUpdate();
+            return result == 1;
+
+        } catch (SQLException e) {
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
             throw new DaoException("error of getting connection from ConnectionPool", e);
         }
     }

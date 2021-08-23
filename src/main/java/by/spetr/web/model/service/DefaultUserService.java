@@ -13,6 +13,7 @@ import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.UserRegForm;
 import by.spetr.web.util.BCrypt;
 import by.spetr.web.util.ConfirmationCodeGenerator;
+import by.spetr.web.util.PasswordGenerator;
 import by.spetr.web.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -303,26 +304,37 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void passwordRecover(UserForm form) throws ServiceException {
+    public boolean recoverUserPassword(UserForm form) throws ServiceException {
 
         try {
             Optional<User> optionalUser = userDao.findByLogin(form.getUserName());
             if (optionalUser.isEmpty()) {
                 logger.warn("Password recovery was requested for not existing user");
-                return;
+                return false;
             }
 
             long chatId = userDao.findChatIdByUserId(optionalUser.get().getUserId());
             if (chatId == 0) {
                 logger.warn("No chatId stored in the db for given user, that's strange...");
-                return;
+                return false;
             }
 
+            String generatedPassword = PasswordGenerator.generate();
+            return updateUserPassword(form.getUserName(), generatedPassword);
 
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
+    }
 
+    @Override
+    public boolean updateUserPassword(String login, String password) throws ServiceException {
+        try {
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            return userDao.updateUserPassword(login, hashedPassword);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 }

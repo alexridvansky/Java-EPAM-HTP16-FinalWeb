@@ -146,9 +146,20 @@ public interface UserService {
      * this method is used to generate a new password and sent it to the user via telegram bot
      *
      * @param form UserForm contains username (login)
+     * @return true if password restoring and storing went successfully
      * @throws ServiceException when error occurred on DAO layer
      */
-    void passwordRecover(UserForm form) throws ServiceException;
+    boolean recoverUserPassword(UserForm form) throws ServiceException;
+
+    /**
+     * method sets up a new password for user by username
+     *
+     * @param login username of the user
+     * @param password a new password to be set up
+     * @return true if password changing went successfully
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    boolean updateUserPassword(String login, String password) throws ServiceException;
 
     static UserService getInstance() {
         return DefaultUserService.getInstance();

@@ -4,6 +4,7 @@ import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.DaoException;
+import by.spetr.web.model.exception.ServiceException;
 
 import java.util.List;
 import java.util.Optional;
@@ -143,6 +144,16 @@ public interface UserDao {
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean updateRole(String userName, UserRoleType userRole) throws DaoException;
+
+    /**
+     * method stores a new password to the db
+     *
+     * @param login username of the user
+     * @param hashedPassword a new password to be set up
+     * @return true if password changing went successfully
+     * @throws DaoException when error occurred on DAO layer
+     */
+    boolean updateUserPassword(String login, String hashedPassword) throws DaoException;
 
     /**
      * Returns confirmation secret key

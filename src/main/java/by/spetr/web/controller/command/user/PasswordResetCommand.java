@@ -22,7 +22,7 @@ public class PasswordResetCommand implements Command {
     public Router execute(HttpServletRequest request) {
         try {
             UserForm form = (UserForm) doForm(request);
-            userService.passwordRecover(form);
+            userService.recoverUserPassword(form);
 
             // there is no additional informing but case when error occurred on service or dao layer.
             // it's done on purpose to not to let someone know whether username given present in the system or not.
