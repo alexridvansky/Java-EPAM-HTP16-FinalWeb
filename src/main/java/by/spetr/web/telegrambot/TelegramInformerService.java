@@ -82,7 +82,7 @@ public final class TelegramInformerService extends TelegramLongPollingBot implem
     @Override
     public void sendMessage(String chatId, String text) {
         try {
-            execute(new SendMessage(BOT_CHAT_ID, text));
+            execute(new SendMessage(chatId, text));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

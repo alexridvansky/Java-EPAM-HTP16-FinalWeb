@@ -4,7 +4,6 @@ import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.DaoException;
-import by.spetr.web.model.exception.ServiceException;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,8 +68,8 @@ public interface UserDao {
     /**
      * is used to create a new user with user.Role = user and user.State = confirmation.
      *
-     * @param user {@code User} class
-     * @param hashedPassword hashed password to the user account
+     * @param user             {@code User} class
+     * @param hashedPassword   hashed password to the user account
      * @param confirmationCode generated confirmation code to activate the account
      * @return true if user has been created successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
@@ -148,7 +147,7 @@ public interface UserDao {
     /**
      * method stores a new password to the db
      *
-     * @param login username of the user
+     * @param login          username of the user
      * @param hashedPassword a new password to be set up
      * @return true if password changing went successfully
      * @throws DaoException when error occurred on DAO layer
@@ -168,7 +167,7 @@ public interface UserDao {
      * is used for registration confirmation by matching secret code with stored in the database
      *
      * @param chatId user's telegram chatId
-     * @param code user's secret confirmation code
+     * @param code   user's secret confirmation code
      * @return true if confirmation code matches with stored one
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
@@ -184,8 +183,6 @@ public interface UserDao {
     long findChatIdByUserId(long chatId) throws DaoException;
 
     /**
-     *
-     *
      * @param entity
      * @return
      * @throws DaoException

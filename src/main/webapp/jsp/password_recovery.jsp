@@ -21,7 +21,7 @@
         <div class="col-lg-8 col-md-8 mx-auto">
             <h2 class="fw-light py-3 text-white">${pass_rec_title}</h2>
             <form class="needs-validation row g-3" action="${abs}/controller" method="post" novalidate>
-                <input type="hidden" name="command" value="password_recovery">
+                <input type="hidden" name="command" value="password_reset">
 
                 <div class="col-12 mt-4">
                     <p class="lead text-muted">${pass_rec_promo}</p>

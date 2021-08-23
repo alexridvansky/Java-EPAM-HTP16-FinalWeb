@@ -11,6 +11,7 @@ import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.LoginForm;
 import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.UserRegForm;
+import by.spetr.web.telegrambot.InformerService;
 import by.spetr.web.util.BCrypt;
 import by.spetr.web.util.ConfirmationCodeGenerator;
 import by.spetr.web.util.PasswordGenerator;
@@ -24,11 +25,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static by.spetr.web.model.entity.type.UserRoleType.ROOT;
+import static by.spetr.web.model.entity.type.UserStateType.DISABLED;
 import static by.spetr.web.model.service.ServiceMessageList.*;
 
 public class DefaultUserService implements UserService {
     private static final Logger logger = LogManager.getLogger();
     private static final AccessControlService accessControlService = AccessControlService.getInstance();
+    private static final InformerService informerService = InformerService.getInstance();
     private static final UserDao userDao = new DefaultUserDao();
     private static DefaultUserService instance;
 
@@ -313,6 +317,15 @@ public class DefaultUserService implements UserService {
                 return false;
             }
 
+            User user = optionalUser.get();
+            if (user.getRole() == ROOT) {
+                logger.warn("Password recovery operation cannot be performed for root account");
+                return false;
+            } else if (user.getState() == DISABLED) {
+                logger.warn("Password recovery operation cannot be performed when user is blocked");
+                return false;
+            }
+
             long chatId = userDao.findChatIdByUserId(optionalUser.get().getUserId());
             if (chatId == 0) {
                 logger.warn("No chatId stored in the db for given user, that's strange...");
@@ -320,10 +333,16 @@ public class DefaultUserService implements UserService {
             }
 
             String generatedPassword = PasswordGenerator.generate();
-            return updateUserPassword(form.getUserName(), generatedPassword);
+
+            boolean result = updateUserPassword(form.getUserName(), generatedPassword);
+            if (result) {
+                informerService.sendMessage(String.valueOf(chatId), generatedPassword);
+                return true;
+            } else {
+                return false;
+            }
 
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
