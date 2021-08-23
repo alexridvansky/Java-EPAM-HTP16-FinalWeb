@@ -37,9 +37,11 @@ public class SignInCommand implements Command {
                     Optional<String> optionalCode = userService.getConfirmCode(optionalUser.get().getUserId());
                     if (optionalCode.isPresent()) {
                         request.setAttribute(USER_CONFIRMATION_CODE, optionalCode.get());
+
                         return new Router(CONFIRMATION_PAGE);
                     } else {
                         request.setAttribute(FEEDBACK_MESSAGE_PARAM, "There's no confirmation code for this user");
+
                         return new Router(ERROR_PAGE);
                     }
                 }
@@ -55,6 +57,7 @@ public class SignInCommand implements Command {
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
+
         } catch (IllegalArgumentException e) {
             logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
