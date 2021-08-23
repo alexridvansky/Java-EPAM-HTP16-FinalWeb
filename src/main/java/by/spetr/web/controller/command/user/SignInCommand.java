@@ -3,7 +3,6 @@ package by.spetr.web.controller.command.user;
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.dto.UserDto;
-import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.LoginForm;
@@ -16,7 +15,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.Objects;
 import java.util.Optional;
 
-import static by.spetr.web.controller.command.PagePath.*;
+import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
+import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
 import static by.spetr.web.model.entity.type.UserStateType.CONFIRM;
 
@@ -26,6 +26,8 @@ public class SignInCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) {
+        String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
+
         try {
             LoginForm form = (LoginForm) doForm(request);
             Optional<UserDto> optionalUser = userService.logIn(form);
@@ -45,18 +47,21 @@ public class SignInCommand implements Command {
                 }
             }
 
-
-            String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
             request.setAttribute(FEEDBACK_MESSAGE_PARAM, form.getFeedbackMsg());
             request.setAttribute(OPERATION_SUCCESS_PARAM, form.isSuccess());
 
             return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
 
-        } catch (ServiceException | IllegalArgumentException e) {
+        } catch (ServiceException e) {
             logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
+        } catch (IllegalArgumentException e) {
+            logger.error(e);
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
+
+            return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
         }
     }
 
@@ -66,7 +71,7 @@ public class SignInCommand implements Command {
         String login = request.getParameter(USER_NAME_PARAM);
         String pass = request.getParameter(USER_PASSWORD_PARAM);
 
-        if (login == null || pass == null) {
+        if (login == null || pass == null || login.isBlank() || pass.isBlank()) {
             throw new IllegalArgumentException("Illegal parameters error");
         }
 
