@@ -46,17 +46,36 @@ public class CreateUserCommand implements Command {
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
+
+        } catch (IllegalArgumentException e) {
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, e.getMessage());
+            logger.error(e);
+
+            return new Router(SIGN_UP_PAGE);
         }
     }
 
     @Override
     public DefaultForm doForm(HttpServletRequest request) {
         UserRegForm form = new UserRegForm();
-        form.setLogin(request.getParameter(REG_USER_NAME_PARAM));
-        form.setPassword(request.getParameter(USER_PASSWORD_PARAM));
-        form.setPasswordRepeat(request.getParameter(USER_PASSWORD_AGAIN_PARAM));
-        form.setEmail(request.getParameter(USER_EMAIL_PARAM));
-        form.setPhone(request.getParameter(USER_PHONE_PARAM));
+
+        String login = request.getParameter(REG_USER_NAME_PARAM);
+        String password = request.getParameter(USER_PASSWORD_PARAM);
+        String passwordRepeat = request.getParameter(USER_PASSWORD_AGAIN_PARAM);
+        String email = request.getParameter(USER_EMAIL_PARAM);
+        String phone = request.getParameter(USER_PHONE_PARAM);
+
+        if (login == null || password == null || passwordRepeat == null || email == null || phone == null
+                || login.isBlank() || password.isBlank() || passwordRepeat.isBlank() || email.isBlank() || phone.isBlank()) {
+
+            throw new IllegalArgumentException("Arguments doesn't match requirements");
+        }
+
+        form.setLogin(login);
+        form.setPassword(password);
+        form.setPasswordRepeat(passwordRepeat);
+        form.setEmail(email);
+        form.setPhone(phone);
 
         return form;
     }
