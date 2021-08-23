@@ -30,7 +30,7 @@
 
                     <div class="row g-3">
 
-                        <div class="col-6">
+                        <div class="col-12">
                             <label for="old_pass" class="form-label">${old_pass}</label>
                             <div class="input-group has-validation">
                                 <input type="password" class="form-control" id="old_pass" name="old_pass"
@@ -42,7 +42,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-12">
                             <label for="new_pass" class="form-label">${new_pass}</label>
                             <input type="password" class="form-control" id="new_pass" name="new_pass"
                                    placeholder="${new_pass}" value="" required autocomplete="off" pattern="${password_regexp}">
@@ -51,7 +51,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-12">
                             <label for="new_pass_repeat" class="form-label">${new_pass_repeat}</label>
                             <input type="password" class="form-control" id="new_pass_repeat" name="new_pass_repeat"
                                    placeholder="${new_pass_repeat}" value="" required autocomplete="off" pattern="${password_regexp}">
