@@ -17,7 +17,7 @@ public class DestroyPoolListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        logger.info("Destroy Listener has been called. Destroying connection pool...");
+        logger.info("Destroy Listener. Destroying connection pool...");
         try {
             ConnectionPool.getInstance().destroyPool();
         } catch (ConnectionPoolException e) {
