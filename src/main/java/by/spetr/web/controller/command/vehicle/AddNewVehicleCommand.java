@@ -42,11 +42,16 @@ public class AddNewVehicleCommand implements Command {
             }
 
 
-        } catch (IllegalArgumentException | ServiceException e) {
+        } catch (ServiceException e) {
             logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
+        } catch (IllegalArgumentException e) {
+            logger.error(e);
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
+
+            return new Router(ADD_VEHICLE_PAGE);
         }
 
     }
