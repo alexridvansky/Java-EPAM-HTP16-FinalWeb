@@ -460,6 +460,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
             statement.setString(2, login);
 
             int result = statement.executeUpdate();
+
             return result == 1;
 
         } catch (SQLException e) {
