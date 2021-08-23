@@ -29,6 +29,7 @@ class ColumnName {
     public static final String USER_LOGIN = "login";
     public static final String USER_PASSHASH = "pass";
     public static final String USER_PHONE = "phone";
+    public static final String CONFIRMATION = "confirmation";
     public static final String OPTION_ID = "option_id";
     public static final String OPTION_DESCRIPTION = "option_description";
     public static final String LAST_INSERT_ID = "last_insert_id()";
