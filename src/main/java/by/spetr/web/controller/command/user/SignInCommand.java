@@ -15,8 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Objects;
 import java.util.Optional;
 
-import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
-import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
+import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
 import static by.spetr.web.model.entity.type.UserStateType.CONFIRM;
 
