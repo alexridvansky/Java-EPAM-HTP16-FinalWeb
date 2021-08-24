@@ -221,12 +221,22 @@ public interface VehicleDao {
     /**
      * is used for changing status of given vehicle
      *
-     * @param vehicleId userId
+     * @param vehicleId vehicleId
      * @param vehicleState new Vehicle.state
      * @return true if vehicle status has been changed successfully
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
     boolean updateState(long vehicleId, VehicleStateType vehicleState) throws DaoException;
+
+    /**
+     * is used for changing comment of given vehicle
+     *
+     * @param vehicleId userId
+     * @param comment new Vehicle.comment
+     * @return true if vehicle comment has been changed successfully
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    boolean updateComment(long vehicleId, String comment) throws DaoException;
 
     /**
      * is used for storing Cloudinary public ids in the database

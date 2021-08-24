@@ -98,6 +98,8 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             "ORDER BY model;";
     private static final String SQL_UPDATE_VEHICLE_BY_ID
             = "UPDATE vehicle SET state_id = ? WHERE vehicle_id = ?;";
+    private static final String SQL_UPDATE_COMMENT_BY_ID
+            = "UPDATE vehicle SET comment = ? WHERE carsales2.vehicle.vehicle_id = ? ";
     private static final String SQL_CREATE_NEW_PHOTO_RECORD
             = "INSERT INTO vehicle_gallery (vehicle_id, img_path) " +
             "values (?, ?);";
@@ -745,9 +747,24 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
             int result = statement.executeUpdate();
 
-            logger.debug("fields updated: {}", result);
+            return result == 1;
 
-            return result > 0;
+        } catch (SQLException e) {
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public boolean updateComment(long vehicleId, String comment) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_COMMENT_BY_ID)) {
+            statement.setString(1, comment);
+            statement.setLong(2, vehicleId);
+            int result = statement.executeUpdate();
+
+            return result == 1;
 
         } catch (SQLException e) {
             throw new DaoException("database access error occurred or error parsing resultSet", e);
