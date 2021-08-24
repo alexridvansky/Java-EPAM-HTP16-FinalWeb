@@ -120,10 +120,7 @@
                                             </c:when>
                                             <c:otherwise>
 
-                                                <!-- Edit button-->
-                                                <a href="${abs}/controller?command=edit_vehicle&vehicle_id=${vehicle.id}"
-                                                   type="button" class="btn btn-sm btn-warning">${edit}
-                                                </a>
+
 
                                                 <!-- Add photo button-->
                                                 <button type="button" class="btn btn-sm btn-warning"

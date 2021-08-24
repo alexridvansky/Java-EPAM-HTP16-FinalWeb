@@ -490,9 +490,7 @@ public class DefaultVehicleService implements VehicleService {
 
     @Override
     public boolean uploadVehiclePhoto(VehicleFullForm form) throws ServiceException {
-        logger.debug("Upload service called");
-
-        AccessControlService.getInstance().uploadPhoto(form);
+        accessControlService.editVehicle(form);
 
         Set<String> cloudinaryPublicIds = new HashSet<>();
         for (String filename : form.getPhotoSet()) {
@@ -527,6 +525,36 @@ public class DefaultVehicleService implements VehicleService {
     }
 
     @Override
+    public boolean updateVehicleComment(VehicleFullForm form) throws ServiceException {
+        logger.debug("Edit comment service");
+        accessControlService.editVehicle(form);
+
+        String description = form.getComment();
+        description = TagRemover.doText(description);
+        if (description.length() > 300) {
+            description = description.substring(0, 300);
+        }
+
+        try {
+            boolean result = vehicleDao.updateComment(form.getVehicleId(), description);
+
+            if (result) {
+                form.setFeedbackMsg("Comment updated");
+                form.setSuccess(true);
+
+                return true;
+            } else {
+                form.setFeedbackMsg("Error updating comment");
+
+                return false;
+            }
+
+        } catch (DaoException e) {
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
     public Optional<String> getPreviewImageById(long vehicleId) throws ServiceException {
         try {
             Optional<String> optionalPreview = vehicleDao.findPreviewById(vehicleId);
@@ -539,7 +567,6 @@ public class DefaultVehicleService implements VehicleService {
             return Optional.ofNullable(previewPath);
 
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }

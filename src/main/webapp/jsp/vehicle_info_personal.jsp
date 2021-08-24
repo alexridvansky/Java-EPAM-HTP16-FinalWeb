@@ -56,21 +56,21 @@
         <div class="row">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <hr class="col-12 text-white">
-                    <div class="col-12 text-white">
-                        <h2 class="text-white">${vehicle.modelYear} ${vehicle.make} ${vehicle.model}
-                            <c:choose>
-                                <c:when test="${vehicle.displacement > 0}">
-                                    <fmt:formatNumber type="number" minFractionDigits="1" maxFractionDigits="1"
-                                                      value="${vehicle.displacement/1000}"/>
-                                </c:when>
-                                <c:otherwise>
+                <div class="col-12 text-white">
+                    <h2 class="text-white">${vehicle.modelYear} ${vehicle.make} ${vehicle.model}
+                        <c:choose>
+                            <c:when test="${vehicle.displacement > 0}">
+                                <fmt:formatNumber type="number" minFractionDigits="1" maxFractionDigits="1"
+                                                  value="${vehicle.displacement/1000}"/>
+                            </c:when>
+                            <c:otherwise>
 
-                                </c:otherwise>
-                            </c:choose>
-                             - ${vehicle.color}
-                             - $<fmt:formatNumber value="${vehicle.price}" type="number" maxFractionDigits="0"/>
-                        </h2>
-                    </div>
+                            </c:otherwise>
+                        </c:choose>
+                        - ${vehicle.color}
+                        - $<fmt:formatNumber value="${vehicle.price}" type="number" maxFractionDigits="0"/>
+                    </h2>
+                </div>
                 <hr class="col-12 text-white">
                 <div class="row mb-3 text-white">
                     <div class="col-sm-4 p-3 themed-grid-col">
@@ -161,6 +161,47 @@
                         <h6 class="fw-light text-white">${vehicle.comment}</h6>
                     </c:when>
                 </c:choose>
+
+                <!-- Edit button-->
+                <button type="button" class="btn btn-sm btn-warning"
+                        data-bs-toggle="modal" data-bs-target="#editCommentModal${vehicle.id}">
+                    ${edit}
+                </button>
+
+                <!-- Modal deleting confirmation dialog -->
+                <div class="modal fade" id="editCommentModal${vehicle.id}" tabindex="-1"
+                     aria-labelledby="editCommentModalLabel${vehicle.id}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <form action="${pageContext.request.contextPath}/controller" method="post">
+                                <input type="hidden" name="command" value="update_vehicle_comment">
+                                <input type="hidden" name="vehicle_id" value="${vehicle.id}">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"
+                                        id="editCommentModalLabel${vehicle.id}">${edit_title}</h5>
+                                    <button type="button" class="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <label for="exampleFormControlTextarea1"
+                                           class="form-label mb-0">${enter_description}
+                                    </label>
+                                    <textarea class="form-control" name="new_description" id="exampleFormControlTextarea1"
+                                              rows="8">${vehicle.comment}
+                                    </textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-secondary"
+                                            data-bs-dismiss="modal">${cancel}</button>
+                                    <button type="submit" class="btn btn-sm btn-warning"
+                                            data-bs-dismiss="modal">${edit}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
                 <hr class="col-12 text-white">
                 <h4 class="fw-light text-white">${info}</h4>

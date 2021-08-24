@@ -25,7 +25,7 @@ public interface AccessControlService {
 
     boolean createVehicle(VehicleFullForm form) throws ServiceException;
 
-    boolean uploadPhoto(VehicleFullForm form) throws ServiceException;
+    boolean editVehicle(VehicleFullForm form) throws ServiceException;
 
     static DefaultAccessControlService getInstance() {
         return DefaultAccessControlService.getInstance();
