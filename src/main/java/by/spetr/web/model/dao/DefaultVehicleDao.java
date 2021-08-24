@@ -99,7 +99,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
     private static final String SQL_UPDATE_VEHICLE_BY_ID
             = "UPDATE vehicle SET state_id = ? WHERE vehicle_id = ?;";
     private static final String SQL_UPDATE_COMMENT_BY_ID
-            = "UPDATE vehicle SET comment = ? WHERE carsales2.vehicle.vehicle_id = ? ";
+            = "UPDATE vehicle SET comment = ? WHERE vehicle_id = ? ";
     private static final String SQL_CREATE_NEW_PHOTO_RECORD
             = "INSERT INTO vehicle_gallery (vehicle_id, img_path) " +
             "values (?, ?);";
