@@ -3,6 +3,7 @@ package by.spetr.web.controller.command.vehicle;
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.dto.UserDto;
+import by.spetr.web.model.dto.VehicleFullDto;
 import by.spetr.web.model.entity.Vehicle;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
@@ -36,15 +37,16 @@ public class UploadVehiclePhotoCommand implements Command {
 
             boolean isUploaded = service.uploadVehiclePhoto(form);
 
-            Optional<Vehicle> optionalVehicle = service.getVehicleById(form.getVehicleId());
+//            Optional<Vehicle> optionalVehicle = service.getVehicleById(form.getVehicleId());
+            Optional<VehicleFullDto> optionalVehicleFullDto = service.getFullDtoVehicleById(form.getVehicleId());
 
             if (isUploaded) {
                 request.setAttribute(FEEDBACK_MESSAGE_PARAM, UPLOAD_SUCCESSFUL);
                 request.setAttribute(OPERATION_SUCCESS_PARAM, true);
             }
 
-            if (optionalVehicle.isPresent()) {
-                request.setAttribute(VEHICLE_PARAM, optionalVehicle.get());
+            if (optionalVehicleFullDto.isPresent()) {
+                request.setAttribute(VEHICLE_PARAM, optionalVehicleFullDto.get());
             } else {
                 return new Router(ERROR_PAGE);
             }
