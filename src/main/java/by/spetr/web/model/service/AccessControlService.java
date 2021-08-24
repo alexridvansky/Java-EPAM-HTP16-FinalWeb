@@ -5,6 +5,7 @@ import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.VehicleFullForm;
+import by.spetr.web.model.form.VehicleUploadForm;
 
 public interface AccessControlService {
 
@@ -24,6 +25,8 @@ public interface AccessControlService {
     boolean updateVehicleState(VehicleFullForm form) throws ServiceException;
 
     boolean createVehicle(VehicleFullForm form) throws ServiceException;
+
+    boolean uploadPhoto(VehicleFullForm form) throws ServiceException;
 
     static DefaultAccessControlService getInstance() {
         return DefaultAccessControlService.getInstance();
