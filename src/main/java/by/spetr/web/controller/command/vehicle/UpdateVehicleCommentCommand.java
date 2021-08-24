@@ -37,7 +37,7 @@ public class UpdateVehicleCommentCommand implements Command {
             if (optionalVehicleFullDto.isPresent()) {
                 request.setAttribute(VEHICLE_PARAM, optionalVehicleFullDto.get());
 
-                return new Router(VEHICLE_INFO);
+                return new Router(VEHICLE_INFO_PERSONAL);
 
             } else {
                 request.setAttribute(FEEDBACK_MESSAGE_PARAM, "Vehicle not found");
