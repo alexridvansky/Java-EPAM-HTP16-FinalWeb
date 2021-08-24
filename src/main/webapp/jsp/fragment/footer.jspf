@@ -1,0 +1,19 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+
+<footer class="footer mt-auto py-1 bg-dark">
+    <div class="container-fluid">
+        <span class="text-muted">@sp 2021.</span>
+    </div>
+</footer>
+
+
+<script src="${abs}/js/bootstrap.bundle.min.js"></script>
+<script src="${abs}/js/table_search.js"></script>
+<script src="${abs}/js/selectFilter.min.js"></script>
+<%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>--%>
+
+<script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+<script type="text/javascript" src="${abs}/js/empty_fields_checker.js"></script>
+<script type="text/javascript" src="${abs}/js/timeout.js"></script>
+

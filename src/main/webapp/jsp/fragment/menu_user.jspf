@@ -1,0 +1,49 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<li class="nav-item">
+    <a href="${abs}/controller?command=show_vehicle_list_public"
+       class="nav-link px-3 text-white">
+        <i class="fas fa-car"></i>
+        ${ads}
+    </a>
+</li>
+<c:choose>
+    <c:when test="${sessionScope.user.state == 'BANNED' || sessionScope.user.state == 'CONFIRM'}">
+        <li class="nav-item">
+            <a href="${abs}/controller?command=show_vehicle_creation_page"
+               class="nav-link px-3 text-secondary disabled">
+                <i class="fas fa-plus"></i>
+                    ${place}
+            </a>
+        </li>
+    </c:when>
+    <c:otherwise>
+        <li class="nav-item">
+            <a href="${abs}/controller?command=show_vehicle_creation_page"
+               class="nav-link px-3 text-white">
+                <i class="fas fa-plus"></i>
+                ${place}
+            </a>
+        </li>
+    </c:otherwise>
+</c:choose>
+<c:choose>
+    <c:when test="${sessionScope.user.state == 'CONFIRM'}">
+        <li class="nav-item">
+            <a href="${abs}/controller?command=show_vehicle_list_personal"
+               class="nav-link px-3 text-secondary disabled">
+                <i class="fas fa-car"></i>
+                    ${show_personal_ads}
+            </a>
+        </li>
+    </c:when>
+    <c:otherwise>
+        <li class="nav-item">
+            <a href="${abs}/controller?command=show_vehicle_list_personal"
+               class="nav-link px-3 text-white">
+                <i class="fas fa-car"></i>
+                ${show_personal_ads}
+            </a>
+        </li>
+    </c:otherwise>
+</c:choose>

@@ -1,0 +1,17 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+
+<li class="nav-item">
+    <a href="${pageContext.request.contextPath}/controller?command=show_message_list_moder"
+       class="nav-link px-3 text-white">
+        <i class="fas fa-comments"></i>
+        ${show_messages}
+    </a>
+</li>
+<li class="nav-item">
+    <a href="${abs}/controller?command=show_vehicle_list_moder"
+       class="nav-link px-3 text-white">
+        <i class="fas fa-car"></i>
+        ${ads_mod}
+    </a>
+</li>

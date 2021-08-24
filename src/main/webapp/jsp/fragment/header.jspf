@@ -1,0 +1,97 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+
+
+<header>
+    <link rel="stylesheet" href="${abs}/css/sticky-footer-navbar.css">
+    <link rel="stylesheet" href="${abs}/css/alert.css">
+
+    <!-- About modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aboutModalLabel">${about_title}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ${about_body}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${close}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <c:if test="${feedback_msg != null}">
+            <c:choose>
+                <c:when test="${success == true}">
+                    <div class="alert alert-success" id="message"><b>${feedback_msg}</b></div>
+                </c:when>
+                <c:otherwise>
+                    <div class="alert alert-danger" id="message"><b>${feedback_msg}</b></div>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="${abs}/controller?command=go_to_main_page"><h2>AutoSchrott</h2></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+
+
+
+                    <c:choose>
+                        <c:when test="${sessionScope.user.role == 'ROOT'}">
+                            <%@include file="/jsp/fragment/menu_root.jspf" %>
+                        </c:when>
+                        <c:when test="${sessionScope.user.role == 'MODERATOR'}">
+                            <%@include file="/jsp/fragment/menu_moder.jspf" %>
+                        </c:when>
+                        <c:when test="${sessionScope.user.role == 'USER'}">
+                            <%@include file="/jsp/fragment/menu_user.jspf" %>
+                        </c:when>
+                        <c:otherwise>
+                            <%@include file="/jsp/fragment/menu_guest.jspf" %>
+                        </c:otherwise>
+                    </c:choose>
+                </ul>
+            </div>
+            <%--            <div class="collapse navbar-collapse" id="navbarCollapse2">--%>
+            <div class="collapse d-inline-flex mt-md-0 ms-md-auto" id="navbarCollapse2">
+<%--                <!--  Language bar below  -->--%>
+<%--                <li class="nav-item dropdown">--%>
+<%--                    <%@include file="lng_bar.jspf" %>--%>
+<%--                </li>--%>
+                <!-- Login Dropdown menu below -->
+<%--                <li class="nav-item dropdown">--%>
+                    <c:choose>
+                        <c:when test="${sessionScope.user.role != 'GUEST'}">
+                            <%@include file="/jsp/fragment/user_tool.jsp" %>
+                        </c:when>
+                        <c:otherwise>
+                            <%@include file="/jsp/fragment/sign_in.jsp" %>
+                        </c:otherwise>
+                    </c:choose>
+<%--                </li>--%>
+
+<%--                <!-- Info menu button -->--%>
+<%--                <li class="nav-item">--%>
+<%--                    <button class="btn btn-dark me-2" type="button" data-bs-toggle="modal" data-bs-target="#aboutModal">--%>
+<%--                        <i class="fas fa-info-circle"></i>--%>
+<%--                        ${about}--%>
+<%--                    </button>--%>
+<%--                </li>--%>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<!-- Begin page content -->
