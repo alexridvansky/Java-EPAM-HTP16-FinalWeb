@@ -1,0 +1,10 @@
+.alert-danger, .alert-success {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    width: 50%;
+    text-align: center;
+    z-index: 99999999;
+    padding: 4px;
+    size: 20px;
+}
