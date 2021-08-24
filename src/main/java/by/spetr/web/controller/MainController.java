@@ -29,13 +29,6 @@ import static by.spetr.web.controller.command.RequestParameter.FEEDBACK_MESSAGE_
 public class MainController extends HttpServlet {
     private static final Logger logger = LogManager.getLogger();
 
-    @Override
-    public void init() throws ServletException {
-        logger.debug("Servlet Bot starter");
-        TelegramInformerService telegramInformerService = TelegramInformerService.getInstance();
-        telegramInformerService.registerBot();
-    }
-
     /**
      * Redirects {@code doGet} requests toward {@code MainController Servlet}
      *
