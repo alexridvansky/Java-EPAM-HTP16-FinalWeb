@@ -160,8 +160,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public List<Vehicle> findAll() throws DaoException {
-        logger.debug("findAll() method called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_VEHICLES)) {
@@ -184,8 +182,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public List<Vehicle> findAllPublicVehicles(int pageSize, int pageNumber) throws DaoException {
-        logger.debug("findAll() method called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery
@@ -209,8 +205,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public List<Vehicle> findAllModeratorVehicles(int pageSize, int pageNumber) throws DaoException {
-        logger.debug("findAll() method called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery
@@ -324,8 +318,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public Optional<Vehicle> findById(long id) throws DaoException {
-        logger.debug("findVehicleById() method called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_VEHICLE_BY_ID)) {
 
@@ -745,8 +737,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public boolean updateState(long vehicleId, VehicleStateType vehicleState) throws DaoException {
-        logger.debug("changeRole() method called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_VEHICLE_BY_ID)) {
 
@@ -768,9 +758,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public boolean createPhoto(long vehicleId, Set<String> cloudinaryPublicIdSet) throws DaoException {
-        logger.debug("createPhoto() method called");
-        cloudinaryPublicIdSet.forEach(logger::debug);
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_CREATE_NEW_PHOTO_RECORD)) {
 
@@ -792,7 +779,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public Optional<String> findPreviewById(long vehicleId) throws DaoException {
-        logger.debug("findPreviewById() method called");
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_PREVIEW_PHOTO_BY_VEHICLE_ID)) {
 
@@ -816,8 +802,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public List<String> findAllPhotoById(long vehicleId) throws DaoException {
-        logger.debug("findAllPhotoById() method called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_PHOTO_BY_VEHICLE_ID)) {
             statement.setLong(1, vehicleId);
@@ -867,8 +851,6 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public List<VehicleOption> findOptionByVehicleId(long vehicleId) throws DaoException {
-        logger.debug("findOptionsById() method called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_OPTIONS_BY_VEHICLE_ID)) {
             statement.setLong(1, vehicleId);
