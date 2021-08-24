@@ -14,7 +14,7 @@ import by.spetr.web.model.form.VehicleFullForm;
 import by.spetr.web.model.form.VehicleShortForm;
 import by.spetr.web.telegrambot.InformerService;
 import by.spetr.web.util.TagRemover;
-import by.spetr.web.validator.VehicleValidator;
+import by.spetr.web.util.validator.VehicleValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
