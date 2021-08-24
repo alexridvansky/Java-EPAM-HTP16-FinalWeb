@@ -8,4 +8,8 @@ public interface MediaService {
     String getPreviewPhoto(String publicId);
 
     String getAlbumPhoto(String publicId);
+
+    static CloudinaryMediaService getInstance() {
+        return CloudinaryMediaService.getCloudinary();
+    }
 }
