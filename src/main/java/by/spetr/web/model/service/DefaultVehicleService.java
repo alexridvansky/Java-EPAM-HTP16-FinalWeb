@@ -414,7 +414,7 @@ public class DefaultVehicleService implements VehicleService {
                     throw new ServiceException("Vehicle can't be inserted or re-read");
                 }
 
-                boolean isUploaded = uploadVehiclePhoto(vehicle.getId(), form.getPhotoSet());
+                boolean isUploaded = uploadVehiclePhoto(form);
                 if (isUploaded) {
                     logger.debug("photo(s) uploaded");
                 } else {
@@ -489,12 +489,13 @@ public class DefaultVehicleService implements VehicleService {
     }
 
     @Override
-    public boolean uploadVehiclePhoto(long vehicleId, Set<String> filenames) throws ServiceException {
+    public boolean uploadVehiclePhoto(VehicleFullForm form) throws ServiceException {
         logger.debug("Upload service called");
 
-        filenames.forEach(logger::debug);
+        AccessControlService.getInstance().uploadPhoto(form);
+
         Set<String> cloudinaryPublicIds = new HashSet<>();
-        for (String filename : filenames) {
+        for (String filename : form.getPhotoSet()) {
             if (filename == null || filename.isBlank()) {
                 return false;
             } else {
@@ -516,7 +517,7 @@ public class DefaultVehicleService implements VehicleService {
         }
 
         try {
-            vehicleDao.createPhoto(vehicleId, cloudinaryPublicIds);
+            vehicleDao.createPhoto(form.getVehicleId(), cloudinaryPublicIds);
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);

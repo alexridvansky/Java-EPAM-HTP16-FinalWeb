@@ -173,22 +173,6 @@
             </div>
         </div>
 
-        <div class="split left text-white">
-            <div class="centered">
-
-
-                <form method="post" action="uploadController" enctype="multipart/form-data">
-                    Choose a file: <input type="file" name="uploadController" multiple/>
-                    <input type="hidden" name="command" value="upload_vehicle_photo" formenctype="text/plain"/>
-                    <input type="hidden" name="vehicle_id" value="${vehicle.id}" formenctype="text/plain"/>
-                    <input type="submit" value="Upload"/>
-                </form>
-                ${requestScope.message}
-
-
-            </div>
-        </div>
-
     </section>
 </main>
 

@@ -164,7 +164,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_VEHICLES + ORDER_BY_VEHICLE_ID)) {
+             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_VEHICLES)) {
 
             List<Vehicle> vehicles = new ArrayList<>();
 
@@ -768,7 +768,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
 
     @Override
     public boolean createPhoto(long vehicleId, Set<String> cloudinaryPublicIdSet) throws DaoException {
-        logger.debug("changeRole() method called");
+        logger.debug("createPhoto() method called");
         cloudinaryPublicIdSet.forEach(logger::debug);
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();

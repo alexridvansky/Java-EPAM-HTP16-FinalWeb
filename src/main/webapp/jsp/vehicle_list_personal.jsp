@@ -102,7 +102,7 @@
                                         ${vehicle.drive}
                                 </p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
+                                    <div class="">
                                         <c:choose>
                                             <c:when test="${vehicle.state == 'ENABLED'}">
                                                 <a href="${abs}/controller?command=change_vehicle_state&vehicle_id=${vehicle.id}&vehicle_state=DISABLED"
@@ -119,22 +119,64 @@
                                             <c:when test="${vehicle.state == 'MODERATION'}">
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="${abs}/controller?command=change_vehicle&vehicle_id=${vehicle.id}"
+
+                                                <!-- Edit button-->
+                                                <a href="${abs}/controller?command=edit_vehicle&vehicle_id=${vehicle.id}"
                                                    type="button" class="btn btn-sm btn-warning">${edit}
                                                 </a>
-                                                <button type="button" class="btn btn-sm btn-danger"
-                                                        data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                                        ${delete}
+
+                                                <!-- Add photo button-->
+                                                <button type="button" class="btn btn-sm btn-warning"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#addPhoto${vehicle.id}">
+                                                    +<i class="fas fa-camera"></i>
                                                 </button>
 
-                                                <!-- Modal deleting confirmation dialog -->
-                                                <div class="modal fade" id="deleteModal" tabindex="-1"
-                                                     aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                <div class="modal fade" id="addPhoto${vehicle.id}" tabindex="-1"
+                                                     aria-labelledby="addPhotoLabel${vehicle.id}" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title"
-                                                                    id="deleteModalLabel">${delete_title}</h5>
+                                                                    id="addPhotoLabel${vehicle.id}">${vhl_add_photo_title}</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>${vhl_add_photo_promo}</p>
+
+                                                                <form method="post" action="uploadController" enctype="multipart/form-data">
+                                                                    Choose a file: <input type="file" name="uploadController" multiple/>
+                                                                    <input type="hidden" name="command" value="upload_vehicle_photo" formenctype="text/plain"/>
+                                                                    <input type="hidden" name="vehicle_id" value="${vehicle.id}" formenctype="text/plain"/>
+                                                                    <input type="submit" value="Upload" class="btn-sm btn-warning"/>
+                                                                </form>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Delete button-->
+                                                <button type="button" class="btn btn-sm btn-danger"
+                                                        data-bs-toggle="modal" data-bs-target="#deleteModal${vehicle.id}">
+                                                        ${delete}
+                                                </button>
+
+                                                <!-- Modal deleting confirmation dialog -->
+                                                <div class="modal fade" id="deleteModal${vehicle.id}" tabindex="-1"
+                                                     aria-labelledby="deleteModalLabel${vehicle.id}" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"
+                                                                    id="deleteModalLabel${vehicle.id}">${delete_title}</h5>
                                                                 <button type="button" class="btn-close"
                                                                         data-bs-dismiss="modal"
                                                                         aria-label="Close"></button>
@@ -152,8 +194,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-
                                             </c:otherwise>
                                         </c:choose>
                                     </div>

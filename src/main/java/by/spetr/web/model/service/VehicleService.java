@@ -10,7 +10,6 @@ import by.spetr.web.model.form.VehicleShortForm;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * declare service methods for {@code Vehicle.class}
@@ -142,12 +141,11 @@ public interface VehicleService {
     /**
      * is used to adding photos to vehicle album.
      *
-     * @param vehicleId vehicleId
-     * @param filenames file names
+     * @param form VehicleFullForm contains vehicleId and Set<filePath>
      * @return true if photo added successfully
      * @throws ServiceException in case of errors on DAO layer or Cloudinary service
      */
-    boolean uploadVehiclePhoto(long vehicleId, Set<String> filenames) throws ServiceException;
+    boolean uploadVehiclePhoto(VehicleFullForm form) throws ServiceException;
 
     /**
      * is used to get from the database publicId of stored picture and getting the path to it
