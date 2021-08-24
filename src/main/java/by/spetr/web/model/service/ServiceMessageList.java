@@ -3,6 +3,7 @@ package by.spetr.web.model.service;
 public class ServiceMessageList {
     private ServiceMessageList(){}
 
+    // User registration messages
     public static final String USERNAME_INVALID = "Username doesn't match requirements";
     public static final String USERNAME_TAKEN = "Username is already taken";
     public static final String PASSWORDS_DIFFERENT = "Entered passwords are different";
@@ -11,6 +12,4 @@ public class ServiceMessageList {
     public static final String EMAIL_TAKEN = "E-Mail is already taken";
     public static final String PHONE_INVALID = "Phone number doesn't match requirements";
     public static final String PHONE_TAKEN = "Phone number is already taken";
-    public static final String DAO_ERROR = "Error occurred on DAO layer";
-    public static final String CLOUDINARY_UPLOAD_ERROR = "Error on Cloudinary service. File(s) can't be uploaded";
 }
