@@ -15,7 +15,7 @@ import by.spetr.web.telegrambot.InformerService;
 import by.spetr.web.util.BCrypt;
 import by.spetr.web.util.ConfirmationCodeGenerator;
 import by.spetr.web.util.PasswordGenerator;
-import by.spetr.web.validator.UserValidator;
+import by.spetr.web.util.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;

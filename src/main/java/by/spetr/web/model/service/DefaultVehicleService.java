@@ -12,8 +12,9 @@ import by.spetr.web.model.exception.DaoException;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.VehicleFullForm;
 import by.spetr.web.model.form.VehicleShortForm;
+import by.spetr.web.telegrambot.InformerService;
 import by.spetr.web.util.TagRemover;
-import by.spetr.web.validator.VehicleValidator;
+import by.spetr.web.util.validator.VehicleValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
@@ -25,8 +26,10 @@ import java.util.*;
 public class DefaultVehicleService implements VehicleService {
     private static final Logger logger = LogManager.getLogger();
     private static final UserService userService = UserService.getInstance();
+    private static final MediaService cloudinary = MediaService.getInstance();
     private static final VehicleDao vehicleDao = new DefaultVehicleDao();
     private static final AccessControlService accessControlService = AccessControlService.getInstance();
+    private static final InformerService informerService = InformerService.getInstance();
     private static DefaultVehicleService instance;
 
     private DefaultVehicleService() {
@@ -60,7 +63,26 @@ public class DefaultVehicleService implements VehicleService {
     @Override
     public List<VehiclePreviewDto> getPublicVehicleList(int pageSize, int pageNumber) throws ServiceException {
         try {
-            List<Vehicle> vehicleList = vehicleDao.findAllPublic(pageSize, pageNumber);
+            List<Vehicle> vehicleList = vehicleDao.findAllPublicVehicles(pageSize, pageNumber);
+            List<VehiclePreviewDto> vehiclePreviewDtoList = new ArrayList<>();
+
+            for (Vehicle vehicle : vehicleList) {
+                VehiclePreviewDto vehiclePreviewDto = convertToPreviewDto(vehicle);
+                vehiclePreviewDtoList.add(vehiclePreviewDto);
+            }
+
+            return vehiclePreviewDtoList;
+
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<VehiclePreviewDto> getModeratorVehicleList(int pageSize, int pageNumber) throws ServiceException {
+        try {
+            List<Vehicle> vehicleList = vehicleDao.findAllModeratorVehicles(pageSize, pageNumber);
             List<VehiclePreviewDto> vehiclePreviewDtoList = new ArrayList<>();
 
             for (Vehicle vehicle : vehicleList) {
@@ -80,6 +102,16 @@ public class DefaultVehicleService implements VehicleService {
     public int getPublicVehicleListSize() throws ServiceException {
         try {
             return vehicleDao.findPublicVehicleListSize();
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int getModeratorVehicleListSize() throws ServiceException {
+        try {
+            return vehicleDao.findModeratorVehicleListSize();
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
             throw new ServiceException(e.getMessage(), e);
@@ -143,6 +175,10 @@ public class DefaultVehicleService implements VehicleService {
             throw new ServiceException("Error occurred on DAO layer", e);
         }
 
+        if (optionalPreviewPublicId.isPresent()) {
+            previewPublicId = cloudinary.getPreviewPhoto(optionalPreviewPublicId.get());
+        }
+
         vehiclePreviewDto.setPreviewImagePath(previewPublicId);
 
         return vehiclePreviewDto;
@@ -203,6 +239,14 @@ public class DefaultVehicleService implements VehicleService {
         vehicleFullDto.setDateCreated(vehicle.getDateCreated());
 
         try {
+
+            List<String> publicIdList = vehicleDao.findAllPhotoById(vehicleId);
+            List<String> album = new ArrayList<>();
+            for (String publicId : publicIdList) {
+                String imgPath = cloudinary.getAlbumPhoto(publicId);
+                album.add(imgPath);
+            }
+            vehicleFullDto.setAlbum(album);
 
             List<VehicleOption> optionList = vehicleDao.findOptionByVehicleId(vehicleId);
             vehicleFullDto.setOptionList(optionList);
@@ -370,13 +414,14 @@ public class DefaultVehicleService implements VehicleService {
                     throw new ServiceException("Vehicle can't be inserted or re-read");
                 }
 
-                boolean isUploaded = uploadVehiclePhoto(vehicle.getId(), form.getPhotoSet());
+                boolean isUploaded = uploadVehiclePhoto(form);
                 if (isUploaded) {
                     logger.debug("photo(s) uploaded");
                 } else {
                     logger.error("photo(s) not uploaded");
                 }
                 form.setSuccess(true);
+                informOfVehicle(vehicle);
 
                 return vehicle;
             }
@@ -387,6 +432,24 @@ public class DefaultVehicleService implements VehicleService {
             logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
+    }
+
+    /**
+     * Method is used to sent notification when new vehicle ad added
+     *
+     * @param vehicle vehicle to be informed about
+     */
+    private void informOfVehicle(Vehicle vehicle) throws ServiceException {
+        StringBuilder note = new StringBuilder();
+        note.append("New ad just added:");
+        note.append(" ").append(vehicle.getModel().getMake().getValue());
+        note.append(" ").append(vehicle.getModel().getValue());
+        note.append(" ").append(vehicle.getModelYear());
+        note.append(" $").append(vehicle.getPrice());
+        Optional<String> previewPath = getPreviewImageById(vehicle.getId());
+        previewPath.ifPresent(s -> note.append("\n").append(s));
+
+        informerService.sendPublicMessage(note.toString());
     }
 
     @Override
@@ -426,8 +489,41 @@ public class DefaultVehicleService implements VehicleService {
     }
 
     @Override
-    public boolean uploadVehiclePhoto(long vehicleId, Set<String> filenames) throws ServiceException {
-        return false;
+    public boolean uploadVehiclePhoto(VehicleFullForm form) throws ServiceException {
+        logger.debug("Upload service called");
+
+        AccessControlService.getInstance().uploadPhoto(form);
+
+        Set<String> cloudinaryPublicIds = new HashSet<>();
+        for (String filename : form.getPhotoSet()) {
+            if (filename == null || filename.isBlank()) {
+                return false;
+            } else {
+                try {
+                    String imgPath = cloudinary.storePhoto(filename);
+
+                    if (imgPath != null && !imgPath.isBlank()) {
+                        cloudinaryPublicIds.add(imgPath);
+
+                        File file = new File(imgPath);
+                        boolean isDeleted = file.delete();
+                        logger.debug("is temporary file deleted: {}", isDeleted);
+                    }
+                } catch (ServiceException e) {
+                    logger.error("Error on Cloudinary service. File(s) can't be uploaded", e);
+                    throw new ServiceException("Error on Cloudinary service. File(s) can't be uploaded", e);
+                }
+            }
+        }
+
+        try {
+            vehicleDao.createPhoto(form.getVehicleId(), cloudinaryPublicIds);
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+
+        return true;
     }
 
     @Override
@@ -435,6 +531,10 @@ public class DefaultVehicleService implements VehicleService {
         try {
             Optional<String> optionalPreview = vehicleDao.findPreviewById(vehicleId);
             String previewPath = null;
+
+            if (optionalPreview.isPresent()) {
+                previewPath = cloudinary.getPreviewPhoto(optionalPreview.get());
+            }
 
             return Optional.ofNullable(previewPath);
 

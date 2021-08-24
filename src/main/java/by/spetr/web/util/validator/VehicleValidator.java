@@ -1,4 +1,4 @@
-package by.spetr.web.validator;
+package by.spetr.web.util.validator;
 
 import by.spetr.web.util.PropertyReader;
 
