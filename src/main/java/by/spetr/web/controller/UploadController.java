@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
@@ -70,7 +71,13 @@ public class UploadController extends HttpServlet {
 
         String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
         File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) uploadDir.mkdir();
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+
+        for (File subFile : Objects.requireNonNull(uploadDir.listFiles())) {
+            subFile.delete();
+        }
 
         Set<String> files = new HashSet<>();
         String fileName = null;
