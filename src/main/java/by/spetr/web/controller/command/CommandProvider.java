@@ -24,6 +24,7 @@ public class CommandProvider {
         commands.put(ADD_NEW_MAKE, new AddNewMakeCommand());
         commands.put(ADD_NEW_MODEL, new AddNewModelCommand());
         commands.put(ADD_NEW_VEHICLE, new AddNewVehicleCommand());
+        commands.put(EDIT_VEHICLE, new EditVehicleCommand());
         commands.put(GO_TO_SIGN_UP_PAGE, new ShowSignUpPageCommand());
         commands.put(GO_TO_MAIN_PAGE, new GoToMainPageCommand());
         commands.put(GO_TO_RECOVERY_PASSWORD_PAGE, new ShowRecoveryPasswordPageCommand());
