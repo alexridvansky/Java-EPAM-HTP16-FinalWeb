@@ -504,8 +504,8 @@ public class DefaultVehicleService implements VehicleService {
 
                     if (imgPath != null && !imgPath.isBlank()) {
                         cloudinaryPublicIds.add(imgPath);
-                        File file = new File(imgPath);
 
+                        File file = new File(imgPath);
                         boolean isDeleted = file.delete();
                         logger.debug("is temporary file deleted: {}", isDeleted);
                     }
