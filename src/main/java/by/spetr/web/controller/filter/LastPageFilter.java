@@ -37,6 +37,8 @@ public class LastPageFilter implements Filter {
         ignoreList.add("/jsp/sign_up.jsp");
         ignoreList.add("/jsp/password_change.jsp");
         ignoreList.add("/jsp/password_recovery.jsp");
+        ignoreList.add("jsp/confirmation_page.jsp");
+        ignoreList.add("/jsp/user_blocked_page.jsp");
     }
 
     @Override

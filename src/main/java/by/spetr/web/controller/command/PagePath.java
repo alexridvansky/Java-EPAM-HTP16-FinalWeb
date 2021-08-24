@@ -7,6 +7,7 @@ public class PagePath {
     public static final String PASSWORD_RECOVERY_PAGE = "jsp/password_recovery.jsp";
     public static final String PASSWORD_CHANGE_PAGE = "jsp/password_change.jsp";
     public static final String CONFIRMATION_PAGE = "jsp/confirmation_page.jsp";
+    public static final String USER_BLOCKED_PAGE = "jsp/user_blocked_page.jsp";
     public static final String SHOW_USER_LIST_ADM = "/jsp/user_list_adm.jsp";
     public static final String VEHICLE_LIST_ADM = "/jsp/vehicle_list_adm.jsp";
     public static final String VEHICLE_LIST_PERSONAL = "/jsp/vehicle_list_personal.jsp";
