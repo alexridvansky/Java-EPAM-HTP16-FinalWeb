@@ -128,11 +128,11 @@ public interface UserDao {
      * expired attempts are automatically deleted
      *
      * @param chatId chatId of the user
-     * @param hour   period of time in hours attempts will be included and counted
+     * @param periodInHour period of time in hours attempts will be included and counted
      * @return number of confirmation attempts
      * @throws DaoException if connection can't be obtained or no access to the DataBase
      */
-    int findConfirmAttemptCount(long chatId, int hour) throws DaoException;
+    int findConfirmAttemptCount(long chatId, int periodInHour) throws DaoException;
 
     /**
      * is used for updating role of given user
