@@ -18,6 +18,7 @@ import java.util.Optional;
 import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
 import static by.spetr.web.model.entity.type.UserStateType.CONFIRM;
+import static by.spetr.web.model.entity.type.UserStateType.DISABLED;
 
 public class SignInCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -32,6 +33,11 @@ public class SignInCommand implements Command {
             Optional<UserDto> optionalUser = userService.logIn(form);
 
             if (optionalUser.isPresent()) {
+                if (optionalUser.get().getState() == DISABLED) {
+
+                    return new Router(USER_BLOCKED_PAGE, Router.RouterType.REDIRECT);
+                }
+
                 request.getSession().setAttribute(USER_PARAM, optionalUser.get());
                 if (optionalUser.get().getState() == CONFIRM) {
                     Optional<String> optionalCode = userService.getConfirmCode(optionalUser.get().getUserId());
