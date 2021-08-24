@@ -3,7 +3,7 @@
 
 <li class="nav-item">
     <a href="${pageContext.request.contextPath}/controller?command=show_message_list_moder"
-       class="nav-link px-3 text-white">
+       class="nav-link px-3 text-white disabled">
         <i class="fas fa-comments"></i>
         ${show_messages}
     </a>
