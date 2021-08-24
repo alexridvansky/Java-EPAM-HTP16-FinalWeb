@@ -1,3 +1,4 @@
+<%--@elvariable id="form" type="by.spetr.web.model.form.VehicleFullForm"--%>
 <%--<%@ taglib prefix="cl" uri="http://cloudinary.com/jsp/taglib" %>--%>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -31,9 +32,9 @@
             </c:if>
 
             <div class="text-secondary text-start col-md-7 col-lg-8 mx-auto">
+
                 <form class="needs-validation" action="${abs}/uploadController" method="post"
                       enctype="multipart/form-data" novalidate>
-                    <%--                <form class="needs-validation" action="${abs}/controller" method="post" novalidate>--%>
                     <input type="hidden" name="command" value="add_new_vehicle">
                     <hr class="my-4">
                     <div class="col-12">
@@ -118,7 +119,7 @@
                         <div class="col-3 mt-3">
                             <label for="model_year" class="form-label mb-0">${enter_model_year}</label>
                             <div class="input-group has-validation">
-                                <input type="text" class="form-control" id="model_year" name="model_year" value=""
+                                <input type="text" class="form-control" id="model_year" name="model_year" value="${form.modelYear}"
                                        placeholder="2007" required="" pattern="${model_year_regexp}">
                                 <div class="invalid-feedback">
                                     ${model_year_req}
@@ -128,7 +129,7 @@
                         <div class="col-3 mt-3">
                             <label for="displacement" class="form-label mb-0">${enter_displacement}</label>
                             <div class="input-group has-validation">
-                                <input type="text" class="form-control" id="displacement" name="displacement" value=""
+                                <input type="text" class="form-control" id="displacement" name="displacement" value="${form.displacement}"
                                        placeholder="3500" required="" pattern="${displacement_regexp}">
                                 <div class="invalid-feedback">
                                     ${displacement_req}
@@ -138,7 +139,7 @@
                         <div class="col-3 mt-3">
                             <label for="mileage" class="form-label mb-0">${enter_mileage}</label>
                             <div class="input-group has-validation">
-                                <input type="text" class="form-control" id="mileage" name="mileage" value=""
+                                <input type="text" class="form-control" id="mileage" name="mileage" value="${form.mileage}"
                                        placeholder="125000" required="" pattern="${mileage_regexp}">
                                 <div class="invalid-feedback">
                                     ${mileage_req}
@@ -148,7 +149,7 @@
                         <div class="col-3 mt-3">
                             <label for="power" class="form-label mb-0">${enter_power}</label>
                             <div class="input-group has-validation">
-                                <input type="text" class="form-control" id="power" name="power" value=""
+                                <input type="text" class="form-control" id="power" name="power" value="${form.power}"
                                        placeholder="245" required="" pattern="${power_regexp}">
                                 <div class="invalid-feedback">
                                     ${power_req}
