@@ -4,6 +4,7 @@ import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.CommandProvider;
 import by.spetr.web.controller.command.RequestParameter;
 import by.spetr.web.controller.command.Router;
+import by.spetr.web.telegrambot.TelegramInformerService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,6 +29,13 @@ import static by.spetr.web.controller.command.RequestParameter.FEEDBACK_MESSAGE_
 public class MainController extends HttpServlet {
     private static final Logger logger = LogManager.getLogger();
 
+    @Override
+    public void init() throws ServletException {
+        logger.debug("Servlet Bot starter");
+        TelegramInformerService telegramInformerService = TelegramInformerService.getInstance();
+        telegramInformerService.registerBot();
+    }
+
     /**
      * Redirects {@code doGet} requests toward {@code MainController Servlet}
      *
@@ -38,7 +46,6 @@ public class MainController extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("MainController: doGet is being called, redirecting...");
         processRequest(request, response);
     }
 
@@ -52,7 +59,6 @@ public class MainController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("MainController: doPost is being called, redirecting...");
         processRequest(request, response);
     }
 
