@@ -44,12 +44,13 @@ public class DefaultAccessControlService implements AccessControlService {
         commandPermission.put(SHOW_VEHICLE_LIST_PERSONAL, new ArrayList<>(List.of(USER)));
         commandPermission.put(SHOW_VEHICLE_LIST_PUBLIC, new ArrayList<>(List.of(ROOT, USER, GUEST)));
         commandPermission.put(SHOW_VEHICLE_INFO, new ArrayList<>(List.of(ROOT, MODERATOR, USER, GUEST)));
+        commandPermission.put(SHOW_VEHICLE_INFO_PERSONAL, new ArrayList<>(List.of(USER)));
         commandPermission.put(SHOW_VEHICLE_CREATION_PAGE, new ArrayList<>(List.of(USER)));
         commandPermission.put(SHOW_MAKE_CREATION_PAGE, new ArrayList<>(List.of(ROOT)));
         commandPermission.put(SHOW_MODEL_CREATION_PAGE, new ArrayList<>(List.of(ROOT)));
         commandPermission.put(SHOW_COLOR_CREATION_PAGE, new ArrayList<>(List.of(ROOT)));
         commandPermission.put(SHOW_CHANGE_PASSWORD_PAGE, new ArrayList<>(List.of(USER, MODERATOR)));
-        commandPermission.put(UPDATE_VEHICLE_ADS, new ArrayList<>(List.of(USER)));
+        commandPermission.put(UPDATE_VEHICLE_COMMENT, new ArrayList<>(List.of(USER)));
         commandPermission.put(UPLOAD_VEHICLE_PHOTO, new ArrayList<>(List.of(USER)));
         commandPermission.put(GO_TO_MAIN_PAGE, new ArrayList<>(List.of(ROOT, MODERATOR, USER, GUEST)));
         commandPermission.put(GO_TO_SIGN_UP_PAGE, new ArrayList<>(List.of(GUEST)));
@@ -191,7 +192,7 @@ public class DefaultAccessControlService implements AccessControlService {
     }
 
     @Override
-    public boolean uploadPhoto(VehicleFullForm form) throws ServiceException {
+    public boolean editVehicle(VehicleFullForm form) throws ServiceException {
         UserDto executor = form.getExecutor();
 
         Optional<Vehicle> optionalVehicle = vehicleService.getVehicleById(form.getVehicleId());
@@ -200,7 +201,9 @@ public class DefaultAccessControlService implements AccessControlService {
         }
 
         Vehicle vehicle = optionalVehicle.get();
-        if (executor.getUserId() != vehicle.getOwnerId()) {
+        if (executor.getState() == UserStateType.BANNED || executor.getState() == UserStateType.CONFIRM) {
+            throw new ServiceException("Only ACTIVE users can edit vehicles");
+        } else if (executor.getUserId() != vehicle.getOwnerId()) {
             throw new ServiceException("Users can't upload photos for someone's else adverts");
         }
 
