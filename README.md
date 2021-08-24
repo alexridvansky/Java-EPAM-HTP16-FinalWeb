@@ -18,6 +18,7 @@ User states:
 Check it out at: 
 https://autoschrott.herokuapp.com/jsp/main.jsp
 <br>
+to make it easier for you:<br>
 login: User1 pass: user1<br>
 login: root pass: root<br>
 login: moder1 pass: moder1<br>
