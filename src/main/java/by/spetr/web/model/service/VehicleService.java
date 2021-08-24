@@ -2,7 +2,7 @@ package by.spetr.web.model.service;
 
 import by.spetr.web.model.dto.VehicleFullDto;
 import by.spetr.web.model.dto.VehiclePreviewDto;
-import by.spetr.web.model.entity.*;
+import by.spetr.web.model.entity.Vehicle;
 import by.spetr.web.model.entity.type.*;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.VehicleFullForm;
@@ -26,7 +26,8 @@ public interface VehicleService {
 
     /**
      * Returns Public list of all vehicles or empty List<Vehicle> if there's no ads in the database.
-     * @param pageSize number of entries on each page
+     *
+     * @param pageSize   number of entries on each page
      * @param pageNumber number of a page
      * @return {@code List<VehiclePreviewDto>}
      * @throws ServiceException if no data been received from DAO layer
@@ -35,7 +36,8 @@ public interface VehicleService {
 
     /**
      * Returns Moderators' list of all vehicles or empty List<Vehicle> if there's no ads in the database.
-     * @param pageSize number of entries on each page
+     *
+     * @param pageSize   number of entries on each page
      * @param pageNumber number of a page
      * @return {@code List<VehiclePreviewDto>}
      * @throws ServiceException if no data been received from DAO layer
