@@ -1,0 +1,19 @@
+# Intellij
+.idea/*
+!.idea/runConfigurations
+*.iml
+*.iws
+*.ipr
+classes/
+atlassian-ide-plugin.xml
+
+# Maven
+log/
+target/
+
+# Java Dump
+*.hprof
+
+*.txt
+
+.vscode
