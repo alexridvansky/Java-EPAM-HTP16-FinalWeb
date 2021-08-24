@@ -18,7 +18,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CloudinaryMediaService implements MediaService {
     private static final Logger logger = LogManager.getLogger();
     private static final AtomicBoolean isInitialized = new AtomicBoolean(false);
-    private static final Cloudinary cloudinary = new Cloudinary();
+    private static final Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+            "cloud_name", "autoschrott",
+            "api_key", "884862746761739",
+            "api_secret", "_L51jlX9czVguOaBVTnpS_LLrvw",
+            "secure", true));
     private static CloudinaryMediaService instance;
 
     private CloudinaryMediaService() {
@@ -34,9 +38,18 @@ public class CloudinaryMediaService implements MediaService {
     }
 
     public String storePhoto(String filename) throws ServiceException {
+        try {
+            Map<String, String> upload = cloudinary.uploader().upload(
+                    filename,
+                    ObjectUtils.emptyMap()
+            );
 
-            return ("public_id"); //test
+            return upload.get("public_id");
 
+        } catch (IOException e) {
+            logger.error("File couldn't be stored through Cloudinary service", e);
+            throw new ServiceException("File couldn't be stored through Cloudinary service", e);
+        }
     }
 
     public String getPreviewPhoto(String publicId) {
