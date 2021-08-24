@@ -11,7 +11,6 @@ import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.telegram.telegrambots.meta.api.objects.payments.SuccessfulPayment;
 
 import java.util.Objects;
 import java.util.Optional;
