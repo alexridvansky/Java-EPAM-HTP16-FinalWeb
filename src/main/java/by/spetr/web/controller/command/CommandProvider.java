@@ -24,12 +24,12 @@ public class CommandProvider {
         commands.put(ADD_NEW_MAKE, new AddNewMakeCommand());
         commands.put(ADD_NEW_MODEL, new AddNewModelCommand());
         commands.put(ADD_NEW_VEHICLE, new AddNewVehicleCommand());
-        commands.put(EDIT_VEHICLE, new EditVehicleCommand());
         commands.put(GO_TO_SIGN_UP_PAGE, new ShowSignUpPageCommand());
         commands.put(GO_TO_MAIN_PAGE, new GoToMainPageCommand());
         commands.put(GO_TO_RECOVERY_PASSWORD_PAGE, new ShowRecoveryPasswordPageCommand());
         commands.put(SHOW_USER_LIST_ADMIN, new ShowUserListAdminCommand());
         commands.put(SHOW_VEHICLE_INFO, new ShowVehicleInfoCommand());
+        commands.put(SHOW_VEHICLE_INFO_PERSONAL, new ShowVehicleInfoPersonalCommand());
         commands.put(SHOW_VEHICLE_LIST_ADMIN, new ShowVehicleListAdmCommand());
         commands.put(SHOW_VEHICLE_LIST_MODER, new ShowVehicleListModerCommand());
         commands.put(SHOW_VEHICLE_LIST_PERSONAL, new ShowVehicleListPersonalCommand());
@@ -39,7 +39,7 @@ public class CommandProvider {
         commands.put(SHOW_MAKE_CREATION_PAGE, new ShowMakeCreationPageCommand());
         commands.put(SHOW_MODEL_CREATION_PAGE, new ShowModelCreationPageCommand());
         commands.put(SHOW_CHANGE_PASSWORD_PAGE, new ShowChangePasswordPageCommand());
-        commands.put(UPDATE_VEHICLE_ADS, new UpdateVehicleAdsCommand());
+        commands.put(UPDATE_VEHICLE_COMMENT, new UpdateVehicleCommentCommand());
         commands.put(UPLOAD_VEHICLE_PHOTO, new UploadVehiclePhotoCommand());
         commands.put(CREATE_USER, new CreateUserCommand());
         commands.put(SIGN_IN, new SignInCommand());
