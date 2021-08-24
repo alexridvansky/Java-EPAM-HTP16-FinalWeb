@@ -2,8 +2,11 @@ package by.spetr.web.controller.command.vehicle;
 
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
+import by.spetr.web.model.dto.UserDto;
 import by.spetr.web.model.entity.Vehicle;
 import by.spetr.web.model.exception.ServiceException;
+import by.spetr.web.model.form.DefaultForm;
+import by.spetr.web.model.form.VehicleFullForm;
 import by.spetr.web.model.service.VehicleService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +19,6 @@ import java.util.Set;
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
-import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
 
 
 public class UploadVehiclePhotoCommand implements Command {
@@ -27,39 +29,69 @@ public class UploadVehiclePhotoCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
         logger.debug("UploadVehiclePhotos called");
+        String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
 
-        String vehicleId = request.getParameter(VEHICLE_ID_PARAM);
-        logger.debug("vehicle_id: {}", vehicleId);
-        Set<String> filenames = (Set<String>) request.getAttribute(FILENAME_PARAM);
-        filenames.forEach(logger::debug);
+        try {
+            VehicleFullForm form = (VehicleFullForm) doForm(request);
 
-        if (vehicleId == null || filenames.isEmpty()) {
-            return new Router(ERROR_PAGE);
-        } else {
-            try {
-                boolean isUploaded = service.uploadVehiclePhoto(Integer.parseInt(vehicleId), filenames);
+            boolean isUploaded = service.uploadVehiclePhoto(form);
 
-                String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
-                Optional<Vehicle> optionalVehicle = service.getVehicleById(Long.parseLong(vehicleId));
+            Optional<Vehicle> optionalVehicle = service.getVehicleById(form.getVehicleId());
 
-                if (isUploaded) {
-                    request.setAttribute(FEEDBACK_MESSAGE_PARAM, UPLOAD_SUCCESSFUL);
-                }
+            if (isUploaded) {
+                request.setAttribute(FEEDBACK_MESSAGE_PARAM, UPLOAD_SUCCESSFUL);
+                request.setAttribute(OPERATION_SUCCESS_PARAM, true);
+            }
 
-                if (optionalVehicle.isPresent()) {
-                    request.setAttribute(VEHICLE_PARAM, optionalVehicle.get());
-                } else {
-                    return new Router(ERROR_PAGE);
-                }
-
-                return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
-
-            } catch (ServiceException e) {
-                logger.error("Error uploading photos", e);
-                request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
-
+            if (optionalVehicle.isPresent()) {
+                request.setAttribute(VEHICLE_PARAM, optionalVehicle.get());
+            } else {
                 return new Router(ERROR_PAGE);
             }
+
+            return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
+
+        } catch (ServiceException e) {
+            logger.error("Error uploading photos", e);
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
+
+            return new Router(ERROR_PAGE);
+        } catch (IllegalArgumentException e) {
+            logger.error("Illegal arguments in request, error uploading", e);
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, "Wrong parameters");
+
+            return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
         }
+    }
+
+    @Override
+    public DefaultForm doForm(HttpServletRequest request) {
+        VehicleFullForm form = new VehicleFullForm();
+
+        UserDto executor = (UserDto) request.getSession().getAttribute(USER_PARAM);
+        if (executor == null) {
+            throw new IllegalArgumentException("No user in the session");
+        }
+
+        String vehicleId = request.getParameter(VEHICLE_ID_PARAM);
+        if (vehicleId == null || vehicleId.isBlank()) {
+            throw new IllegalArgumentException("Wrong parameters");
+        }
+
+        try {
+            form.setVehicleId(Long.parseLong(vehicleId));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Error parsing argument from String to Long");
+        }
+
+        Set<String> filenames = (Set<String>) request.getAttribute(FILENAME_PARAM);
+        if (filenames == null || filenames.isEmpty()) {
+            throw new IllegalArgumentException("There's no files to upload");
+        }
+
+        form.setExecutor(executor);
+        form.setPhotoSet(filenames);
+
+        return form;
     }
 }
