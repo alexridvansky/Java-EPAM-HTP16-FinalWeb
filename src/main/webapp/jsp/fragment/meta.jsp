@@ -11,7 +11,6 @@
 <meta name="theme-color" content="#7952b3">
 <link rel="icon" type="image/png" href="${abs}/ico/site_logo.png">
 
-<%--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">--%>
 <link rel="stylesheet" href="${abs}/css/bootstrap.min.css">
 <link rel="stylesheet" href="${abs}/css/sticky-footer-navbar.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"

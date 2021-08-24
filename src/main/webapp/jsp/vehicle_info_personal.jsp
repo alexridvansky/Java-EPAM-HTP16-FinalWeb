@@ -168,7 +168,7 @@
                     ${edit}
                 </button>
 
-                <!-- Modal deleting confirmation dialog -->
+                <!-- Modal editing description dialog -->
                 <div class="modal fade" id="editCommentModal${vehicle.id}" tabindex="-1"
                      aria-labelledby="editCommentModalLabel${vehicle.id}" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -189,8 +189,7 @@
                                            class="form-label mb-0">${enter_description}
                                     </label>
                                     <textarea class="form-control" name="new_description" id="exampleFormControlTextarea1"
-                                              rows="8">${vehicle.comment}
-                                    </textarea>
+                                              rows="8">${vehicle.comment}</textarea>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-sm btn-secondary"

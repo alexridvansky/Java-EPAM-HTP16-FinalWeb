@@ -48,18 +48,6 @@
                 </div>
             </form>
 
-<%--            <c:if test="${feedback_msg != null}">--%>
-<%--                <c:choose>--%>
-<%--                    <c:when test="${success == true}">--%>
-<%--                        <br/>--%>
-<%--                        <div class="alert alert-success" id="message"><b>${feedback_msg}</b></div>--%>
-<%--                    </c:when>--%>
-<%--                    <c:otherwise>--%>
-<%--                        <br/>--%>
-<%--                        <div class="alert alert-danger" id="message"><b>${feedback_msg}</b></div>--%>
-<%--                    </c:otherwise>--%>
-<%--                </c:choose>--%>
-<%--            </c:if>--%>
         </div>
 
     </section>
