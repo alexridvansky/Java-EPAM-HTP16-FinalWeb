@@ -2,7 +2,6 @@ package by.spetr.web.controller.command;
 
 public class PagePath {
     public static final String ADD_VEHICLE_PAGE = "/jsp/add_vehicle.jsp";
-    public static final String ADD_VEHICLE_PHOTO_PAGE = "/jsp/add_vehicle_photo.jsp";
     public static final String SIGN_UP_PAGE = "/jsp/sign_up.jsp";
     public static final String PASSWORD_RECOVERY_PAGE = "jsp/password_recovery.jsp";
     public static final String PASSWORD_CHANGE_PAGE = "jsp/password_change.jsp";
@@ -14,6 +13,7 @@ public class PagePath {
     public static final String VEHICLE_LIST_PUBLIC = "/jsp/vehicle_list_public.jsp";
     public static final String VEHICLE_LIST_MODER = "/jsp/vehicle_list_moder.jsp";
     public static final String VEHICLE_INFO = "/jsp/vehicle_info.jsp";
+    public static final String VEHICLE_INFO_PERSONAL = "/jsp/vehicle_info_personal.jsp";
     public static final String COLOR_CREATION_PAGE = "/jsp/add_color.jsp";
     public static final String MAKE_CREATION_PAGE = "/jsp/add_make.jsp";
     public static final String MODEL_CREATION_PAGE = "/jsp/create_model.jsp";

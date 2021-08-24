@@ -40,7 +40,7 @@
                             <c:choose>
                                 <c:when test="${vehicle.previewImagePath != null}">
                                     <img src="${vehicle.previewImagePath}"
-                                         onclick="location.href='${abs}/controller?command=show_vehicle_info&vehicle_id=${vehicle.id}';"
+                                         onclick="location.href='${abs}/controller?command=show_vehicle_info_personal&vehicle_id=${vehicle.id}';"
                                          style="cursor: pointer; border-radius: 0.25rem;"/>
                                 </c:when>
                                 <c:otherwise>

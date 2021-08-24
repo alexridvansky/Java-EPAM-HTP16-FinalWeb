@@ -24,12 +24,12 @@ public class CommandProvider {
         commands.put(ADD_NEW_MAKE, new AddNewMakeCommand());
         commands.put(ADD_NEW_MODEL, new AddNewModelCommand());
         commands.put(ADD_NEW_VEHICLE, new AddNewVehicleCommand());
-        commands.put(EDIT_VEHICLE, new EditVehicleCommand());
         commands.put(GO_TO_SIGN_UP_PAGE, new ShowSignUpPageCommand());
         commands.put(GO_TO_MAIN_PAGE, new GoToMainPageCommand());
         commands.put(GO_TO_RECOVERY_PASSWORD_PAGE, new ShowRecoveryPasswordPageCommand());
         commands.put(SHOW_USER_LIST_ADMIN, new ShowUserListAdminCommand());
         commands.put(SHOW_VEHICLE_INFO, new ShowVehicleInfoCommand());
+        commands.put(SHOW_VEHICLE_INFO_PERSONAL, new ShowVehicleInfoPersonalCommand());
         commands.put(SHOW_VEHICLE_LIST_ADMIN, new ShowVehicleListAdmCommand());
         commands.put(SHOW_VEHICLE_LIST_MODER, new ShowVehicleListModerCommand());
         commands.put(SHOW_VEHICLE_LIST_PERSONAL, new ShowVehicleListPersonalCommand());
