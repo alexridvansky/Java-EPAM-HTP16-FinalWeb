@@ -439,12 +439,12 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public int findConfirmAttemptCount(long chatId, int hour) throws DaoException {
+    public int findConfirmAttemptCount(long chatId, int periodInHour) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement deleteStatement = connection.prepareStatement(SQL_REMOVE_EXPIRED_ATTEMPT);
              PreparedStatement countStatement = connection.prepareStatement(SQL_FIND_CONFIRMATION_COUNT)) {
 
-            deleteStatement.setInt(1, hour);
+            deleteStatement.setInt(1, periodInHour);
             int deleteResult = deleteStatement.executeUpdate();
             logger.debug("{} expired confirmation attempt record(s) deleted", deleteResult);
 
