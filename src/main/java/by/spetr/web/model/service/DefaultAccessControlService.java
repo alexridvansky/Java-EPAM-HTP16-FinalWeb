@@ -37,6 +37,7 @@ public class DefaultAccessControlService implements AccessControlService {
         commandPermission.put(ADD_NEW_MAKE, new ArrayList<>(List.of(ROOT)));
         commandPermission.put(ADD_NEW_MODEL, new ArrayList<>(List.of(ROOT)));
         commandPermission.put(ADD_NEW_VEHICLE, new ArrayList<>(List.of(USER)));
+        commandPermission.put(EDIT_VEHICLE, new ArrayList<>(List.of(USER)));
         commandPermission.put(SHOW_USER_LIST_ADMIN, new ArrayList<>(List.of(ROOT)));
         commandPermission.put(SHOW_VEHICLE_LIST_ADMIN, new ArrayList<>(List.of(ROOT)));
         commandPermission.put(SHOW_VEHICLE_LIST_MODER, new ArrayList<>(List.of(MODERATOR)));
@@ -75,7 +76,7 @@ public class DefaultAccessControlService implements AccessControlService {
     public boolean commandPermission(UserRoleType role, CommandType command) {
         List<UserRoleType> list = commandPermission.get(command);
         if (list == null) {
-            throw new IllegalArgumentException("Unknown command type");
+            throw new IllegalArgumentException("AccessControlService: Unknown command type");
         } else {
             return list.contains(role);
         }
@@ -184,6 +185,23 @@ public class DefaultAccessControlService implements AccessControlService {
                 logger.error("Users can change state only within ENABLED-DISABLED, and once to ARCHIVED");
                 throw new ServiceException("Users can change state only within ENABLED-DISABLED, and once to ARCHIVED");
             }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean uploadPhoto(VehicleFullForm form) throws ServiceException {
+        UserDto executor = form.getExecutor();
+
+        Optional<Vehicle> optionalVehicle = vehicleService.getVehicleById(form.getVehicleId());
+        if (optionalVehicle.isEmpty()) {
+            throw new ServiceException("Vehicle not found");
+        }
+
+        Vehicle vehicle = optionalVehicle.get();
+        if (executor.getUserId() != vehicle.getOwnerId()) {
+            throw new ServiceException("Users can't upload photos for someone's else adverts");
         }
 
         return true;
