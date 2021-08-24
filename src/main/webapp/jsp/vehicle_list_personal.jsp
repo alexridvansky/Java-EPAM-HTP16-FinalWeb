@@ -40,7 +40,7 @@
                             <c:choose>
                                 <c:when test="${vehicle.previewImagePath != null}">
                                     <img src="${vehicle.previewImagePath}"
-                                         onclick="location.href='${abs}/controller?command=show_vehicle_info&vehicle_id=${vehicle.id}';"
+                                         onclick="location.href='${abs}/controller?command=show_vehicle_info_personal&vehicle_id=${vehicle.id}';"
                                          style="cursor: pointer; border-radius: 0.25rem;"/>
                                 </c:when>
                                 <c:otherwise>
@@ -120,10 +120,7 @@
                                             </c:when>
                                             <c:otherwise>
 
-                                                <!-- Edit button-->
-                                                <a href="${abs}/controller?command=edit_vehicle&vehicle_id=${vehicle.id}"
-                                                   type="button" class="btn btn-sm btn-warning">${edit}
-                                                </a>
+
 
                                                 <!-- Add photo button-->
                                                 <button type="button" class="btn btn-sm btn-warning"

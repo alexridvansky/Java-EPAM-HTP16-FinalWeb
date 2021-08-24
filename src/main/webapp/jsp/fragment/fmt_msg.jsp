@@ -118,6 +118,7 @@
 <fmt:message key="global.delete" var="delete" bundle="${localization}"/>
 <fmt:message key="global.delete_title" var="delete_title" bundle="${localization}"/>
 <fmt:message key="global.delete_description" var="delete_description" bundle="${localization}"/>
+<fmt:message key="global.edit_title" var="edit_title" bundle="${localization}"/>
 <fmt:message key="global.cancel" var="cancel" bundle="${localization}"/>
 <fmt:message key="global.close" var="close" bundle="${localization}"/>
 <fmt:message key="global.about_title" var="about_title" bundle="${localization}"/>
