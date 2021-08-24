@@ -19,7 +19,11 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.29.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.webjars</groupId>
@@ -52,6 +56,11 @@
             <artifactId>gson</artifactId>
             <version>2.8.7</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.json</groupId>-->
+<!--            <artifactId>json</artifactId>-->
+<!--            <version>20210307</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
