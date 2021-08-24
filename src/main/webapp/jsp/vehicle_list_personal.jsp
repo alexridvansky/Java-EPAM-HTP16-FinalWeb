@@ -16,7 +16,7 @@
 
 <%@include file="fragment/header.jspf" %>
 
-<link rel="stylesheet" href="${abs}/css/album_style2.css">
+<link rel="stylesheet" href="${abs}/css/album_style.css">
 
 <main>
 
