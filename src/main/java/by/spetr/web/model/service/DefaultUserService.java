@@ -3,29 +3,37 @@ package by.spetr.web.model.service;
 import by.spetr.web.model.dao.DefaultUserDao;
 import by.spetr.web.model.dao.UserDao;
 import by.spetr.web.model.dto.UserDto;
-import by.spetr.web.model.form.LoginForm;
-import by.spetr.web.model.form.UserForm;
-import by.spetr.web.model.form.UserRegForm;
 import by.spetr.web.model.entity.User;
 import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.entity.type.UserStateType;
 import by.spetr.web.model.exception.DaoException;
 import by.spetr.web.model.exception.ServiceException;
+import by.spetr.web.model.form.LoginForm;
+import by.spetr.web.model.form.UserForm;
+import by.spetr.web.model.form.UserRegForm;
+import by.spetr.web.telegrambot.InformerService;
 import by.spetr.web.util.BCrypt;
+import by.spetr.web.util.ConfirmationCodeGenerator;
+import by.spetr.web.util.PasswordGenerator;
 import by.spetr.web.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static by.spetr.web.model.entity.type.UserRoleType.GUEST;
+import static by.spetr.web.model.entity.type.UserRoleType.ROOT;
+import static by.spetr.web.model.entity.type.UserStateType.DISABLED;
 import static by.spetr.web.model.service.ServiceMessageList.*;
 
 public class DefaultUserService implements UserService {
     private static final Logger logger = LogManager.getLogger();
     private static final AccessControlService accessControlService = AccessControlService.getInstance();
+    private static final InformerService informerService = InformerService.getInstance();
     private static final UserDao userDao = new DefaultUserDao();
     private static DefaultUserService instance;
 
@@ -68,19 +76,21 @@ public class DefaultUserService implements UserService {
             form.setPhone("");
             form.setFeedbackMsg(PHONE_TAKEN);
         } else {
-            User user = new User(
-                    form.getLogin(),
-                    UserRoleType.USER,
-                    UserStateType.CONFIRM,
-                    form.getEmail(),
-                    form.getPhone(),
-                    LocalDate.now()
-            );
-
-            String hashedPassword = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt());
 
             try {
-                user = userDao.createUser(user, hashedPassword);
+                User user = new User(
+                        form.getLogin(),
+                        UserRoleType.USER,
+                        UserStateType.CONFIRM,
+                        form.getEmail(),
+                        form.getPhone(),
+                        LocalDate.now()
+                );
+
+                String hashedPassword = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt());
+                String confirmationCode = ConfirmationCodeGenerator.generateConfirmCode();
+
+                user = userDao.createUser(user, hashedPassword, confirmationCode);
                 UserDto userDto = new UserDto();
                 userDto.setUserId(user.getUserId());
                 userDto.setLogin(user.getLogin());
@@ -161,16 +171,16 @@ public class DefaultUserService implements UserService {
                 return Optional.empty();
             }
 
-                userDto = new UserDto();
-                userDto.setLogin(optionalUser.get().getLogin());
-                userDto.setUserId(optionalUser.get().getUserId());
-                userDto.setRole(optionalUser.get().getRole());
-                userDto.setState(optionalUser.get().getState());
+            userDto = new UserDto();
+            userDto.setLogin(optionalUser.get().getLogin());
+            userDto.setUserId(optionalUser.get().getUserId());
+            userDto.setRole(optionalUser.get().getRole());
+            userDto.setState(optionalUser.get().getState());
 
-                form.setFeedbackMsg("User '" + form.getLogin() + "' has entered successfully");
-                form.setSuccess(true);
+            form.setFeedbackMsg("User '" + form.getLogin() + "' has entered successfully");
+            form.setSuccess(true);
 
-                return Optional.of(userDto);
+            return Optional.of(userDto);
 
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
@@ -196,6 +206,17 @@ public class DefaultUserService implements UserService {
             logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
+    }
+
+    @Override
+    public UserDto convertToDto(@NonNull User user) {
+        UserDto userDto = new UserDto();
+        userDto.setLogin(user.getLogin());
+        userDto.setUserId(user.getUserId());
+        userDto.setRole(user.getRole());
+        userDto.setState(user.getState());
+
+        return userDto;
     }
 
     @Override
@@ -243,6 +264,148 @@ public class DefaultUserService implements UserService {
         } catch (DaoException e) {
             logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
+    public boolean isChatIdExist(long chatId) throws ServiceException {
+        try {
+            return userDao.isChatIdExist(chatId);
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
+    public int getConfirmAttemptCount(long chatId, int hourPeriod) throws ServiceException {
+        try {
+            return userDao.findConfirmAttemptCount(chatId, hourPeriod);  // todo: replace by property variable
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
+    public Optional<String> getConfirmCode(long userId) throws ServiceException {
+        try {
+            return userDao.getConfirmCode(userId);
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
+    public boolean confirm(Long chatId, String code) throws ServiceException {
+        try {
+            userDao.createConfirmAttempt(chatId);
+            return userDao.confirm(chatId, code);
+        } catch (DaoException e) {
+            logger.error("Error occurred on DAO layer", e);
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
+    public boolean recoverUserPassword(UserForm form) throws ServiceException {
+
+        try {
+            Optional<User> optionalUser = userDao.findByLogin(form.getUserName());
+            if (optionalUser.isEmpty()) {
+                logger.warn("Password recovery was requested for not existing user");
+                return false;
+            }
+
+            User user = optionalUser.get();
+            if (user.getRole() == ROOT) {
+                logger.warn("Password recovery operation cannot be performed for root account");
+                return false;
+            } else if (user.getState() == DISABLED) {
+                logger.warn("Password recovery operation cannot be performed when user is blocked");
+                return false;
+            }
+
+            long chatId = userDao.findChatIdByUserId(optionalUser.get().getUserId());
+            if (chatId == 0) {
+                logger.warn("No chatId stored in the db for given user, that's strange...");
+                return false;
+            }
+
+            String generatedPassword = PasswordGenerator.generate();
+
+            boolean result = updateUserPassword(form.getUserName(), generatedPassword);
+            if (result) {
+                informerService.sendMessage(String.valueOf(chatId), generatedPassword);
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (DaoException e) {
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
+
+    @Override
+    public boolean changeUserPassword(UserRegForm form) throws ServiceException {
+        try {
+            Optional<User> optionalUser = userDao.findByLogin(form.getLogin());
+            if (optionalUser.isEmpty()) {
+                throw new ServiceException("User not found");
+            }
+
+            User user = optionalUser.get();
+            if (user.getRole() == ROOT || user.getRole() == GUEST) {
+                form.setFeedbackMsg("It's forbidden for such user to change their password");
+                return false;
+            } else if (user.getState() == DISABLED) {
+                form.setFeedbackMsg("Disabled user's can't logIn and change password as well");
+                return false;
+            }
+
+            if (!form.getPassword().equals(form.getPasswordRepeat())) {
+                form.setFeedbackMsg("Entered new password and new password repeat are different");
+                return false;
+            } else if (!UserValidator.validatePassword(form.getPassword())) {
+                form.setFeedbackMsg("Entered password doesn't match requirements");
+            }
+
+            Optional<String> optionalOldHashedPassFromDB = userDao.findUserPassword(user.getLogin());
+            if (optionalOldHashedPassFromDB.isEmpty()) {
+                throw new ServiceException("Couldn't verify user's password");
+            }
+
+            if (!UserValidator.validatePassword(form.getOldPassword())) {
+                form.setFeedbackMsg("Old password doesn't match requirements");
+            }
+
+            String oldHashedPasswordFromDB = optionalOldHashedPassFromDB.get();
+            if (BCrypt.checkpw(form.getPassword(), oldHashedPasswordFromDB)) {
+                form.setFeedbackMsg("Entered old password is incorrect");
+                return false;
+            }
+
+            boolean result = updateUserPassword(form.getLogin(), form.getPassword());
+
+            if (result) {
+                form.setSuccess(true);
+            }
+            return result;
+
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public boolean updateUserPassword(String login, String password) throws ServiceException {
+        try {
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            return userDao.updateUserPassword(login, hashedPassword);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 }

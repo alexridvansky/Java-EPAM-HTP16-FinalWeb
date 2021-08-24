@@ -6,6 +6,7 @@ import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.LoginForm;
 import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.UserRegForm;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +79,14 @@ public interface UserService {
     Optional<User> getUserById(long userId) throws ServiceException;
 
     /**
+     * converts User to UserDto
+     *
+     * @param user of User.class
+     * @return UserDto instance
+     */
+    UserDto convertToDto(@NonNull User user);
+
+    /**
      * is used for updating user status by username
      *
      * @param form UserForm contains User and new userStatus to be changed to
@@ -94,6 +103,72 @@ public interface UserService {
      * @throws ServiceException when error occurred on DAO layer
      */
     boolean updateUserRole(UserForm form) throws ServiceException;
+
+    /**
+     * method is used to verify is chatId given already exists in the db
+     *
+     * @param chatId chatId to be checked
+     * @return true if chatId given is already present in the db
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    boolean isChatIdExist(long chatId) throws ServiceException;
+
+    /**
+     * method is used to get number of confirmation attempts of the user
+     *
+     * @param chatId chatId of the user
+     * @param hourPeriod period of time in hours attempts will be counted and expired will be deleted
+     * @return number of confirmation attempts
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    int getConfirmAttemptCount(long chatId, int hourPeriod) throws ServiceException;
+
+    /**
+     * Returns confirmation secret key
+     *
+     * @param userId userId
+     * @return confirmation code
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    Optional<String> getConfirmCode(long userId) throws ServiceException;
+
+    /**
+     * Method is used for user registration confirmation
+     *
+     * @param chatId telegram chatId
+     * @param code   confirmation code to activate the account
+     * @return boolean if confirmation went successful and user status changed
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    boolean confirm(Long chatId, String code) throws ServiceException;
+
+    /**
+     * this method is used to generate a new password and sent it to the user via telegram bot
+     *
+     * @param form UserForm contains username (login)
+     * @return true if password restoring and storing went successfully
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    boolean recoverUserPassword(UserForm form) throws ServiceException;
+
+    /**
+     * is user to change current user password to a new one
+     *
+     * @param form UserRegForm contains old and new passwords
+     * @return true if changing was allowed and went successfully
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    boolean changeUserPassword(UserRegForm form) throws ServiceException;
+
+    /**
+     * method sets up a new password for user by username
+     *
+     * @param login username of the user
+     * @param password a new password to be set up
+     * @return true if password changing went successfully
+     * @throws ServiceException when error occurred on DAO layer
+     */
+    boolean updateUserPassword(String login, String password) throws ServiceException;
 
     static UserService getInstance() {
         return DefaultUserService.getInstance();
