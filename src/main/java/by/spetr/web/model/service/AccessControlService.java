@@ -5,7 +5,6 @@ import by.spetr.web.model.entity.type.UserRoleType;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.VehicleFullForm;
-import by.spetr.web.model.form.VehicleUploadForm;
 
 public interface AccessControlService {
 

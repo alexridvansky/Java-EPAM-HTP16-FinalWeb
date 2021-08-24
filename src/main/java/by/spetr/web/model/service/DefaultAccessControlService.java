@@ -13,7 +13,6 @@ import by.spetr.web.model.exception.DaoException;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.UserForm;
 import by.spetr.web.model.form.VehicleFullForm;
-import by.spetr.web.model.form.VehicleUploadForm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
