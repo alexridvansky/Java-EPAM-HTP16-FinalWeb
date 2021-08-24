@@ -96,8 +96,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public List<User> findAll() throws DaoException {
-        logger.debug("findAll() method been called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL + SQL_ORDER_BY_USER_ID)) {
 
@@ -120,8 +118,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> findById(long id) throws DaoException {
-        logger.debug("findById() method been called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_ID)) {
 
@@ -147,8 +143,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> findByLogin(String login) throws DaoException {
-        logger.debug("findUserByLogin() method been called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_LOGIN)) {
 
@@ -174,8 +168,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> findByEmail(String email) throws DaoException {
-        logger.debug("findUserByEmail() method been called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_EMAIL)) {
 
@@ -201,8 +193,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> findByPhone(String phone) throws DaoException {
-        logger.debug("findUserByPhone() method been called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_PHONE)) {
 
@@ -234,7 +224,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
      * @throws SQLException in case of impossibility of extracting all fields
      */
     private User extractUserFromResultSet(ResultSet resultSet) throws SQLException {
-
         return new User(
                 resultSet.getLong("user_id"),
                 resultSet.getString(USER_LOGIN),
@@ -248,8 +237,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<String> findUserPassword(String login) throws DaoException {
-        logger.debug("findUserPassword() method been called with {}", login);
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_PASSWORD_FINDER)) {
 
@@ -275,8 +262,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public User createUser(User user, String hashedPassword, String confirmationCode) throws DaoException {
-        logger.debug("createUser() method been called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement confirmationStatement = connection.prepareStatement(SQL_CREATE_CONFIRM_STATEMENT);
              PreparedStatement userStatement = connection.prepareStatement(SQL_CREATE_NEW_USER,
@@ -323,8 +308,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public boolean updateState(long userId, UserStateType userState) throws DaoException {
-        logger.debug("Update user_state by user_id method been called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_ID)) {
 
@@ -354,8 +337,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public boolean updateState(String userName, UserStateType userState) throws DaoException {
-        logger.debug("Update user_state by user_id method been called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATE_BY_LOGIN)) {
 
@@ -377,8 +358,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public boolean updateRole(long userId, UserRoleType userRole) throws DaoException {
-        logger.debug("Update user_role by user_id method been called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ROLE_BY_ID)) {
 
@@ -400,8 +379,6 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     @Override
     public boolean updateRole(String userName, UserRoleType userRole) throws DaoException {
-        logger.debug("Update user_role by user_name method been called");
-
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ROLE_BY_LOGIN)) {
 
