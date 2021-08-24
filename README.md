@@ -14,6 +14,7 @@ User states:
 3. BANNED - such user can look through adverts, see phone numbers, but can't place new adverts, adverts of these users, already placed, won't be shown to other users.
 4. DISABLED - those users, who are disabled, can't login into the system, their accounts blocked, such accounts will ever stay at the database what means they'll never be able to register again due to policy of unique e-main and phone number, it's better not to get blocked.
 
-There's a running up db on heroku you can use, just use db.property from db_source_select/heroku/db.properties
+!INFO! There's a running up db on heroku you can use, just use db.property from db_source_select/heroku/db.properties
+
 DataBase model :
 <img src="/src/main/resources/db_model.png" alt="database model">
