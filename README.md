@@ -14,14 +14,14 @@ User states:
 3. BANNED - such user can look through adverts, see phone numbers, but can't place new adverts, adverts of these users, already placed, won't be shown to other users.
 4. DISABLED - those users, who are disabled, can't login into the system, their accounts blocked, such accounts will ever stay at the database what means they'll never be able to register again due to policy of unique e-main and phone number, it's better not to get blocked.
 
-
+<br>
 Check it out at: 
 https://autoschrott.herokuapp.com/jsp/main.jsp
-
-login: User1 pass: user1
-login: root pass: root
-login: moder1 pass: moder1
-and so on, and so on...
+<br>
+login: User1 pass: user1<br>
+login: root pass: root<br>
+login: moder1 pass: moder1<br>
+and so on, and so on...<br>
 
 DataBase model :
 <img src="/src/main/resources/db_model.png" alt="database model">
