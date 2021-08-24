@@ -8,7 +8,6 @@ import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.VehicleFullForm;
 import by.spetr.web.model.service.VehicleService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +18,8 @@ import java.util.Set;
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 public class UploadVehiclePhotoCommand implements Command {

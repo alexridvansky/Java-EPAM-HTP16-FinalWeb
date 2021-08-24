@@ -7,7 +7,6 @@ import by.spetr.web.model.dto.VehiclePreviewDto;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,6 +15,8 @@ import java.util.List;
 
 import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class ShowVehicleListModerCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

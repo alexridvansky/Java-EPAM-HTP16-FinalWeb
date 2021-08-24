@@ -1,9 +1,10 @@
 package by.spetr.web.controller.command;
 
 import by.spetr.web.model.form.DefaultForm;
-import jakarta.servlet.http.HttpServletRequest;
 
 import static by.spetr.web.controller.command.RequestParameter.PAGE_PARAM;
+
+import javax.servlet.http.HttpServletRequest;
 
 @FunctionalInterface
 public interface Command {

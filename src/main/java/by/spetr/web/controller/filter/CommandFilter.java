@@ -6,12 +6,6 @@ import by.spetr.web.model.entity.User;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.service.AccessControlService;
 import by.spetr.web.model.service.UserService;
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.annotation.WebInitParam;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +14,18 @@ import java.util.Optional;
 
 import static by.spetr.web.controller.command.RequestParameter.COMMAND_PARAM;
 import static by.spetr.web.controller.command.RequestParameter.USER_PARAM;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebInitParam;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Security filter controls client's access to commands through AccessControlService

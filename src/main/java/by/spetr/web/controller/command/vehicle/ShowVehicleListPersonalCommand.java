@@ -8,7 +8,6 @@ import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.service.DefaultVehicleService;
 import by.spetr.web.model.service.VehicleService;
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -16,6 +15,8 @@ import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.USER_PARAM;
 import static by.spetr.web.controller.command.RequestParameter.VEHICLE_LIST_PARAM;
 import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class ShowVehicleListPersonalCommand implements Command {
     private static final VehicleService vehicleService = DefaultVehicleService.getInstance();

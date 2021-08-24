@@ -8,7 +8,6 @@ import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.UserRegForm;
 import by.spetr.web.model.service.DefaultUserService;
 import by.spetr.web.model.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,6 +17,8 @@ import java.util.Optional;
 import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
 import static by.spetr.web.model.entity.type.UserStateType.CONFIRM;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class CreateUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

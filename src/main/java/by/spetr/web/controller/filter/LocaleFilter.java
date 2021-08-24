@@ -1,8 +1,5 @@
 package by.spetr.web.controller.filter;
 
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,6 +7,14 @@ import java.io.IOException;
 import java.util.Locale;
 
 import static by.spetr.web.controller.command.RequestParameter.LOCALE_PARAM;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Filter is used to set up the locale from user's system defaults to session

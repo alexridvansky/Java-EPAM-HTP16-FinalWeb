@@ -2,10 +2,11 @@ package by.spetr.web.controller.command.user;
 
 import by.spetr.web.controller.command.Command;
 import by.spetr.web.controller.command.Router;
-import jakarta.servlet.http.HttpServletRequest;
 
 import static by.spetr.web.controller.command.PagePath.INDEX_PAGE;
 import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class LogOutCommand implements Command {
 

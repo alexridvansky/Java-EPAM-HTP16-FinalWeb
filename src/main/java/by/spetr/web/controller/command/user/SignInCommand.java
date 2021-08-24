@@ -8,7 +8,6 @@ import by.spetr.web.model.form.DefaultForm;
 import by.spetr.web.model.form.LoginForm;
 import by.spetr.web.model.service.DefaultUserService;
 import by.spetr.web.model.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +18,8 @@ import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
 import static by.spetr.web.model.entity.type.UserStateType.CONFIRM;
 import static by.spetr.web.model.entity.type.UserStateType.DISABLED;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class SignInCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

@@ -5,14 +5,6 @@ import by.spetr.web.controller.command.CommandProvider;
 import by.spetr.web.controller.command.RequestParameter;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.model.service.VehicleService;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,6 +16,15 @@ import java.util.Set;
 
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.*;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  * class {@code UploadController} is used for processing requests with multipart parameters

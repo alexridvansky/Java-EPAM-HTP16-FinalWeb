@@ -5,12 +5,6 @@ import by.spetr.web.controller.command.CommandProvider;
 import by.spetr.web.controller.command.RequestParameter;
 import by.spetr.web.controller.command.Router;
 import by.spetr.web.telegrambot.TelegramInformerService;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +13,13 @@ import java.io.IOException;
 import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
 import static by.spetr.web.controller.command.RequestParameter.EXCEPTION_MESSAGE_PARAM;
 import static by.spetr.web.controller.command.RequestParameter.FEEDBACK_MESSAGE_PARAM;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
