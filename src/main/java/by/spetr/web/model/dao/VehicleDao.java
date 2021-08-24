@@ -265,15 +265,6 @@ public interface VehicleDao {
     List<VehicleOption> findAllOption() throws DaoException;
 
     /**
-     * method is used to renew options set for a specific vehicle
-     *
-     * @param vehicleId id of the affected vehicle
-     * @return List of options
-     * @throws DaoException if connection can't be obtained or no access to the DataBase
-     */
-    List<VehicleOption> reSetOptionList(long vehicleId) throws DaoException;
-
-    /**
      * is used to get the full List of possible values for Vehicle.Color
      *
      * @return List<VehicleColor> of values Vehicle.Color
