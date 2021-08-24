@@ -150,6 +150,15 @@ public interface VehicleService {
     boolean uploadVehiclePhoto(VehicleFullForm form) throws ServiceException;
 
     /**
+     * is used to edit vehicle.comment field.
+     *
+     * @param form VehicleFullForm contains vehicleId and new comment text
+     * @return true if comment changed successfully
+     * @throws ServiceException in case of errors on DAO layer or Cloudinary service
+     */
+    boolean updateVehicleComment(VehicleFullForm form) throws ServiceException;
+
+    /**
      * is used to get from the database publicId of stored picture and getting the path to it
      *
      * @param vehicleId vehicleId
