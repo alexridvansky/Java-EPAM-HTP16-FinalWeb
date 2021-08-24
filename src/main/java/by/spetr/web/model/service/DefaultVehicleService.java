@@ -1,6 +1,5 @@
 package by.spetr.web.model.service;
 
-import by.spetr.web.telegrambot.InformerService;
 import by.spetr.web.model.dao.DefaultVehicleDao;
 import by.spetr.web.model.dao.VehicleDao;
 import by.spetr.web.model.dto.VehicleFullDto;
@@ -13,6 +12,7 @@ import by.spetr.web.model.exception.DaoException;
 import by.spetr.web.model.exception.ServiceException;
 import by.spetr.web.model.form.VehicleFullForm;
 import by.spetr.web.model.form.VehicleShortForm;
+import by.spetr.web.telegrambot.InformerService;
 import by.spetr.web.util.TagRemover;
 import by.spetr.web.validator.VehicleValidator;
 import org.apache.logging.log4j.LogManager;
