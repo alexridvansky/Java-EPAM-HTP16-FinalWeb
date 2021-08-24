@@ -401,7 +401,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     @Override
     public boolean updateUserPassword(String login, String hashedPassword) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_PASSWORD_BY_LOGIN)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_PASSWORD_BY_LOGIN)) {
             statement.setString(1, hashedPassword);
             statement.setString(2, login);
 
@@ -446,9 +446,9 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
             deleteStatement.setInt(1, hour);
             int deleteResult = deleteStatement.executeUpdate();
-                logger.debug("{} expired confirmation attempt record(s) deleted", deleteResult);
+            logger.debug("{} expired confirmation attempt record(s) deleted", deleteResult);
 
-        countStatement.setLong(1, chatId);
+            countStatement.setLong(1, chatId);
             ResultSet countResultSet = countStatement.executeQuery();
 
             if (countResultSet.next()) {
@@ -467,7 +467,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
 
     public void createConfirmAttempt(long chatId) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SQL_CONFIRMATION_ATTEMPT_INSERT)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_CONFIRMATION_ATTEMPT_INSERT)) {
             statement.setLong(1, chatId);
             statement.executeUpdate();
 
@@ -481,7 +481,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     @Override
     public Optional<String> getConfirmCode(long userId) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SQL_FIND_CONFIRMATION_BY_USER_ID)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_FIND_CONFIRMATION_BY_USER_ID)) {
             statement.setLong(1, userId);
             ResultSet resultSet = statement.executeQuery();
 
@@ -567,7 +567,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     @Override
     public long findChatIdByUserId(long userId) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SQL_FIND_CHAT_ID_BY_USER_ID)) {
+             PreparedStatement statement = connection.prepareStatement(SQL_FIND_CHAT_ID_BY_USER_ID)) {
             statement.setLong(1, userId);
             ResultSet resultSet = statement.executeQuery();
 
