@@ -19,7 +19,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -55,7 +54,6 @@ public class DefaultVehicleService implements VehicleService {
             return vehicleFullDtoList;
 
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -74,7 +72,6 @@ public class DefaultVehicleService implements VehicleService {
             return vehiclePreviewDtoList;
 
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException(e.getMessage(), e);
         }
     }
@@ -93,7 +90,6 @@ public class DefaultVehicleService implements VehicleService {
             return vehiclePreviewDtoList;
 
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException(e.getMessage(), e);
         }
     }
@@ -103,7 +99,6 @@ public class DefaultVehicleService implements VehicleService {
         try {
             return vehicleDao.findPublicVehicleListSize();
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException(e.getMessage(), e);
         }
     }
@@ -113,7 +108,6 @@ public class DefaultVehicleService implements VehicleService {
         try {
             return vehicleDao.findModeratorVehicleListSize();
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException(e.getMessage(), e);
         }
     }
@@ -130,7 +124,6 @@ public class DefaultVehicleService implements VehicleService {
             }
             return vehiclePreviewDtoList;
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -141,7 +134,6 @@ public class DefaultVehicleService implements VehicleService {
             return vehicleDao.findAdNumberByUserId(userId);
 
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -171,7 +163,6 @@ public class DefaultVehicleService implements VehicleService {
         try {
             optionalPreviewPublicId = getPreviewImageById(vehicle.getId());
         } catch (ServiceException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
 
@@ -196,7 +187,6 @@ public class DefaultVehicleService implements VehicleService {
             }
 
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -254,7 +244,6 @@ public class DefaultVehicleService implements VehicleService {
             return Optional.of(vehicleFullDto);
 
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -265,7 +254,6 @@ public class DefaultVehicleService implements VehicleService {
         try {
             return vehicleDao.findById(vehicleId);
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -275,7 +263,6 @@ public class DefaultVehicleService implements VehicleService {
         try {
             return vehicleDao.findMakeList();
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -289,13 +276,11 @@ public class DefaultVehicleService implements VehicleService {
                 if (vehicleDao.isMakeExist(form.getMake())) {
                     form.setFeedbackMsg("Make '<b>" + form.getMake() + "</b>' already exists");
                 } else if (vehicleDao.insertMake(form.getMake())) {
-                    logger.debug("New make '{}' successfully added", form.getMake());
                     form.setFeedbackMsg("New make '<b>" + form.getMake() + "</b>' successfully added");
                     form.setSuccess(true);
                 }
 
             } catch (DaoException e) {
-                logger.error("Error occurred on DAO layer", e);
                 throw new ServiceException("Error occurred on DAO layer", e);
             }
         }
@@ -306,7 +291,6 @@ public class DefaultVehicleService implements VehicleService {
         try {
             return vehicleDao.findModelList();
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -322,12 +306,10 @@ public class DefaultVehicleService implements VehicleService {
                 } else if (vehicleDao.isModelExist(form.getModel())) {
                     form.setFeedbackMsg("Model '<b>" + form.getModel() + "</b>' already exists");
                 } else if (vehicleDao.insertModel(form.getModel(), form.getMakeId())) {
-                    logger.info("New model '{}' successfully added", form.getModel());
                     form.setFeedbackMsg("New model '<b>" + form.getModel() + "</b>' successfully added");
                     form.setSuccess(true);
                 }
             } catch (DaoException e) {
-                logger.error("Error occurred on DAO layer", e);
                 throw new ServiceException("Error occurred on DAO layer", e);
             }
         }
@@ -410,17 +392,16 @@ public class DefaultVehicleService implements VehicleService {
 
                 vehicle = vehicleDao.insertVehicle(vehicle);
                 if (vehicle == null) {
-                    logger.error("Vehicle can't be inserted or re-read");
                     throw new ServiceException("Vehicle can't be inserted or re-read");
                 }
 
                 boolean isUploaded = uploadVehiclePhoto(form);
                 if (isUploaded) {
                     logger.debug("photo(s) uploaded");
+                    form.setSuccess(true);
                 } else {
                     logger.error("photo(s) not uploaded");
                 }
-                form.setSuccess(true);
                 informOfVehicle(vehicle);
 
                 return vehicle;
@@ -429,7 +410,6 @@ public class DefaultVehicleService implements VehicleService {
             return null;
 
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -456,19 +436,16 @@ public class DefaultVehicleService implements VehicleService {
     public boolean updateVehicleState(VehicleFullForm form) throws ServiceException {
         try {
             if (!accessControlService.updateVehicleState(form)) {
-                logger.error("Unauthorised access attempt");
                 throw new ServiceException("Unauthorised access attempt");
             }
 
             if (vehicleDao.findById(form.getVehicleId()).isEmpty()) {
                 FormattedMessage errorMsg = new FormattedMessage(
                         "vehicle by id '{}' not found", form.getVehicleId());
-                logger.error(errorMsg);
                 throw new ServiceException(errorMsg.toString());
             }
 
             if (!vehicleDao.updateState(form.getVehicleId(), form.getState())) {
-                logger.error("Error changing vehicle state");
                 form.setFeedbackMsg("Error changing vehicle state");
                 return false;
             } else {
@@ -483,7 +460,6 @@ public class DefaultVehicleService implements VehicleService {
                 return true;
             }
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -502,13 +478,8 @@ public class DefaultVehicleService implements VehicleService {
 
                     if (imgPath != null && !imgPath.isBlank()) {
                         cloudinaryPublicIds.add(imgPath);
-
-                        File file = new File(imgPath);
-                        boolean isDeleted = file.delete();
-                        logger.debug("is temporary file deleted: {}", isDeleted);
                     }
                 } catch (ServiceException e) {
-                    logger.error("Error on Cloudinary service. File(s) can't be uploaded", e);
                     throw new ServiceException("Error on Cloudinary service. File(s) can't be uploaded", e);
                 }
             }
@@ -517,7 +488,6 @@ public class DefaultVehicleService implements VehicleService {
         try {
             vehicleDao.createPhoto(form.getVehicleId(), cloudinaryPublicIds);
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
 
@@ -526,7 +496,6 @@ public class DefaultVehicleService implements VehicleService {
 
     @Override
     public boolean updateVehicleComment(VehicleFullForm form) throws ServiceException {
-        logger.debug("Edit comment service");
         accessControlService.editVehicle(form);
 
         String description = form.getComment();
@@ -577,7 +546,6 @@ public class DefaultVehicleService implements VehicleService {
         try {
             return vehicleDao.findAllPhotoById(vehicleId);
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -587,7 +555,6 @@ public class DefaultVehicleService implements VehicleService {
         try {
             return vehicleDao.findAllOption();
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -633,7 +600,6 @@ public class DefaultVehicleService implements VehicleService {
         try {
             return vehicleDao.findAllColors();
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
@@ -642,11 +608,9 @@ public class DefaultVehicleService implements VehicleService {
     public VehicleColor addColor(VehicleShortForm form) throws ServiceException {
         try {
             if (!VehicleValidator.validateColor(form.getColor())) {
-                logger.error("Color entered doesn't match requirements");
                 throw new ServiceException("Color entered doesn't match requirements");
 
             } else if (vehicleDao.isColorExist(form.getColor())) {
-                logger.error("Color with name {} already exists", form.getColor());
                 throw new ServiceException("Color with name '" + form.getColor() + "' already exists");
             }
             VehicleColor vehicleColor = vehicleDao.insertColor(form.getColor());
@@ -658,7 +622,6 @@ public class DefaultVehicleService implements VehicleService {
                 throw new ServiceException("New color entry '" + form.getColor() + "' hasn't been created");
             }
         } catch (DaoException e) {
-            logger.error("Error occurred on DAO layer", e);
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
