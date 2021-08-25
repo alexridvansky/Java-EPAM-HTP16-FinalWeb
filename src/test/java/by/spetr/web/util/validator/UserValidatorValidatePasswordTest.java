@@ -24,7 +24,9 @@ public class UserValidatorValidatePasswordTest {
                 {"1ann", true},
                 {"ann1", true},
                 {"0000", true},
-                {"01aa", true}
+                {"01aa", true},
+                {"", false},
+                {" ", false}
         };
     }
 }

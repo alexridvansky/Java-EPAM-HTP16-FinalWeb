@@ -24,7 +24,9 @@ public class UserValidatorValidateEmailTest {
                 {"stupidity@mail.ru", true},
                 {"curiosity@tut.by", true},
                 {"trump@tut.by", true},
-                {"barabashka@tut.by", true}
+                {"barabashka@tut.by", true},
+                {"", false},
+                {" ", false}
         };
     }
 }

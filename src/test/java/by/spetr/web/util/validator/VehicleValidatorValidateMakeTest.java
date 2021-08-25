@@ -4,27 +4,27 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+public class VehicleValidatorValidateMakeTest {
 
-public class UserValidatorValidateUsernameTest {
-
-    @Test(dataProvider = "validate_username")
-    public void testValidateUsername(String username, boolean expectedResult) {
-        boolean actualResult = UserValidator.validateUsername(username);
+    @Test(dataProvider = "validate_make")
+    public void testValidateUsername(String make, boolean expectedResult) {
+        boolean actualResult = VehicleValidator.validateMake(make);
 
         Assert.assertEquals(actualResult, expectedResult);
     }
 
-    @DataProvider(name = "validate_username")
+    @DataProvider(name = "validate_make")
     public Object[][] createData() {
         return new Object[][]{
-                {"Sasha", true},
-                {"as", false},
+                {"lada", true},
+                {"zaz", false},
                 {"Жора", false},
-                {"ann", false},
+                {"nissan", true},
                 {"anna", true},
                 {"1ann", false},
                 {"ann1", true},
+                {"moskvich", true},
+                {"жигули", false},
                 {"", false},
                 {" ", false}
         };
