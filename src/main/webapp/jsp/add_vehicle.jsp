@@ -181,8 +181,7 @@
                                    class="form-label mb-0">${enter_description}
                             </label>
                             <textarea class="form-control" name="description" id="exampleFormControlTextarea1"
-                                      rows="8">
-                            </textarea>
+                                      rows="8"></textarea>
                         </div>
                         <hr class="my-4">
                         <div class="col-12 mt-0">
