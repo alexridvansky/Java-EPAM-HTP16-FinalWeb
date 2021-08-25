@@ -68,7 +68,46 @@
                             </c:otherwise>
                         </c:choose>
                         - ${vehicle.color}
-                        - $<fmt:formatNumber value="${vehicle.price}" type="number" maxFractionDigits="0"/>
+                        <br>
+                        $<fmt:formatNumber value="${vehicle.price}" type="number" maxFractionDigits="0"/>
+                        <br>
+
+                        <!-- Price edit button -->
+                        <button type="button" class="btn btn-sm btn-warning text-dark" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal${vehicle.id}" data-bs-whatever="@mdo">${edit}</button>
+
+                        <!-- Price edit modal -->
+                        <div class="modal fade" id="exampleModal${vehicle.id}" tabindex="-1"
+                             aria-labelledby="exampleModalLabel${vehicle.id}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <form class="needs-validation" action="${abs}/controller" method="post" novalidate>
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-dark"
+                                                id="exampleModalLabel${vehicle.id}">${edit_title}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <input type="hidden" name="command" value="update_vehicle_price">
+                                            <input type="hidden" name="vehicle_id" value="${vehicle.id}">
+                                            <div class="mb-3 has-validation">
+                                                <label for="recipient-name"
+                                                       class="col-form-label text-dark">${enter_price}</label>
+                                                <input type="text" class="form-control" id="recipient-name"
+                                                       required pattern="${price_regexp}" name="new_price">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-bs-dismiss="modal">${close}</button>
+                                            <button type="submit" class="btn btn-sm btn-warning">${edit}</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
                     </h2>
                 </div>
                 <hr class="col-12 text-white">
@@ -173,7 +212,7 @@
                      aria-labelledby="editCommentModalLabel${vehicle.id}" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <form action="${pageContext.request.contextPath}/controller" method="post">
+                            <form action="${abs}/controller" method="post">
                                 <input type="hidden" name="command" value="update_vehicle_comment">
                                 <input type="hidden" name="vehicle_id" value="${vehicle.id}">
                                 <div class="modal-header">
@@ -188,7 +227,8 @@
                                     <label for="exampleFormControlTextarea1"
                                            class="form-label mb-0">${enter_description}
                                     </label>
-                                    <textarea class="form-control" name="new_description" id="exampleFormControlTextarea1"
+                                    <textarea class="form-control" name="new_description"
+                                              id="exampleFormControlTextarea1"
                                               rows="8">${vehicle.comment}</textarea>
                                 </div>
                                 <div class="modal-footer">
