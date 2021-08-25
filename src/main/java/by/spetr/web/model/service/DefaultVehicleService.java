@@ -423,13 +423,9 @@ public class DefaultVehicleService implements VehicleService {
      */
     private void informOfVehicle(Vehicle vehicle) throws ServiceException {
         StringBuilder note = new StringBuilder();
-        note.append("New ad just added:");
-        note.append(" ").append(vehicle.getModel().getMake().getValue());
-        note.append(" ").append(vehicle.getModel().getValue());
-        note.append(" ").append(vehicle.getModelYear());
-        note.append(" $").append(vehicle.getPrice());
-        Optional<String> previewPath = getPreviewImageById(vehicle.getId());
-        previewPath.ifPresent(s -> note.append("\n").append(s));
+        note.append("New ad just added:\n");
+        note.append("https://autoschrott.herokuapp.com/controller?command=show_vehicle_info&vehicle_id=");
+        note.append(vehicle.getId());
 
         informerService.sendPublicMessage(note.toString());
     }
