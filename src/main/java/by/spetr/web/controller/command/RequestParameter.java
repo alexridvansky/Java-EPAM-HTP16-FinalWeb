@@ -42,6 +42,7 @@ public final class RequestParameter {
     public static final String VEHICLE_DESCRIPTION_PARAM = "description";
     public static final String VEHICLE_NEW_DESCRIPTION_PARAM = "new_description";
     public static final String VEHICLE_PRICE_PARAM = "price";
+    public static final String VEHICLE_NEW_PRICE_PARAM = "new_price";
     public static final String VEHICLE_MAKE_LIST_PARAM = "makes";
     public static final String VEHICLE_MODEL_LIST_PARAM = "models";
     public static final String VEHICLE_OPTION_LIST_PARAM = "options";
