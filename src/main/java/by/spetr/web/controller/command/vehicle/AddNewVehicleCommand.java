@@ -33,6 +33,8 @@ public class AddNewVehicleCommand implements Command {
             request.setAttribute(VEHICLE_PARAM, vehicle);
 
             if (form.isSuccess()) {
+                request.setAttribute(VEHICLE_PARAM, vehicle);
+
                 return new Router(VEHICLE_LIST_PERSONAL, REDIRECT);
             } else {
                 request.setAttribute(FORM_PARAM, form);
@@ -109,6 +111,7 @@ public class AddNewVehicleCommand implements Command {
             Set<String> filenames = (Set<String>) request.getAttribute(FILENAME_PARAM);
             filenames.forEach(logger::debug);
             form.setPhotoSet(filenames);
+            form.setExecutor(executor);
 
             return form;
 
