@@ -40,16 +40,11 @@ public class ShowVehicleListModerCommand implements Command {
 
             return new Router(VEHICLE_LIST_MODER);
 
-        } catch (ServiceException e) {
+        } catch (ServiceException | IllegalArgumentException e) {
             logger.error(e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
-        } catch (IllegalArgumentException e) {
-            logger.error(e);
-            request.setAttribute(FEEDBACK_MESSAGE_PARAM, e.getMessage());
-
-            return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
         }
     }
 }
