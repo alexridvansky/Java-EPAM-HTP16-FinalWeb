@@ -13,9 +13,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
-import static by.spetr.web.controller.command.PagePath.VEHICLE_LIST_PUBLIC;
+import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
 
 public class ShowVehicleListPublicCommand implements Command {
@@ -24,6 +24,8 @@ public class ShowVehicleListPublicCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) {
+        String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
+
         try {
             int adCount = vehicleService.getPublicVehicleListSize();
             List<VehiclePreviewDto> vehicles = new ArrayList<>(adCount);
@@ -42,6 +44,11 @@ public class ShowVehicleListPublicCommand implements Command {
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
+        } catch (IllegalArgumentException e) {
+            logger.error(e);
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, e.getMessage());
+
+            return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
         }
     }
 }

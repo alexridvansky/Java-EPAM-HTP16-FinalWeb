@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static by.spetr.web.controller.command.PagePath.*;
 import static by.spetr.web.controller.command.RequestParameter.*;
@@ -23,6 +24,8 @@ public class ShowVehicleListModerCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) {
+        String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
+
         try {
             int adCount = vehicleService.getModeratorVehicleListSize();
             List<VehiclePreviewDto> vehicles = new ArrayList<>(adCount);
@@ -41,6 +44,11 @@ public class ShowVehicleListModerCommand implements Command {
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
+        } catch (IllegalArgumentException e) {
+            logger.error(e);
+            request.setAttribute(FEEDBACK_MESSAGE_PARAM, e.getMessage());
+
+            return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
         }
     }
 }
