@@ -53,6 +53,44 @@
             </button>
         </div>
 
+        <!-- Add photo button-->
+        <button type="button" class="btn btn-sm btn-warning mt-1"
+                data-bs-toggle="modal"
+                data-bs-target="#addPhoto${vehicle.id}">
+            +<i class="fas fa-camera"></i>
+        </button>
+
+        <div class="modal fade" id="addPhoto${vehicle.id}" tabindex="-1"
+             aria-labelledby="addPhotoLabel${vehicle.id}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"
+                            id="addPhotoLabel${vehicle.id}">${vhl_add_photo_title}</h5>
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>${vhl_add_photo_promo}</p>
+
+                        <form method="post" action="uploadController" enctype="multipart/form-data">
+                            Choose a file: <input type="file" name="uploadController" multiple/>
+                            <input type="hidden" name="command" value="upload_vehicle_photo" formenctype="text/plain"/>
+                            <input type="hidden" name="vehicle_id" value="${vehicle.id}" formenctype="text/plain"/>
+                            <input type="submit" value="Upload" class="btn-sm btn-warning"/>
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <hr class="col-12 text-white">
