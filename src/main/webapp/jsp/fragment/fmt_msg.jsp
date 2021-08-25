@@ -171,4 +171,8 @@
 <fmt:message key="user.phone" var="phone" bundle="${localization}"/>
 <fmt:message key="user.create" var="create" bundle="${localization}"/>
 <fmt:message key="error.error_title" var="error" bundle="${localization}"/>
+<fmt:message key="error.error400_title" var="error400" bundle="${localization}"/>
+<fmt:message key="error.error403_title" var="error403" bundle="${localization}"/>
+<fmt:message key="error.error404_title" var="error404" bundle="${localization}"/>
+<fmt:message key="error.error500_title" var="error500" bundle="${localization}"/>
 
