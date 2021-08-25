@@ -395,6 +395,8 @@ public class DefaultVehicleService implements VehicleService {
                     throw new ServiceException("Vehicle can't be inserted or re-read");
                 }
 
+                form.setVehicleId(vehicle.getId());
+
                 boolean isUploaded = uploadVehiclePhoto(form);
                 if (isUploaded) {
                     logger.debug("photo(s) uploaded");
@@ -480,7 +482,7 @@ public class DefaultVehicleService implements VehicleService {
                         cloudinaryPublicIds.add(imgPath);
                     }
                 } catch (ServiceException e) {
-                    throw new ServiceException("Error on Cloudinary service. File(s) can't be uploaded", e);
+                    throw new ServiceException(e.getMessage(), e);
                 }
             }
         }
@@ -488,7 +490,7 @@ public class DefaultVehicleService implements VehicleService {
         try {
             vehicleDao.createPhoto(form.getVehicleId(), cloudinaryPublicIds);
         } catch (DaoException e) {
-            throw new ServiceException("Error occurred on DAO layer", e);
+            throw new ServiceException(e.getMessage(), e);
         }
 
         return true;
