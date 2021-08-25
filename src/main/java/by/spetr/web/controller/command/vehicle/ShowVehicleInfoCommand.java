@@ -24,6 +24,7 @@ public class ShowVehicleInfoCommand implements Command {
     public Router execute(HttpServletRequest request) {
         try {
             String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
+
             String strVehicleId = request.getParameter(VEHICLE_ID_PARAM);
             if (strVehicleId == null) {
                 throw new IllegalArgumentException("Parameter is null");
@@ -46,7 +47,8 @@ public class ShowVehicleInfoCommand implements Command {
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
 
             return new Router(ERROR_PAGE);
-        } catch (NumberFormatException e) {
+
+        } catch (IllegalArgumentException e) {
             logger.error("Error parsing command {}", e.getMessage(), e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, "Error parsing command " + e.getMessage());
 
