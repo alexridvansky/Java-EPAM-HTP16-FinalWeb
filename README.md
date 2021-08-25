@@ -2,6 +2,9 @@
 
 SecondHandCar - by a dream
 
+- Deployed on Heroku (see below).
+- Uses Cloudinary for storing photos.
+
 Users and roles:
 1. ROOT - system account, has rights to change role and status for every user, has access to both administrative and user's pages.
 2. MODERATORS - a group which members can block and unblock adverts.
