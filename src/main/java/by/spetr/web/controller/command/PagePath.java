@@ -16,7 +16,7 @@ public class PagePath {
     public static final String VEHICLE_INFO_PERSONAL = "/jsp/vehicle_info_personal.jsp";
     public static final String COLOR_CREATION_PAGE = "/jsp/add_color.jsp";
     public static final String MAKE_CREATION_PAGE = "/jsp/add_make.jsp";
-    public static final String MODEL_CREATION_PAGE = "/jsp/create_model.jsp";
+    public static final String MODEL_CREATION_PAGE = "/jsp/add_model.jsp";
     public static final String ERROR_404_PAGE = "/jsp/error/error_404.jsp";
     public static final String ERROR_PAGE = "/jsp/error/error.jsp";
     public static final String INDEX_PAGE = "index.jsp";

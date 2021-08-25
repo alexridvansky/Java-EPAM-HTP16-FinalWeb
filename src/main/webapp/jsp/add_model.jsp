@@ -27,7 +27,7 @@
                 <div class="col-12">
                     <p class="lead text-muted">${enter_new_model}</p>
                     <select name="make_id" class="form-control secondList selectFilter mt-3" required>
-                        <option value="${last_make}">${select_model}</option>
+                        <option value="${last_make}">${select_make}</option>
                         <%--@elvariable id="makes" type="java.util.List"--%>
                         <%--@elvariable id="make" type="by.spetr.web.model.entity.type.VehicleMake"--%>
                         <%--@elvariable id="last_make_id" type="java.lang.Integer"--%>
@@ -50,7 +50,7 @@
                 <div class="col-12 mt-4">
                     <div class="input-group has-validation">
                         <input type="text" class="form-control" id="model" name="model"
-                               placeholder="${vehicle_make}" required pattern="${model_regexp}">
+                               placeholder="${vehicle_model}" required pattern="${model_regexp}">
                         <div class="invalid-feedback">
                             ${model_req}
                         </div>
