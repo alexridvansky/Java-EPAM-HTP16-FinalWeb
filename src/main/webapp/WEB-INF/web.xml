@@ -64,5 +64,4 @@
         <location>/jsp/error/error_500.jsp</location>
     </error-page>
 
-
 </web-app>
