@@ -194,6 +194,9 @@ public class DefaultAccessControlService implements AccessControlService {
     @Override
     public boolean editVehicle(VehicleFullForm form) throws ServiceException {
         UserDto executor = form.getExecutor();
+        if (executor == null) {
+            throw new ServiceException("No executor in the form");
+        }
 
         Optional<Vehicle> optionalVehicle = vehicleService.getVehicleById(form.getVehicleId());
         if (optionalVehicle.isEmpty()) {
