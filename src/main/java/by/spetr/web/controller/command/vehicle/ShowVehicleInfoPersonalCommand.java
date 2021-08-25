@@ -27,7 +27,7 @@ public class ShowVehicleInfoPersonalCommand implements Command {
 
             String strVehicleId = request.getParameter(VEHICLE_ID_PARAM);
             if (strVehicleId == null) {
-                throw new IllegalArgumentException("Parameter is null");
+                throw new IllegalArgumentException("VehicleId parameter is null");
             }
             long vehicleId = Long.parseLong(strVehicleId);
 
@@ -49,8 +49,8 @@ public class ShowVehicleInfoPersonalCommand implements Command {
             return new Router(ERROR_PAGE);
 
         } catch (IllegalArgumentException e) {
-            logger.error("Error parsing command {}", e.getMessage(), e);
-            request.setAttribute(EXCEPTION_MESSAGE_PARAM, "Error parsing command " + e.getMessage());
+            logger.error("Error parsing command: {}", e.getMessage(), e);
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, "Error parsing command: " + e.getMessage());
 
             return new Router(ERROR_PAGE);
         }
