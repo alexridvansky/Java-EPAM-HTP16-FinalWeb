@@ -239,6 +239,16 @@ public interface VehicleDao {
     boolean updateComment(long vehicleId, String comment) throws DaoException;
 
     /**
+     * is used for changing price of given vehicle
+     *
+     * @param vehicleId userId
+     * @param price new Vehicle.price
+     * @return true if vehicle price has been changed successfully
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    boolean updatePrice(long vehicleId, int price) throws DaoException;
+
+    /**
      * is used for storing Cloudinary public ids in the database
      *
      * @param vehicleId vehicleId
