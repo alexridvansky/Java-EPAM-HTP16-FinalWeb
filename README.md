@@ -18,11 +18,14 @@ User states:
 Check it out at: 
 https://autoschrott.herokuapp.com/jsp/main.jsp
 <br>
-to make it easier for you:<br>
-login: User1 pass: user1<br>
-login: root pass: root<br>
-login: moder1 pass: moder1<br>
-and so on, and so on...<br>
+<br>
+just to make it easier and more convenient for you:<br>
+login: user1, pass: user1<br>
+login: root, pass: root<br>
+login: moder1, pass: moder1<br>
+and so on, and so on...
+<br>
+<br>
 
 DataBase model :
 <img src="/src/main/resources/db_model.png" alt="database model">
