@@ -38,7 +38,6 @@ public class UploadVehiclePhotoCommand implements Command {
 
             boolean isUploaded = service.uploadVehiclePhoto(form);
 
-//            Optional<Vehicle> optionalVehicle = service.getVehicleById(form.getVehicleId());
             Optional<VehicleFullDto> optionalVehicleFullDto = service.getFullDtoVehicleById(form.getVehicleId());
 
             if (isUploaded) {
