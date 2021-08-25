@@ -39,4 +39,13 @@
         <url-pattern>*.jsp</url-pattern>
     </filter-mapping>
 
+    <display-name>MyListeningApplication</display-name>
+    <listener>
+        <listener-class>by.spetr.web.controller.listener.ServiceStartListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>by.spetr.web.controller.listener.DestroyPoolListener</listener-class>
+    </listener>
+
+
 </web-app>
