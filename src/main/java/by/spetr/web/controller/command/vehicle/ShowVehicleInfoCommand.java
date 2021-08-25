@@ -25,7 +25,9 @@ public class ShowVehicleInfoCommand implements Command {
         try {
             String lastPage = (String) request.getSession().getAttribute(LAST_PAGE_PARAM);
             String strVehicleId = request.getParameter(VEHICLE_ID_PARAM);
-            assert strVehicleId != null : "Parameter is null";
+            if (strVehicleId == null) {
+                throw new IllegalArgumentException("Parameter is null");
+            }
             long vehicleId = Long.parseLong(strVehicleId);
 
             Optional<VehicleFullDto> optionalVehicleFullDto = vehicleService.getFullDtoVehicleById(vehicleId);
@@ -39,9 +41,14 @@ public class ShowVehicleInfoCommand implements Command {
 
                 return new Router(Objects.requireNonNullElse(lastPage, INDEX_PAGE));
             }
-        } catch (ServiceException | NumberFormatException | AssertionError e) {
+        } catch (ServiceException e) {
             logger.error("Error getting vehicle info from Vehicle.service", e);
             request.setAttribute(EXCEPTION_MESSAGE_PARAM, e.getMessage());
+
+            return new Router(ERROR_PAGE);
+        } catch (NumberFormatException e) {
+            logger.error("Error parsing command {}", e.getMessage(), e);
+            request.setAttribute(EXCEPTION_MESSAGE_PARAM, "Error parsing command " + e.getMessage());
 
             return new Router(ERROR_PAGE);
         }
