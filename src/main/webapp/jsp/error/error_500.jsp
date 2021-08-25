@@ -21,7 +21,7 @@
     <section class="py-5 mt-3 text-center container">
         <div class="row">
             <div class="col-12">
-                <h2 class="fw-light text-danger">${error404}</h2>
+                <h2 class="fw-light text-danger">${error500}</h2>
                 <p class="lead text-danger">${feedback_msg}</p>
             </div>
         </div>

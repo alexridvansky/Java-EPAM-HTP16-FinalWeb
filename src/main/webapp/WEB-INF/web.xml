@@ -47,5 +47,22 @@
         <listener-class>by.spetr.web.controller.listener.DestroyPoolListener</listener-class>
     </listener>
 
+    <error-page>
+        <error-code>400</error-code>
+        <location>/jsp/error/error_400.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/jsp/error/error_403.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/jsp/error/error_404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/jsp/error/error_500.jsp</location>
+    </error-page>
+
 
 </web-app>
