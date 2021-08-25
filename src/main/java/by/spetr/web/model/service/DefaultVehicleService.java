@@ -395,6 +395,8 @@ public class DefaultVehicleService implements VehicleService {
                     throw new ServiceException("Vehicle can't be inserted or re-read");
                 }
 
+                form.setVehicleId(vehicle.getId());
+
                 boolean isUploaded = uploadVehiclePhoto(form);
                 if (isUploaded) {
                     logger.debug("photo(s) uploaded");
