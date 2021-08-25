@@ -522,6 +522,36 @@ public class DefaultVehicleService implements VehicleService {
     }
 
     @Override
+    public boolean updateVehiclePrice(VehicleFullForm form) throws ServiceException {
+        accessControlService.editVehicle(form);
+
+        int price = form.getPrice();
+
+        if (!VehicleValidator.validatePrice(price)) {
+            form.setFeedbackMsg("Entered price is not valid");
+
+            return false;
+        }
+
+        try {
+            boolean result = vehicleDao.updatePrice(form.getVehicleId(), price);
+
+            if (result) {
+                form.setFeedbackMsg("Price updated");
+                form.setSuccess(true);
+
+                return true;
+            } else {
+                form.setFeedbackMsg("Error updating price");
+
+                return false;
+            }
+
+        } catch (DaoException e) {
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }    }
+
+    @Override
     public Optional<String> getPreviewImageById(long vehicleId) throws ServiceException {
         try {
             Optional<String> optionalPreview = vehicleDao.findPreviewById(vehicleId);
