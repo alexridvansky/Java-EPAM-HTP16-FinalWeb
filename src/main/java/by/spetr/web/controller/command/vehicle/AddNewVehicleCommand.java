@@ -31,9 +31,10 @@ public class AddNewVehicleCommand implements Command {
         try {
             VehicleFullForm form = (VehicleFullForm) doForm(request);
             Vehicle vehicle = vehicleService.addVehicle(form);
-            request.setAttribute(VEHICLE_PARAM, vehicle);
 
             if (form.isSuccess()) {
+                request.setAttribute(VEHICLE_PARAM, vehicle);
+
                 return new Router(VEHICLE_LIST_PERSONAL, REDIRECT);
             } else {
                 request.setAttribute(FORM_PARAM, form);
@@ -60,6 +61,11 @@ public class AddNewVehicleCommand implements Command {
     @Override
     public DefaultForm doForm(HttpServletRequest request) {
         try {
+            UserDto executor = (UserDto) request.getSession().getAttribute(USER_PARAM);
+            if (executor == null) {
+                throw new IllegalArgumentException("No user in the session");
+            }
+
             VehicleFullForm form = new VehicleFullForm();
 
             UserDto user = (UserDto) request.getSession().getAttribute(USER_PARAM);
@@ -105,6 +111,7 @@ public class AddNewVehicleCommand implements Command {
             Set<String> filenames = (Set<String>) request.getAttribute(FILENAME_PARAM);
             filenames.forEach(logger::debug);
             form.setPhotoSet(filenames);
+            form.setExecutor(executor);
 
             return form;
 
