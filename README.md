@@ -4,6 +4,7 @@ SecondHandCar - by a dream
 
 - Deployed on Heroku (see below).
 - Uses Cloudinary for storing photos.
+- User registration confirmation via telegram bot.
 - Autoinforming placing new adverts (telegram channel 'AutoSchrottChat').
 
 Users and roles:
