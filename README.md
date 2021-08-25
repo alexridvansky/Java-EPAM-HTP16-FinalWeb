@@ -4,6 +4,7 @@ SecondHandCar - by a dream
 
 - Deployed on Heroku (see below).
 - Uses Cloudinary for storing photos.
+- Autoinforming placing new adverts (telegram channel 'AutoSchrottChat').
 
 Users and roles:
 1. ROOT - system account, has rights to change role and status for every user, has access to both administrative and user's pages.
