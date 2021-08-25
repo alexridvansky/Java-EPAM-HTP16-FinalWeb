@@ -59,6 +59,11 @@ public class AddNewVehicleCommand implements Command {
     @Override
     public DefaultForm doForm(HttpServletRequest request) {
         try {
+            UserDto executor = (UserDto) request.getSession().getAttribute(USER_PARAM);
+            if (executor == null) {
+                throw new IllegalArgumentException("No user in the session");
+            }
+
             VehicleFullForm form = new VehicleFullForm();
 
             UserDto user = (UserDto) request.getSession().getAttribute(USER_PARAM);
