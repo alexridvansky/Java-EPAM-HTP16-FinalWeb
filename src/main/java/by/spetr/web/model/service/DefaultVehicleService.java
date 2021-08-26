@@ -423,13 +423,9 @@ public class DefaultVehicleService implements VehicleService {
      */
     private void informOfVehicle(Vehicle vehicle) throws ServiceException {
         StringBuilder note = new StringBuilder();
-        note.append("New ad just added:");
-        note.append(" ").append(vehicle.getModel().getMake().getValue());
-        note.append(" ").append(vehicle.getModel().getValue());
-        note.append(" ").append(vehicle.getModelYear());
-        note.append(" $").append(vehicle.getPrice());
-        Optional<String> previewPath = getPreviewImageById(vehicle.getId());
-        previewPath.ifPresent(s -> note.append("\n").append(s));
+        note.append("New ad just added:\n");
+        note.append("https://autoschrott.herokuapp.com/controller?command=show_vehicle_info&vehicle_id=");
+        note.append(vehicle.getId());
 
         informerService.sendPublicMessage(note.toString());
     }
@@ -524,6 +520,36 @@ public class DefaultVehicleService implements VehicleService {
             throw new ServiceException("Error occurred on DAO layer", e);
         }
     }
+
+    @Override
+    public boolean updateVehiclePrice(VehicleFullForm form) throws ServiceException {
+        accessControlService.editVehicle(form);
+
+        int price = form.getPrice();
+
+        if (!VehicleValidator.validatePrice(price)) {
+            form.setFeedbackMsg("Entered price is not valid");
+
+            return false;
+        }
+
+        try {
+            boolean result = vehicleDao.updatePrice(form.getVehicleId(), price);
+
+            if (result) {
+                form.setFeedbackMsg("Price updated");
+                form.setSuccess(true);
+
+                return true;
+            } else {
+                form.setFeedbackMsg("Error updating price");
+
+                return false;
+            }
+
+        } catch (DaoException e) {
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }    }
 
     @Override
     public Optional<String> getPreviewImageById(long vehicleId) throws ServiceException {

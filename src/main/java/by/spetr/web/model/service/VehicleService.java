@@ -154,9 +154,18 @@ public interface VehicleService {
      *
      * @param form VehicleFullForm contains vehicleId and new comment text
      * @return true if comment changed successfully
-     * @throws ServiceException in case of errors on DAO layer or Cloudinary service
+     * @throws ServiceException in case of errors on DAO layer
      */
     boolean updateVehicleComment(VehicleFullForm form) throws ServiceException;
+
+    /**
+     * is used to edit vehicle.price field.
+     *
+     * @param form VehicleFullForm contains vehicleId and new price
+     * @return true if comment changed successfully
+     * @throws ServiceException in case of errors on DAO layer
+     */
+    boolean updateVehiclePrice(VehicleFullForm form) throws ServiceException;
 
     /**
      * is used to get from the database publicId of stored picture and getting the path to it

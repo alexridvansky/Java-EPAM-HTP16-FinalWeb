@@ -40,7 +40,7 @@
                             <c:choose>
                                 <c:when test="${vehicle.previewImagePath != null}">
                                     <img src="${vehicle.previewImagePath}"
-                                         onclick="location.href='${abs}/controller?command=show_vehicle_info_personal&vehicle_id=${vehicle.id}';"
+                                         onclick="location.href='${abs}/controller?command=show_vehicle_info&vehicle_id=${vehicle.id}';"
                                          style="cursor: pointer; border-radius: 0.25rem;"/>
                                 </c:when>
                                 <c:otherwise>
@@ -106,12 +106,12 @@
                                         <c:choose>
                                             <c:when test="${vehicle.state == 'ENABLED'}">
                                                 <a href="${abs}/controller?command=change_vehicle_state&vehicle_id=${vehicle.id}&vehicle_state=DISABLED"
-                                                   type="button" class="btn btn-sm btn-secondary">${disable}
+                                                   type="button" class="btn btn-sm btn-secondary"><i class="fas fa-car-crash"></i> ${disable}
                                                 </a>
                                             </c:when>
                                             <c:when test="${vehicle.state == 'DISABLED'}">
                                                 <a href="${abs}/controller?command=change_vehicle_state&vehicle_id=${vehicle.id}&vehicle_state=ENABLED"
-                                                   type="button" class="btn btn-sm btn-success">${enable}
+                                                   type="button" class="btn btn-sm btn-success"><i class="fas fa-check-square"></i> ${enable}
                                                 </a>
                                             </c:when>
                                         </c:choose>
@@ -120,50 +120,15 @@
                                             </c:when>
                                             <c:otherwise>
 
-
-
-                                                <!-- Add photo button-->
-                                                <button type="button" class="btn btn-sm btn-warning"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#addPhoto${vehicle.id}">
-                                                    +<i class="fas fa-camera"></i>
-                                                </button>
-
-                                                <div class="modal fade" id="addPhoto${vehicle.id}" tabindex="-1"
-                                                     aria-labelledby="addPhotoLabel${vehicle.id}" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"
-                                                                    id="addPhotoLabel${vehicle.id}">${vhl_add_photo_title}</h5>
-                                                                <button type="button" class="btn-close"
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p>${vhl_add_photo_promo}</p>
-
-                                                                <form method="post" action="uploadController" enctype="multipart/form-data">
-                                                                    Choose a file: <input type="file" name="uploadController" multiple/>
-                                                                    <input type="hidden" name="command" value="upload_vehicle_photo" formenctype="text/plain"/>
-                                                                    <input type="hidden" name="vehicle_id" value="${vehicle.id}" formenctype="text/plain"/>
-                                                                    <input type="submit" value="Upload" class="btn-sm btn-warning"/>
-                                                                </form>
-
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">Close
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <!-- Edit button -->
+                                                <a href="${abs}/controller?command=show_vehicle_info_personal&vehicle_id=${vehicle.id}"
+                                                   type="button" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> ${edit}
+                                                </a>
 
                                                 <!-- Delete button-->
                                                 <button type="button" class="btn btn-sm btn-danger"
                                                         data-bs-toggle="modal" data-bs-target="#deleteModal${vehicle.id}">
-                                                        ${delete}
+                                                    <i class="fas fa-trash-alt"></i> ${delete}
                                                 </button>
 
                                                 <!-- Modal deleting confirmation dialog -->
