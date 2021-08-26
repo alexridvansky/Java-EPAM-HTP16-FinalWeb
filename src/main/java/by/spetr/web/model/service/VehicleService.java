@@ -168,6 +168,15 @@ public interface VehicleService {
     boolean updateVehiclePrice(VehicleFullForm form) throws ServiceException;
 
     /**
+     * is used to choose title photo
+     *
+     * @param form VehicleFullForm contains vehicleId and new title photo path
+     * @return true if title photo changed successfully
+     * @throws ServiceException in case of errors on DAO layer
+     */
+    boolean updateVehiclePreview(VehicleFullForm form) throws ServiceException;
+
+    /**
      * is used to get from the database publicId of stored picture and getting the path to it
      *
      * @param vehicleId vehicleId
