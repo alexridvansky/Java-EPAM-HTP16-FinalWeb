@@ -133,7 +133,7 @@
                                                 <label for="recipient-name"
                                                        class="col-form-label text-dark">${enter_price}</label>
                                                 <input type="text" class="form-control" id="recipient-name"
-                                                       required pattern="${price_regexp}" name="new_price">
+                                                       required pattern="${price_regexp}" name="new_price" value="${vehicle.price}">
                                             </div>
                                         </div>
                                         <div class="modal-footer">
