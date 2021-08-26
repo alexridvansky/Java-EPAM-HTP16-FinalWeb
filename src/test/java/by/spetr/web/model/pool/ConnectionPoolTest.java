@@ -32,8 +32,8 @@ public class ConnectionPoolTest {
 
             Assert.assertEquals(connections.size(), EXPECTED_POOL_SIZE);
         } finally {
-            for (int i = 0; i < connections.size(); i++) {
-                connections.get(i).close();
+            for (Connection connection : connections) {
+                connection.close();
             }
         };
     }
