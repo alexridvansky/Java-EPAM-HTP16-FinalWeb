@@ -41,6 +41,7 @@ public class CommandProvider {
         commands.put(SHOW_CHANGE_PASSWORD_PAGE, new ShowChangePasswordPageCommand());
         commands.put(UPDATE_VEHICLE_COMMENT, new UpdateVehicleCommentCommand());
         commands.put(UPDATE_VEHICLE_PRICE, new UpdateVehiclePriceCommand());
+        commands.put(UPDATE_VEHICLE_PREVIEW, new UpdateVehiclePreviewCommand());
         commands.put(UPLOAD_VEHICLE_PHOTO, new UploadVehiclePhotoCommand());
         commands.put(CREATE_USER, new CreateUserCommand());
         commands.put(SIGN_IN, new SignInCommand());

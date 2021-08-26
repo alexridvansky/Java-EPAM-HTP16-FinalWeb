@@ -52,6 +52,7 @@ public class DefaultAccessControlService implements AccessControlService {
         commandPermission.put(SHOW_CHANGE_PASSWORD_PAGE, new ArrayList<>(List.of(USER, MODERATOR)));
         commandPermission.put(UPDATE_VEHICLE_COMMENT, new ArrayList<>(List.of(USER)));
         commandPermission.put(UPDATE_VEHICLE_PRICE, new ArrayList<>(List.of(USER)));
+        commandPermission.put(UPDATE_VEHICLE_PREVIEW, new ArrayList<>(List.of(USER)));
         commandPermission.put(UPLOAD_VEHICLE_PHOTO, new ArrayList<>(List.of(USER)));
         commandPermission.put(GO_TO_MAIN_PAGE, new ArrayList<>(List.of(ROOT, MODERATOR, USER, GUEST)));
         commandPermission.put(GO_TO_SIGN_UP_PAGE, new ArrayList<>(List.of(GUEST)));

@@ -64,6 +64,7 @@ public final class RequestParameter {
     public static final String EXCEPTION_MESSAGE_PARAM = "e";
     public static final String MESSAGE_PARAM = "message";
     public static final String PREVIEW_PARAM = "preview";
+    public static final String NEW_PREVIEW_PARAM = "new_preview";
     public static final String PAGE_PARAM = "page";
     public static final String PAGEABLE = "pageable";
     public static final String FORM_PARAM = "form";
