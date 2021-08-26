@@ -30,7 +30,6 @@ public class AddNewVehicleCommand implements Command {
         try {
             VehicleFullForm form = (VehicleFullForm) doForm(request);
             Vehicle vehicle = vehicleService.addVehicle(form);
-            request.setAttribute(VEHICLE_PARAM, vehicle);
 
             if (form.isSuccess()) {
                 request.setAttribute(VEHICLE_PARAM, vehicle);
