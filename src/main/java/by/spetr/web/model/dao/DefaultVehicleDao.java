@@ -102,6 +102,10 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             = "UPDATE vehicle SET comment = ? WHERE vehicle_id = ? ";
     private static final String SQL_UPDATE_PRICE_BY_ID
             = "UPDATE vehicle SET price = ? WHERE vehicle_id = ?";
+    private static final String SQL_CLEAR_PREVIEW_BY_ID
+            = "UPDATE vehicle_gallery SET is_preview = 'n' WHERE vehicle_id = ? ";
+    private static final String SQL_UPDATE_PREVIEW_BY_ID
+            = "UPDATE vehicle_gallery SET is_preview = 'y' WHERE img_path = ? AND vehicle_id = ? ";
     private static final String SQL_CREATE_NEW_PHOTO_RECORD
             = "INSERT INTO vehicle_gallery (vehicle_id, img_path) " +
             "values (?, ?);";
@@ -114,7 +118,7 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             = "SELECT img_path " +
             "FROM vehicle_gallery " +
             "WHERE vehicle_id = ? " +
-            "ORDER BY is_preview " +
+            "ORDER BY is_preview DESC " +
             "LIMIT 1;";
     private static final String SQL_FIND_ALL_OPTIONS
             = "SELECT * " +
@@ -767,6 +771,28 @@ public class DefaultVehicleDao extends AbstractDao<Vehicle> implements VehicleDa
             int result = statement.executeUpdate();
 
             return result == 1;
+
+        } catch (SQLException e) {
+            throw new DaoException("database access error occurred or error parsing resultSet", e);
+        } catch (ConnectionPoolException e) {
+            throw new DaoException("error of getting connection from ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public boolean updatePreview(long vehicleId, String imgPath) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement resetStatement = connection.prepareStatement(SQL_CLEAR_PREVIEW_BY_ID);
+             PreparedStatement setStatement = connection.prepareStatement(SQL_UPDATE_PREVIEW_BY_ID)) {
+
+            resetStatement.setLong(1, vehicleId);
+            int resetResult = resetStatement.executeUpdate();
+
+            setStatement.setString(1, imgPath);
+            setStatement.setLong(2, vehicleId);
+            int setResult = setStatement.executeUpdate();
+
+            return resetResult > 0 && setResult > 0;
 
         } catch (SQLException e) {
             throw new DaoException("database access error occurred or error parsing resultSet", e);
