@@ -3,7 +3,6 @@ package by.spetr.web.model.pool;
 import by.spetr.web.model.exception.ConnectionPoolException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
@@ -35,6 +34,6 @@ public class ConnectionPoolTest {
             for (Connection connection : connections) {
                 connection.close();
             }
-        };
+        }
     }
 }
