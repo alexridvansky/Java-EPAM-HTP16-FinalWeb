@@ -13,10 +13,8 @@ import static org.testng.Assert.*;
 public class ConnectionCreatorTest {
     @Test(dataProvider = "validate_connection")
     public void testCreateConnection(Connection connection, boolean expectedResult) throws SQLException {
-        try {
+        try (connection) {
             Assert.assertNotNull(connection);
-        } finally {
-            connection.close();
         }
     }
 
