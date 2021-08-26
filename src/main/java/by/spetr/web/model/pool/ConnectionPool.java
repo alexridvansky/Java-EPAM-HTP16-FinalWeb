@@ -89,6 +89,11 @@ public class ConnectionPool {
             onServicePause();
         }
 
+        if (connection == null) {
+            logger.error("Connection is null");
+            return false;
+        }
+
         if (connection.getClass() != ProxyConnection.class) {
             logger.error("Wild connection been returned");
             return false;
