@@ -19,8 +19,6 @@
             <taglib-uri>custom_tags</taglib-uri>
             <taglib-location>/WEB_INF/tld/custom.tld</taglib-location>
         </taglib>
-    </jsp-config>
-    <jsp-config>
         <jsp-property-group>
             <url-pattern>*.jsp</url-pattern>
             <page-encoding>UTF-8</page-encoding>
