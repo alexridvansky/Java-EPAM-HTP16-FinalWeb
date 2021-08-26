@@ -12,7 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
-import static by.spetr.web.controller.command.PagePath.*;
+import static by.spetr.web.controller.command.PagePath.ERROR_PAGE;
+import static by.spetr.web.controller.command.PagePath.VEHICLE_LIST_PERSONAL;
 import static by.spetr.web.controller.command.RequestParameter.USER_PARAM;
 import static by.spetr.web.controller.command.RequestParameter.VEHICLE_LIST_PARAM;
 import static by.spetr.web.controller.command.Router.RouterType.REDIRECT;
