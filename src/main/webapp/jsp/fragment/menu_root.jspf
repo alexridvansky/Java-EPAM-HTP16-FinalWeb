@@ -17,7 +17,7 @@
 </li>
 <li class="nav-item">
     <a href="${pageContext.request.contextPath}/controller?command=show_message_list_admin"
-       class="nav-link px-3 text-white disabled">
+       class="nav-link px-3 text-secondary disabled">
         <i class="fas fa-comments"></i>
         ${show_messages}
     </a>
