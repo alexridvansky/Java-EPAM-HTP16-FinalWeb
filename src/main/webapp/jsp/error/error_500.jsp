@@ -26,9 +26,13 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
-                <img src="${abs}/img/whatsgoingon.jpg">
-            </div>
+            Request from ${pageContext.errorData.requestURI} is failed
+            <br>
+            Servlet name or type: ${pageContext.errorData.servletName}
+            <br>
+            Status code: ${pageContext.errorData.statusCode}
+            <br>
+            Exception: ${pageContext.errorData.throwable}
         </div>
         <div class="col-12">
             <div class="col-12 mt-3">
