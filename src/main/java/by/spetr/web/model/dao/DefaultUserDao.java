@@ -59,7 +59,7 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     private static final String SQL_UPDATE_ROLE_BY_LOGIN
             = "UPDATE user SET role_id = ? WHERE login = ? ";
     private static final String SQL_UPDATE_PASSWORD_BY_LOGIN
-            = "UPDATE user SET pass = ? WHERE carsales2.user.login = ?";
+            = "UPDATE user SET pass = ? WHERE login = ?";
     private static final String SQL_COUNT_CHAT_ID
             = "SELECT COUNT(*) " +
             "FROM user_chat_id " +
