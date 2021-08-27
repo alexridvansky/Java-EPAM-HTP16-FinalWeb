@@ -22,42 +22,31 @@
 
 <main>
     <section class="py-5 text-center container">
-        <div id="carouselExampleIndicators" class="carousel mt-4 slide col-lg-6 col-md-8 mx-auto"
-             data-bs-ride="carousel">
-            <div class="carousel-inner">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 mx-auto">
                 <c:forEach items="${vehicle.album}" var="photo" varStatus="loop">
-                    <c:choose>
-                        <c:when test="${loop.index == 0}">
-                            <div class="carousel-item active">
-                                <img src="${photo}" class="d-block w-100" alt="...">
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="carousel-item">
-                                <img src="${photo}" class="d-block w-100" alt="...">
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
 
+                    <div class="col-auto card bg-dark justify-content-center" style="width: 40rem;">
+                        <img src="${photo}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <a href="${abs}/controller?command=update_vehicle_preview&vehicle_id=${vehicle.id}&new_preview=${photo}"
+                               type="button" class="btn btn-sm btn-success"><i class="fas fa-check"></i> ${use_photo_as_title}
+                            </a>
+                                <%--                    <p class="card-text"></p>--%>
+                        </div>
+                    </div>
+                    <%--            <img src="${photo}" class="d-block w-100" alt="...">--%>
+                </c:forEach>
+                <hr class="col-12 text-white">
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
         </div>
+
 
         <!-- Add photo button-->
         <button type="button" class="btn btn-sm btn-warning mt-1"
                 data-bs-toggle="modal"
                 data-bs-target="#addPhoto${vehicle.id}">
-            +<i class="fas fa-camera"></i>
+            ${add_photo}<i class="fas fa-camera"></i>
         </button>
 
         <div class="modal fade" id="addPhoto${vehicle.id}" tabindex="-1"
@@ -133,7 +122,8 @@
                                                 <label for="recipient-name"
                                                        class="col-form-label text-dark">${enter_price}</label>
                                                 <input type="text" class="form-control" id="recipient-name"
-                                                       required pattern="${price_regexp}" name="new_price" value="${vehicle.price}">
+                                                       required pattern="${price_regexp}" name="new_price"
+                                                       value="${vehicle.price}">
                                             </div>
                                         </div>
                                         <div class="modal-footer">

@@ -549,7 +549,44 @@ public class DefaultVehicleService implements VehicleService {
 
         } catch (DaoException e) {
             throw new ServiceException("Error occurred on DAO layer", e);
-        }    }
+        }
+    }
+
+    @Override
+    public boolean updateVehiclePreview(VehicleFullForm form) throws ServiceException {
+        accessControlService.editVehicle(form);
+
+        String titlePhoto = null;
+        for(String s : form.getPhotoSet()) {
+            titlePhoto = s;
+        }
+
+        if (titlePhoto == null) {
+            form.setFeedbackMsg("Photo path is null");
+
+            return false;
+        }
+
+        String shortPath = titlePhoto.substring(titlePhoto.lastIndexOf("/") + 1);
+
+        try {
+            boolean result = vehicleDao.updatePreview(form.getVehicleId(), shortPath);
+
+            if (result) {
+                form.setFeedbackMsg("Title photo updated");
+                form.setSuccess(true);
+
+                return true;
+            } else {
+                form.setFeedbackMsg("Error updating title photo");
+
+                return false;
+            }
+
+        } catch (DaoException e) {
+            throw new ServiceException("Error occurred on DAO layer", e);
+        }
+    }
 
     @Override
     public Optional<String> getPreviewImageById(long vehicleId) throws ServiceException {

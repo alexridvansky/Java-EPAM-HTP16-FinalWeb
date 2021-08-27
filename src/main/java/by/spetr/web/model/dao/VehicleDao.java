@@ -239,6 +239,16 @@ public interface VehicleDao {
     boolean updateComment(long vehicleId, String comment) throws DaoException;
 
     /**
+     * is used to choose title photo
+     *
+     * @param vehicleId userId
+     * @param imgPath image path to set as a title image
+     * @return true if vehicle title image has been changed successfully
+     * @throws DaoException if connection can't be obtained or no access to the DataBase
+     */
+    boolean updatePreview(long vehicleId, String imgPath) throws DaoException;
+
+    /**
      * is used for changing price of given vehicle
      *
      * @param vehicleId userId
