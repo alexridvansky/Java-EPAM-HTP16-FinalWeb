@@ -23,20 +23,19 @@ import java.util.Optional;
 public final class TelegramInformerService extends TelegramLongPollingBot implements InformerService{
     private static final Logger logger = LogManager.getLogger();
     private static final UserService userService = UserService.getInstance();
-    private static final String BOT_NAME_PROPERTY = "telegram.bot_name";
     private static final String BOT_CHAT_ID_PROPERTY = "telegram.chat_id";
     private static final String MAX_ATT_COUNT_PROPERTY = "telegram.confirm_count";
     private static final String ATT_EXPIRES_TIME_PROPERTY = "telegram.confirm_expires";
     private static final String BOT_TOKEN = Optional.ofNullable(System.getenv("BOT_TOKEN"))
             .orElseThrow( () -> new IllegalArgumentException("BOT_TOKEN is not set in the environment") );
-    private static final String BOT_NAME;
+    private static final String BOT_NAME = Optional.ofNullable(System.getenv("BOT_NAME"))
+            .orElseThrow( () -> new IllegalArgumentException("BOT_NAME is not set in the environment") );
     private static final String BOT_CHAT_ID;
     private static final int MAX_ATT_COUNT;
     private static final int ATT_EXPIRES_TIME;
     private static TelegramInformerService instance;
 
     static {
-        BOT_NAME = PropertyReader.getInstance().getBotProperty(BOT_NAME_PROPERTY);
         BOT_CHAT_ID = PropertyReader.getInstance().getBotProperty(BOT_CHAT_ID_PROPERTY);
         MAX_ATT_COUNT = Integer.parseInt(PropertyReader.getInstance().getBotProperty(MAX_ATT_COUNT_PROPERTY));
         ATT_EXPIRES_TIME = Integer.parseInt(PropertyReader.getInstance().getBotProperty(ATT_EXPIRES_TIME_PROPERTY));
