@@ -34,11 +34,11 @@ public final class TelegramInformerService extends TelegramLongPollingBot implem
 
     static {
         BOT_TOKEN = Optional.ofNullable(System.getenv("BOT_TOKEN"))
-                .orElseThrow( () -> new IllegalArgumentException("BOT_TOKEN is not set in the environment") );
+                .orElseThrow(() -> new IllegalArgumentException("BOT_TOKEN is not set in the environment"));
         BOT_NAME = Optional.ofNullable(System.getenv("BOT_NAME"))
-                .orElseThrow( () -> new IllegalArgumentException("BOT_NAME is not set in the environment") );
+                .orElseThrow(() -> new IllegalArgumentException("BOT_NAME is not set in the environment"));
         BOT_CHAT_ID = Optional.ofNullable(System.getenv("CHAT_ID"))
-                .orElseThrow( () -> new IllegalArgumentException("CHAT_ID is not set in the environment"));
+                .orElseThrow(() -> new IllegalArgumentException("CHAT_ID is not set in the environment"));
         MAX_ATT_COUNT = Integer.parseInt(PropertyReader.getInstance().getBotProperty(MAX_ATT_COUNT_PROPERTY));
         ATT_EXPIRES_TIME = Integer.parseInt(PropertyReader.getInstance().getBotProperty(ATT_EXPIRES_TIME_PROPERTY));
     }
