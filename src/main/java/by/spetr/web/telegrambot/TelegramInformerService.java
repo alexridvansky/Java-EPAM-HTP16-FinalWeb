@@ -18,6 +18,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class TelegramInformerService extends TelegramLongPollingBot implements InformerService{
     private static final Logger logger = LogManager.getLogger();
@@ -26,7 +27,8 @@ public final class TelegramInformerService extends TelegramLongPollingBot implem
     private static final String BOT_CHAT_ID_PROPERTY = "telegram.chat_id";
     private static final String MAX_ATT_COUNT_PROPERTY = "telegram.confirm_count";
     private static final String ATT_EXPIRES_TIME_PROPERTY = "telegram.confirm_expires";
-    private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
+    private static final String BOT_TOKEN = Optional.ofNullable(System.getenv("BOT_TOKEN"))
+            .orElseThrow( () -> new IllegalArgumentException("BOT_TOKEN is not set in the environment") );
     private static final String BOT_NAME;
     private static final String BOT_CHAT_ID;
     private static final int MAX_ATT_COUNT;
